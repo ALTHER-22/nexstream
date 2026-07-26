@@ -1483,7 +1483,11 @@ p {
 
 /* Tablet */
 @media (max-width: 992px) {
-  .nex-navbar__nav { display: none; }
+  .nex-navbar__nav,
+  .nex-navbar__actions .nex-btn,
+  .nex-navbar__actions .nex-dropdown {
+    display: none;
+  }
 
   .nex-hero__content {
     padding: var(--space-8) var(--space-6) var(--space-12);

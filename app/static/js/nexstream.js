@@ -126,6 +126,7 @@ const NexNavbar = (() => {
 
     const open = () => {
       menu.classList.add('open');
+      toggleBtn.classList.add('open');
       overlay.classList.add('active');
       document.body.style.overflow = 'hidden';
       toggleBtn.setAttribute('aria-expanded', 'true');
@@ -136,6 +137,7 @@ const NexNavbar = (() => {
 
     const close = () => {
       menu.classList.remove('open');
+      toggleBtn.classList.remove('open');
       overlay.classList.remove('active');
       document.body.style.overflow = '';
       toggleBtn.setAttribute('aria-expanded', 'false');
