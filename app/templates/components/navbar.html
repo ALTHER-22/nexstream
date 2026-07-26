@@ -36,7 +36,10 @@
     {% if nav_categories %}
       {% for cat in nav_categories %}
       <li>
-        <a href="{{ url_for('main.category', slug=cat.slug) }}" class="nex-navbar__link">{{ cat.name }}</a>
+        <a href="{{ url_for('main.category', slug=cat.slug) }}" 
+           class="nex-navbar__link {% if request.endpoint == 'main.category' and request.view_args.get('slug') == cat.slug %}active{% endif %}">
+          {{ cat.name }}
+        </a>
       </li>
       {% endfor %}
     {% endif %}
