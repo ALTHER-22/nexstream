@@ -21,47 +21,14 @@
     </form>
   </div>
 
-  <div class="nex-history-list">
+  <div class="nex-catalog-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1.5rem;">
+    {% from 'macros/content_card.html' import content_card with context %}
     {% for item in pagination.items %}
-      {% set content = item.series if item.series else item.movie %}
-      {% set is_series = true if item.series else false %}
-      
-      <a href="{{ url_for('main.series_detail', slug=content.slug) if is_series else url_for('main.movie_detail', slug=content.slug) }}" 
-         class="nex-history-item">
-        
-        <div class="nex-history-item__thumb">
-          {% if is_series and item.episode and item.episode.thumbnail_url %}
-            <img src="{{ item.episode.thumbnail_url }}" alt="Thumbnail" loading="lazy">
-          {% elif content.cover_url %}
-            <img src="{{ content.cover_url }}" alt="Cover" loading="lazy">
-          {% endif %}
-        </div>
-        
-        <div class="nex-history-item__info">
-          <h3 class="nex-history-item__title">
-            {{ content.title }}
-            {% if is_series and item.episode %}
-              <span style="font-weight:400;color:var(--color-text-muted);"> — S{{ item.episode.season.number }} E{{ item.episode.number }}</span>
-            {% endif %}
-          </h3>
-          
-          <div class="nex-history-item__meta">
-            {% if is_series and item.episode %}
-              {{ item.episode.title or 'Episodio ' + item.episode.number|string }}
-            {% else %}
-              Película
-            {% endif %}
-          </div>
-          
-          <div class="nex-history-item__progress">
-            <div class="nex-history-item__progress-fill" style="width:{{ item.progress_percentage }}%"></div>
-          </div>
-          
-          <div class="nex-history-item__date">
-            Visto el {{ item.watched_at.strftime('%d/%m/%Y') }}
-          </div>
-        </div>
-      </a>
+      {% if item.series %}
+        {{ content_card(item.series, type='series', show_info=True, progress=item.progress_percentage) }}
+      {% elif item.movie %}
+        {{ content_card(item.movie, type='movie', show_info=True, progress=item.progress_percentage) }}
+      {% endif %}
     {% endfor %}
   </div>
 
