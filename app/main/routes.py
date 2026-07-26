@@ -430,16 +430,6 @@ def search():
 @bp.route('/reproducir/serie/<int:episode_id>')
 def play_episode(episode_id):
     """Reproductor de video para un episodio específico."""
-    from flask_login import login_required
-    
-    if not current_user.is_authenticated:
-        return redirect(url_for('auth.login', next=request.url))
-        
-    if not current_user.is_admin and (not current_user.subscription or not current_user.subscription.is_active):
-        from flask import flash
-        flash('Necesitas una suscripción activa para reproducir contenido.', 'warning')
-        return redirect(url_for('subscription.plans'))
-        
     episode = Episode.query.get_or_404(episode_id)
     series = episode.season.series
     
@@ -452,10 +442,13 @@ def play_episode(episode_id):
             next_episode = next((e for e in next_season.episodes if e.number == 1), None)
             
     # Historial de progreso actual
-    history = WatchHistory.query.filter_by(
-        user_id=current_user.id, series_id=series.id, episode_id=episode.id
-    ).first()
-    start_time = history.progress if history and history.progress_percentage < 95 else 0
+    start_time = 0
+    if current_user.is_authenticated:
+        history = WatchHistory.query.filter_by(
+            user_id=current_user.id, series_id=series.id, episode_id=episode.id
+        ).first()
+        if history and history.progress_percentage < 95:
+            start_time = history.progress
 
     return render_template(
         'main/player.html',
@@ -464,29 +457,22 @@ def play_episode(episode_id):
         type='series',
         next_item=next_episode,
         start_time=start_time,
-        autoplay_next=current_user.autoplay,
+        autoplay_next=current_user.autoplay if current_user.is_authenticated else False,
         title=f'{series.title} - S{episode.season.number}E{episode.number}'
     )
 
 @bp.route('/reproducir/pelicula/<int:movie_id>')
 def play_movie(movie_id):
     """Reproductor de video para una película."""
-    from flask_login import login_required
-    
-    if not current_user.is_authenticated:
-        return redirect(url_for('auth.login', next=request.url))
-        
-    if not current_user.is_admin and (not current_user.subscription or not current_user.subscription.is_active):
-        from flask import flash
-        flash('Necesitas una suscripción activa para reproducir contenido.', 'warning')
-        return redirect(url_for('subscription.plans'))
-        
     movie = Movie.query.get_or_404(movie_id)
     
-    history = WatchHistory.query.filter_by(
-        user_id=current_user.id, movie_id=movie.id
-    ).first()
-    start_time = history.progress if history and history.progress_percentage < 95 else 0
+    start_time = 0
+    if current_user.is_authenticated:
+        history = WatchHistory.query.filter_by(
+            user_id=current_user.id, movie_id=movie.id
+        ).first()
+        if history and history.progress_percentage < 95:
+            start_time = history.progress
 
     return render_template(
         'main/player.html',

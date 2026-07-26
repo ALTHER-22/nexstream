@@ -40,10 +40,8 @@
       </li>
       {% endfor %}
     {% endif %}
-    <li>
-      <a href="{{ url_for('subscription.plans') }}" class="nex-navbar__link" style="color:var(--color-primary);">Planes</a>
-    </li>
   </ul>
+
 
   {# ── Acciones (derecha) ── #}
   <div class="nex-navbar__actions">
@@ -167,7 +165,6 @@
     <a href="{{ url_for('main.index') }}"  class="nex-mobile-menu__link">🏠 Inicio</a>
     <a href="#series"                       class="nex-mobile-menu__link">📺 Series</a>
     <a href="#movies"                       class="nex-mobile-menu__link">🎬 Películas</a>
-    <a href="{{ url_for('subscription.plans') }}" class="nex-mobile-menu__link" style="color:var(--color-primary);">💳 Planes</a>
     <div class="nex-divider"></div>
     {% if current_user.is_authenticated %}
       <a href="{{ url_for('user.profile') }}" class="nex-mobile-menu__link">👤 Mi Perfil</a>
