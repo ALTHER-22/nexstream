@@ -81,21 +81,13 @@
         {% endif %}
 
         <div class="nex-detail-hero__actions">
-          {# BotÃ³n de reproducir / SuscripciÃ³n #}
+          {# Botón de reproducir / Suscripción #}
           {% if seasons and seasons[0].episodes %}
             {% set first_ep = seasons[0].episodes[0] %}
             
-            {% if not current_user.is_authenticated %}
-              <a href="{{ url_for('auth.login') }}" class="nex-btn nex-btn--primary nex-btn--lg">🔑 Iniciar sesión para ver</a>
-            {% elif current_user.is_admin or (current_user.subscription and current_user.subscription.is_active) %}
               <a href="{{ url_for('main.play_episode', episode_id=first_ep.id) }}" class="nex-btn nex-btn--primary nex-btn--lg">
                 ▶ Reproducir
               </a>
-            {% else %}
-              <a href="{{ url_for('subscription.plans') }}" class="nex-btn nex-btn--primary nex-btn--lg" style="background:var(--color-primary); color:white;">
-                💳 Ver planes para reproducir
-              </a>
-            {% endif %}
           {% else %}
             <button class="nex-btn nex-btn--primary nex-btn--lg" disabled>
               ▶ Próximamente
@@ -149,11 +141,7 @@
            style="{{ 'display:none;' if active_season and season.id != active_season.id else '' }}">
         {% for ep in season.episodes %}
           <div class="nex-episode-card" 
-               {% if current_user.is_authenticated and (current_user.is_admin or (current_user.subscription and current_user.subscription.is_active)) %}
                  onclick="window.location.href='{{ url_for('main.play_episode', episode_id=ep.id) }}'" style="cursor:pointer;"
-               {% else %}
-                 onclick="window.location.href='{{ url_for('subscription.plans') }}'" style="cursor:pointer;"
-               {% endif %}
                role="button" tabindex="0"
                aria-label="Episodio {{ ep.number }}: {{ ep.title or 'Sin título' }}">
 
