@@ -1,0 +1,201 @@
+{# =============================================================================
+   NEXSTREAM — Planes de Suscripción
+   ============================================================================= #}
+
+{% extends "base.html" %}
+
+{% block title %}Planes de Suscripción — {{ platform_name }}{% endblock %}
+
+{% block styles %}
+<style>
+/* CSS en línea temporal para los planes. Luego se puede mover a subscription.css */
+.nex-plans-hero {
+  text-align: center;
+  padding: 6rem 1rem 3rem;
+}
+.nex-plans-title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  margin-bottom: 1rem;
+}
+.nex-plans-subtitle {
+  font-size: 1.25rem;
+  color: var(--color-text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.nex-plans-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  padding: 2rem 0 6rem;
+}
+@media (min-width: 768px) {
+  .nex-plans-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.nex-plan-card {
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  transition: all var(--transition-spring);
+  position: relative;
+  overflow: hidden;
+}
+
+.nex-plan-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(255,255,255,0.2);
+  background: var(--color-surface-3);
+}
+
+.nex-plan-card.premium {
+  border-color: var(--color-primary);
+  background: linear-gradient(145deg, rgba(229,9,20,0.1) 0%, var(--color-surface-2) 100%);
+  box-shadow: 0 20px 40px rgba(229,9,20,0.15);
+}
+
+.nex-plan-card.premium::before {
+  content: "RECOMENDADO";
+  position: absolute;
+  top: 1rem;
+  right: -2rem;
+  background: var(--color-primary);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 0.25rem 3rem;
+  transform: rotate(45deg);
+}
+
+.nex-plan-name {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+.nex-plan-price {
+  font-size: 3rem;
+  font-weight: 900;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: flex-start;
+}
+.nex-plan-currency {
+  font-size: 1.5rem;
+  margin-top: 0.5rem;
+  color: var(--color-text-secondary);
+}
+.nex-plan-period {
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  align-self: flex-end;
+  margin-bottom: 0.75rem;
+}
+.nex-plan-desc {
+  color: var(--color-text-secondary);
+  margin-bottom: 2rem;
+  font-size: 0.9375rem;
+}
+
+.nex-plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2.5rem;
+  flex: 1;
+}
+.nex-plan-feature {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  font-size: 0.9375rem;
+  color: var(--color-text-primary);
+}
+.nex-plan-feature svg {
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.nex-plan-btn {
+  width: 100%;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="nex-container">
+  
+  <div class="nex-plans-hero animate-fade-in-up">
+    <h1 class="nex-plans-title">Elige tu plan perfecto</h1>
+    <p class="nex-plans-subtitle">Sin contratos, cancela cuando quieras. Disfruta de todo nuestro contenido sin límites.</p>
+  </div>
+
+  <div class="nex-plans-grid">
+    {% for plan in plans %}
+    <div class="nex-plan-card {% if plan.price_monthly > 10 %}premium{% endif %} animate-fade-in-up" 
+         style="animation-delay: {{ loop.index0 * 100 }}ms;">
+      
+      <h2 class="nex-plan-name">{{ plan.name }}</h2>
+      <p class="nex-plan-desc">{{ plan.description }}</p>
+      
+      <div class="nex-plan-price">
+        <span class="nex-plan-currency">$</span>
+        {{ plan.price_monthly }}
+        <span class="nex-plan-period">/mes</span>
+      </div>
+      
+      <ul class="nex-plan-features">
+        <li class="nex-plan-feature">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Resolución máxima: {{ plan.max_resolution }}
+        </li>
+        <li class="nex-plan-feature">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Dispositivos simultáneos: {{ plan.max_devices }}
+        </li>
+        {% if plan.has_downloads %}
+        <li class="nex-plan-feature">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          Descargas para ver offline
+        </li>
+        {% else %}
+        <li class="nex-plan-feature" style="opacity: 0.5;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          Sin descargas offline
+        </li>
+        {% endif %}
+      </ul>
+
+      {% if current_user.is_authenticated %}
+        {% if current_plan and current_plan.id == plan.id %}
+          <button class="nex-btn nex-btn--secondary nex-btn--lg nex-plan-btn" disabled>Plan Actual</button>
+        {% else %}
+          <form action="{{ url_for('subscription.checkout', plan_id=plan.id) }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="nex-btn nex-btn--primary nex-btn--lg nex-plan-btn">Seleccionar {{ plan.name }}</button>
+          </form>
+        {% endif %}
+      {% else %}
+        <a href="{{ url_for('auth.login', next=url_for('subscription.plans')) }}" class="nex-btn nex-btn--primary nex-btn--lg nex-plan-btn">
+          Inicia sesión para elegir
+        </a>
+      {% endif %}
+      
+    </div>
+    {% else %}
+      <div class="nex-empty-state" style="grid-column: 1 / -1;">
+        <span class="nex-empty-state__icon">💳</span>
+        <h2 class="nex-empty-state__title">No hay planes disponibles</h2>
+        <p class="nex-empty-state__desc">Los administradores aún no han configurado los planes de suscripción en Stripe.</p>
+      </div>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}

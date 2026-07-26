@@ -1,0 +1,39 @@
+{# =============================================================================
+   NEXSTREAM — Componente: Search Overlay
+   ============================================================================= #}
+
+<div class="nex-search-overlay" id="searchOverlay" role="dialog" aria-label="Búsqueda" aria-hidden="true">
+  <div class="nex-search-overlay__inner">
+
+    <div class="nex-search-overlay__header">
+      <div class="nex-search-overlay__input-wrap">
+        <svg class="nex-search-overlay__icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="search"
+               class="nex-search-overlay__input"
+               id="searchInput"
+               placeholder="Buscar series, películas, actores..."
+               autocomplete="off"
+               spellcheck="false"
+               aria-label="Buscar contenido">
+        <button class="nex-search-overlay__clear" id="searchClear" aria-label="Limpiar búsqueda" style="display:none;">✕</button>
+      </div>
+      <button class="nex-search-overlay__close" id="searchClose" aria-label="Cerrar búsqueda">
+        Cancelar
+      </button>
+    </div>
+
+    {# Resultados en tiempo real #}
+    <div class="nex-search-overlay__results" id="searchResults" aria-live="polite">
+      {# Populated by JS #}
+      <div class="nex-search-overlay__hint" id="searchHint">
+        <p>Escribe para buscar en todo el catálogo...</p>
+      </div>
+    </div>
+
+  </div>
+</div>

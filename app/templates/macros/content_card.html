@@ -1,0 +1,86 @@
+﻿{# =============================================================================
+   NEXSTREAM â€” Macro: Content Card
+   =============================================================================
+   Archivo: app/templates/macros/content_card.html
+   Uso: {% from 'macros/content_card.html' import content_card with context %}
+        {{ content_card(item, type='series') }}
+   ============================================================================= #}
+
+{% macro content_card(item, type='series', show_info=True) %}
+<a href="{{ url_for('main.series_detail', slug=item.slug) if type == 'series' else url_for('main.movie_detail', slug=item.slug) }}"
+   class="nex-content-card reveal"
+   data-content-id="{{ item.id }}"
+   data-content-type="{{ type }}"
+   aria-label="{{ item.title }}">
+
+  {# â”€â”€ Portada â”€â”€ #}
+  <div class="nex-content-card__cover">
+
+    {# Badge tipo #}
+    <div class="nex-content-card__badge">
+      {% if type == 'series' %}
+        <span class="nex-badge nex-badge--primary" style="font-size:0.65rem; padding:2px 6px;">SERIE</span>
+      {% else %}
+        <span class="nex-badge nex-badge--hd" style="font-size:0.65rem; padding:2px 6px;">FILM</span>
+      {% endif %}
+    </div>
+
+    {# Imagen #}
+    {% if item.cover_url %}
+      <img src="{{ item.cover_url }}"
+           alt="{{ item.title }}"
+           loading="lazy"
+           width="190" height="285">
+    {% else %}
+      {# Placeholder de color si no hay imagen #}
+      <div style="width:100%;height:100%;background:linear-gradient(135deg,var(--color-surface-3),var(--color-surface-2));
+                  display:flex;align-items:center;justify-content:center;font-size:3rem;opacity:0.3;">
+        {% if type == 'series' %}ðŸ“º{% else %}ðŸŽ¬{% endif %}
+      </div>
+    {% endif %}
+
+    {# Rating flotante #}
+    {% if item.rating_avg %}
+      <span class="nex-content-card__rating">â­ {{ "%.1f"|format(item.rating_avg|float) }}</span>
+    {% endif %}
+
+    {# Overlay con play #}
+    <div class="nex-content-card__overlay">
+      <div class="nex-content-card__play" aria-hidden="true">â–¶</div>
+    </div>
+
+    {# BotÃ³n favorito #}
+    {% if current_user.is_authenticated %}
+      <button class="nex-content-card__fav nex-fav-btn {{ 'is-active' if item.is_favorite else '' }}"
+              data-id="{{ item.id }}"
+              data-type="{{ type }}"
+              aria-label="{{ 'Quitar de favoritos' if item.is_favorite else 'AÃ±adir a favoritos' }}"
+              title="{{ 'Quitar de favoritos' if item.is_favorite else 'AÃ±adir a favoritos' }}"
+              onclick="event.preventDefault(); NexFavorites.toggle(this)">
+        {{ 'â¤' if item.is_favorite else 'â™¡' }}
+      </button>
+    {% endif %}
+  </div>
+
+  {# â”€â”€ Info â”€â”€ #}
+  {% if show_info %}
+  <div class="nex-content-card__info">
+    <span class="nex-content-card__title" title="{{ item.title }}">{{ item.title }}</span>
+    <div class="nex-content-card__meta">
+      {% if item.year %}
+        <span>{{ item.year }}</span>
+      {% endif %}
+      {% if item.year and (item.season_count or item.duration) %}
+        <span class="nex-content-card__meta-dot"></span>
+      {% endif %}
+      {% if type == 'series' and item.season_count %}
+        <span>{{ item.season_count }} temp.</span>
+      {% elif type == 'movie' and item.duration %}
+        <span>{{ item.duration }} min</span>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+</a>
+{% endmacro %}

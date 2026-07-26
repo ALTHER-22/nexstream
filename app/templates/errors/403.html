@@ -1,0 +1,19 @@
+{# Error 403 #}
+{% extends "base.html" %}
+{% block title %}403 — Acceso prohibido | {{ platform_name }}{% endblock %}
+{% block content %}
+<div class="nex-error-page">
+  <div class="nex-error-page__code">403</div>
+  <h1 class="nex-error-page__title">Acceso prohibido</h1>
+  <p class="nex-error-page__msg">No tienes permiso para acceder a esta sección.</p>
+  <a href="{{ url_for('main.index') }}" class="nex-btn nex-btn--primary nex-btn--lg">← Volver al inicio</a>
+</div>
+{% endblock %}
+{% block styles %}<style>
+.nex-error-page{display:flex;flex-direction:column;align-items:center;justify-content:center;
+min-height:70vh;text-align:center;padding:3rem 1.5rem;}
+.nex-error-page__code{font-size:clamp(6rem,20vw,12rem);font-weight:900;font-family:var(--font-display);
+color:var(--color-primary);line-height:1;letter-spacing:-0.05em;opacity:0.15;}
+.nex-error-page__title{font-size:2rem;font-weight:700;margin:-2rem 0 1rem;}
+.nex-error-page__msg{color:var(--color-text-muted);margin-bottom:2rem;}
+</style>{% endblock %}

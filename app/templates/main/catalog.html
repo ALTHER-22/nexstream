@@ -1,0 +1,191 @@
+﻿{# =============================================================================
+   NEXSTREAM â€” CatÃ¡logo con Filtros
+   ============================================================================= #}
+
+{% extends "base.html" %}
+{% from 'macros/content_card.html' import content_card with context %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block body_class %}page-catalog{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/catalog.css') }}">
+{% endblock %}
+
+{% block content %}
+
+{# â”€â”€ Cabecera del catÃ¡logo â”€â”€ #}
+<header class="nex-catalog-header">
+  <div class="nex-container">
+    <div class="nex-breadcrumb">
+      <a href="{{ url_for('main.index') }}">Inicio</a>
+      <span class="nex-breadcrumb__sep">â€º</span>
+      <span class="nex-breadcrumb__current">
+        {% if active_cat %}{{ active_cat.name }}
+        {% elif tipo == 'series' %}Series
+        {% elif tipo == 'movies' %}PelÃ­culas
+        {% else %}CatÃ¡logo completo
+        {% endif %}
+      </span>
+    </div>
+
+    <h1 class="nex-catalog-title">
+      {% if q %}Resultados para "{{ q }}"
+      {% elif active_cat %}{{ active_cat.name }}
+      {% elif tipo == 'series' %}Series
+      {% elif tipo == 'movies' %}PelÃ­culas
+      {% else %}CatÃ¡logo
+      {% endif %}
+    </h1>
+    {% if pagination %}
+      <p style="color:var(--color-text-muted); font-size:0.9375rem;">
+        {{ pagination.total }} tÃ­tulos disponibles
+      </p>
+    {% endif %}
+  </div>
+</header>
+
+<div class="nex-container">
+
+  {# â”€â”€ Filtros â”€â”€ #}
+  <form method="GET" action="{{ url_for('main.catalog') }}" id="filterForm">
+
+    <div class="nex-filters-bar">
+
+      {# Tipo #}
+      <div role="group" aria-label="Tipo de contenido" style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+        <a href="{{ url_for('main.catalog', tipo='all', categoria=active_cat.slug if active_cat else '', orden=orden, anio=year) }}"
+           class="nex-filter-chip {{ 'active' if tipo == 'all' else '' }}">Todo</a>
+        <a href="{{ url_for('main.catalog', tipo='series', categoria=active_cat.slug if active_cat else '', orden=orden, anio=year) }}"
+           class="nex-filter-chip {{ 'active' if tipo == 'series' else '' }}">Series</a>
+        <a href="{{ url_for('main.catalog', tipo='movies', categoria=active_cat.slug if active_cat else '', orden=orden, anio=year) }}"
+           class="nex-filter-chip {{ 'active' if tipo == 'movies' else '' }}">PelÃ­culas</a>
+      </div>
+
+      {# Separador #}
+      <div style="width:1px;height:28px;background:var(--color-border);"></div>
+
+      {# CategorÃ­a #}
+      <select name="categoria" class="nex-filter-select"
+              onchange="this.form.submit()" aria-label="Filtrar por categorÃ­a">
+        <option value="">Todas las categorÃ­as</option>
+        {% for cat in categories %}
+          <option value="{{ cat.slug }}" {{ 'selected' if active_cat and active_cat.id == cat.id else '' }}>
+            {{ cat.name }}
+          </option>
+        {% endfor %}
+      </select>
+
+      {# AÃ±o #}
+      <select name="anio" class="nex-filter-select"
+              onchange="this.form.submit()" aria-label="Filtrar por aÃ±o">
+        <option value="">Todos los aÃ±os</option>
+        {% for y in available_years %}
+          <option value="{{ y }}" {{ 'selected' if year == y|string else '' }}>{{ y }}</option>
+        {% endfor %}
+      </select>
+
+      {# Orden #}
+      <select name="orden" class="nex-filter-select"
+              onchange="this.form.submit()" aria-label="Ordenar por">
+        <option value="reciente" {{ 'selected' if orden == 'reciente' else '' }}>MÃ¡s recientes</option>
+        <option value="rating"   {{ 'selected' if orden == 'rating'   else '' }}>Mejor valorados</option>
+        <option value="titulo"   {{ 'selected' if orden == 'titulo'   else '' }}>Aâ€“Z</option>
+        <option value="anio"     {{ 'selected' if orden == 'anio'     else '' }}>AÃ±o</option>
+      </select>
+
+      {# Mantener tipo y categoria en el form #}
+      <input type="hidden" name="tipo"      value="{{ tipo }}">
+      <input type="hidden" name="q"         value="{{ q }}">
+
+      {# Limpiar filtros #}
+      {% if tipo != 'all' or active_cat or year or q %}
+        <a href="{{ url_for('main.catalog') }}"
+           class="nex-filter-chip"
+           style="border-color:var(--color-primary);color:var(--color-primary);">
+          âœ• Limpiar
+        </a>
+      {% endif %}
+
+      {% if pagination %}
+        <span class="nex-filter-count">{{ pagination.total }} resultados</span>
+      {% endif %}
+    </div>
+
+  </form>
+
+  {# â”€â”€ Grid de contenido â”€â”€ #}
+  {% set all_items = series_items + movies_items %}
+
+  {% if all_items %}
+    <div class="nex-content-grid" id="catalogGrid">
+      {% for item in series_items %}
+        {{ content_card(item, type='series') }}
+      {% endfor %}
+      {% for item in movies_items %}
+        {{ content_card(item, type='movie') }}
+      {% endfor %}
+    </div>
+
+    {# â”€â”€ PaginaciÃ³n â”€â”€ #}
+    {% if pagination and pagination.pages > 1 %}
+      <nav class="nex-pagination" aria-label="PaginaciÃ³n">
+
+        {# Anterior #}
+        {% if pagination.has_prev %}
+          <a href="{{ url_for('main.catalog', page=pagination.prev_num, tipo=tipo,
+                     categoria=active_cat.slug if active_cat else '', orden=orden, anio=year, q=q) }}"
+             class="nex-page-btn" aria-label="PÃ¡gina anterior">â€¹</a>
+        {% else %}
+          <button class="nex-page-btn" disabled aria-label="PÃ¡gina anterior">â€¹</button>
+        {% endif %}
+
+        {# NÃºmeros de pÃ¡gina #}
+        {% for page_num in pagination.iter_pages() %}
+          {% if page_num %}
+            {% if page_num == pagination.page %}
+              <button class="nex-page-btn active" aria-current="page">{{ page_num }}</button>
+            {% else %}
+              <a href="{{ url_for('main.catalog', page=page_num, tipo=tipo,
+                         categoria=active_cat.slug if active_cat else '', orden=orden, anio=year, q=q) }}"
+                 class="nex-page-btn">{{ page_num }}</a>
+            {% endif %}
+          {% else %}
+            <span class="nex-page-ellipsis">Â·Â·Â·</span>
+          {% endif %}
+        {% endfor %}
+
+        {# Siguiente #}
+        {% if pagination.has_next %}
+          <a href="{{ url_for('main.catalog', page=pagination.next_num, tipo=tipo,
+                     categoria=active_cat.slug if active_cat else '', orden=orden, anio=year, q=q) }}"
+             class="nex-page-btn" aria-label="PÃ¡gina siguiente">â€º</a>
+        {% else %}
+          <button class="nex-page-btn" disabled aria-label="PÃ¡gina siguiente">â€º</button>
+        {% endif %}
+
+      </nav>
+    {% endif %}
+
+  {% else %}
+    {# Estado vacÃ­o #}
+    <div class="nex-empty-state">
+      <span class="nex-empty-state__icon">ðŸ”</span>
+      <h2 class="nex-empty-state__title">
+        {% if q %}Sin resultados para "{{ q }}"{% else %}Sin contenido{% endif %}
+      </h2>
+      <p class="nex-empty-state__desc">
+        {% if q %}
+          Prueba con otras palabras o elimina algunos filtros.
+        {% else %}
+          No hay contenido disponible con los filtros seleccionados.
+        {% endif %}
+      </p>
+      <a href="{{ url_for('main.catalog') }}" class="nex-btn nex-btn--primary nex-btn--lg">
+        Ver todo el catÃ¡logo
+      </a>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

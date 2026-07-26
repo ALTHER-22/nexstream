@@ -1,0 +1,466 @@
+/* =============================================================================
+   NEXSTREAM — CSS de Componentes (complemento de nexstream.css)
+   =============================================================================
+   Archivo: app/static/css/components.css
+   Descripción: Estilos de componentes específicos que complementan el
+                design system principal. Se importa después de nexstream.css.
+   ============================================================================= */
+
+/* ─── NAVBAR MOBILE ─────────────────────────────────────────────────────────── */
+
+/* Hamburger button */
+.nex-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 28px;
+  height: 20px;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: var(--z-fixed);
+}
+
+.nex-hamburger span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: var(--color-text-secondary);
+  border-radius: var(--radius-full);
+  transition: all var(--transition-base);
+  transform-origin: center;
+}
+
+.nex-hamburger.open span:nth-child(1) {
+  transform: translateY(9px) rotate(45deg);
+}
+.nex-hamburger.open span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.nex-hamburger.open span:nth-child(3) {
+  transform: translateY(-9px) rotate(-45deg);
+}
+
+@media (max-width: 992px) {
+  .nex-hamburger { display: flex; }
+}
+
+/* Menú mobile */
+.nex-mobile-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: min(320px, 85vw);
+  height: 100vh;
+  background: var(--color-surface-2);
+  border-right: 1px solid var(--color-border);
+  z-index: var(--z-modal);
+  transform: translateX(-100%);
+  transition: transform var(--transition-slow) cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.nex-mobile-menu.open {
+  transform: translateX(0);
+  box-shadow: var(--shadow-xl);
+}
+
+.nex-mobile-menu__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  background: var(--color-surface-2);
+  z-index: 1;
+}
+
+.nex-mobile-menu__close {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: var(--color-surface-3);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.nex-mobile-menu__close:hover {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+}
+
+.nex-mobile-menu__nav {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.nex-mobile-menu__link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  transition: all var(--transition-fast);
+}
+
+.nex-mobile-menu__link:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-text-primary);
+}
+
+/* ─── GLOBAL OVERLAY ────────────────────────────────────────────────────────── */
+
+.nex-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: var(--z-overlay);
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-base);
+}
+
+.nex-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ─── SEARCH OVERLAY ────────────────────────────────────────────────────────── */
+
+.nex-search-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 10vh;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-base);
+}
+
+.nex-search-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.nex-search-overlay__inner {
+  width: 100%;
+  max-width: 700px;
+  padding-inline: 1rem;
+  animation: fadeInDown 0.3s ease;
+}
+
+.nex-search-overlay__header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.nex-search-overlay__input-wrap {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.nex-search-overlay__icon {
+  position: absolute;
+  left: 1rem;
+  color: var(--color-text-muted);
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.nex-search-overlay__input {
+  width: 100%;
+  padding: 1rem 3rem 1rem 3.25rem;
+  background: var(--color-surface-3);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  color: var(--color-text-primary);
+  font-size: 1.125rem;
+  font-family: var(--font-primary);
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.nex-search-overlay__input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.12);
+}
+
+.nex-search-overlay__input::placeholder {
+  color: var(--color-text-disabled);
+}
+
+.nex-search-overlay__clear {
+  position: absolute;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.25rem;
+  transition: color var(--transition-fast);
+}
+
+.nex-search-overlay__clear:hover { color: var(--color-text-primary); }
+
+.nex-search-overlay__close {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  padding: 0.5rem;
+  transition: color var(--transition-fast);
+}
+
+.nex-search-overlay__close:hover { color: var(--color-text-primary); }
+
+.nex-search-overlay__results {
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  max-height: 60vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.nex-search-overlay__hint {
+  padding: 2rem;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+.nex-search-overlay__count {
+  padding: 0.75rem 1.25rem;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.nex-search-overlay__section-title {
+  padding: 0.75rem 1.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.nex-search-overlay__list {
+  padding: 0.5rem;
+}
+
+.nex-search-overlay__empty {
+  padding: 2.5rem;
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+/* Ítem de resultado */
+.nex-search-result-item {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.625rem 0.75rem;
+  border-radius: var(--radius-md);
+  transition: background var(--transition-fast);
+  cursor: pointer;
+}
+
+.nex-search-result-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.nex-search-result-item__img {
+  width: 40px;
+  height: 60px;
+  border-radius: 4px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--color-surface-3);
+}
+
+.nex-search-result-item__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.nex-search-result-item__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.nex-search-result-item__title {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nex-search-result-item__meta {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-top: 0.2rem;
+}
+
+/* ─── FLASH MESSAGES ────────────────────────────────────────────────────────── */
+
+.nex-flash-container {
+  position: fixed;
+  top: calc(var(--navbar-height) + 1rem);
+  right: 1.5rem;
+  z-index: var(--z-toast);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  pointer-events: none;
+  max-width: 400px;
+}
+
+.nex-flash-container .nex-toast {
+  pointer-events: all;
+}
+
+.nex-toast__icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.nex-toast__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.nex-toast__message {
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.nex-toast__close {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-size: 0.875rem;
+  padding: 0.25rem;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  transition: color var(--transition-fast), background var(--transition-fast);
+  line-height: 1;
+}
+
+.nex-toast__close:hover {
+  color: var(--color-text-primary);
+  background: rgba(255,255,255,0.08);
+}
+
+/* ─── BACK TO TOP ───────────────────────────────────────────────────────────── */
+
+.nex-back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  background: var(--color-surface-3);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: var(--z-fixed);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-lg);
+}
+
+.nex-back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.nex-back-to-top:hover {
+  background: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
+/* ─── SEARCH HOTKEY HINT ────────────────────────────────────────────────────── */
+
+.nex-search-hotkey {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.6875rem;
+  color: var(--color-text-disabled);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: var(--font-mono);
+}
+
+/* ─── IMAGEN CARGADA SUAVEMENTE ─────────────────────────────────────────────── */
+
+img {
+  transition: opacity 0.3s ease;
+}
+
+img[data-src] {
+  opacity: 0;
+}
+
+img.loaded {
+  opacity: 1;
+}
+
+/* ─── RESPONSIVE: OCULTAR HOTKEY EN MOBILE ──────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .nex-search-hotkey { display: none; }
+  .nex-back-to-top   { bottom: 1rem; right: 1rem; }
+  .nex-flash-container { right: 1rem; left: 1rem; max-width: unset; }
+}

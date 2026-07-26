@@ -1,0 +1,52 @@
+﻿{# CategorÃ­a + BÃºsqueda templates simples #}
+{% extends "base.html" %}
+{% from 'macros/content_card.html' import content_card with context %}
+{% block title %}{{ title }}{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', filename='css/catalog.css') }}">{% endblock %}
+{% block content %}
+<div class="nex-container" style="padding-top:7rem;padding-bottom:4rem;">
+  <div class="nex-breadcrumb">
+    <a href="{{ url_for('main.index') }}">Inicio</a>
+    <span class="nex-breadcrumb__sep">â€º</span>
+    <span class="nex-breadcrumb__current">{{ category.name }}</span>
+  </div>
+  <h1 style="font-size:2.5rem;font-weight:900;letter-spacing:-0.03em;margin-bottom:0.5rem;">
+    {{ category.name }}
+  </h1>
+  <p style="color:var(--color-text-muted);margin-bottom:2rem;">
+    {{ (series_items|length + movies_items|length) }} tÃ­tulos disponibles
+  </p>
+
+  <div style="display:flex;gap:0.75rem;margin-bottom:2rem;">
+    <a href="?tipo=all"    class="nex-filter-chip {{ 'active' if tipo == 'all'    else '' }}">Todo</a>
+    <a href="?tipo=series" class="nex-filter-chip {{ 'active' if tipo == 'series' else '' }}">Series</a>
+    <a href="?tipo=movies" class="nex-filter-chip {{ 'active' if tipo == 'movies' else '' }}">PelÃ­culas</a>
+  </div>
+
+  {% set show_series = tipo in ('all','series') %}
+  {% set show_movies = tipo in ('all','movies') %}
+
+  {% if show_series and series_items %}
+    <h2 style="font-size:1.25rem;font-weight:700;margin-bottom:1rem;">Series</h2>
+    <div class="nex-content-grid" style="margin-bottom:2.5rem;">
+      {% for item in series_items %}{{ content_card(item, type='series') }}{% endfor %}
+    </div>
+  {% endif %}
+
+  {% if show_movies and movies_items %}
+    <h2 style="font-size:1.25rem;font-weight:700;margin-bottom:1rem;">PelÃ­culas</h2>
+    <div class="nex-content-grid">
+      {% for item in movies_items %}{{ content_card(item, type='movie') }}{% endfor %}
+    </div>
+  {% endif %}
+
+  {% if not series_items and not movies_items %}
+    <div class="nex-empty-state">
+      <span class="nex-empty-state__icon">ðŸ“‚</span>
+      <h2 class="nex-empty-state__title">Sin contenido aÃºn</h2>
+      <p class="nex-empty-state__desc">Esta categorÃ­a no tiene contenido todavÃ­a.</p>
+      <a href="{{ url_for('main.catalog') }}" class="nex-btn nex-btn--primary">Ver catÃ¡logo</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

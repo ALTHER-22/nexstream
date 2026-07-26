@@ -1,0 +1,47 @@
+﻿{# =============================================================================
+   NEXSTREAM â€” Mi Lista (Favoritos)
+   ============================================================================= #}
+
+{% extends "user/layout.html" %}
+{% from 'macros/content_card.html' import content_card with context %}
+
+{% block title %}Mi Lista â€” {{ platform_name }}{% endblock %}
+{% block profile_title %}Mi Lista{% endblock %}
+{% block profile_subtitle %}Series y pelÃ­culas que has guardado para ver despuÃ©s.{% endblock %}
+
+{% block profile_content %}
+{% if pagination.items %}
+  <div class="nex-content-grid">
+    {% for fav in pagination.items %}
+      {% if fav.series %}
+        {{ content_card(fav.series, type='series') }}
+      {% elif fav.movie %}
+        {{ content_card(fav.movie, type='movie') }}
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  {# PaginaciÃ³n simple #}
+  {% if pagination.pages > 1 %}
+    <nav class="nex-pagination" style="margin-top:2rem;">
+      {% if pagination.has_prev %}
+        <a href="{{ url_for('user.favorites', page=pagination.prev_num) }}" class="nex-page-btn">â€¹</a>
+      {% endif %}
+      <span style="font-size:0.875rem;color:var(--color-text-muted);padding:0 1rem;">
+        PÃ¡gina {{ pagination.page }} de {{ pagination.pages }}
+      </span>
+      {% if pagination.has_next %}
+        <a href="{{ url_for('user.favorites', page=pagination.next_num) }}" class="nex-page-btn">â€º</a>
+      {% endif %}
+    </nav>
+  {% endif %}
+
+{% else %}
+  <div class="nex-empty-state">
+    <span class="nex-empty-state__icon">â¤</span>
+    <h2 class="nex-empty-state__title">Tu lista estÃ¡ vacÃ­a</h2>
+    <p class="nex-empty-state__desc">AÃ±ade series y pelÃ­culas a favoritos para encontrarlas fÃ¡cilmente aquÃ­.</p>
+    <a href="{{ url_for('main.catalog') }}" class="nex-btn nex-btn--primary">Explorar catÃ¡logo</a>
+  </div>
+{% endif %}
+{% endblock %}

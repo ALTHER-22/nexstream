@@ -1,0 +1,73 @@
+{% extends "admin/layout.html" %}
+
+{% block page_title %}Gestión de Películas{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 1.5rem; display: flex; justify-content: flex-end;">
+  <a href="{{ url_for('admin.create_movie') }}" class="nex-btn nex-btn--primary">
+    + Nueva Película
+  </a>
+</div>
+
+<table class="nex-table">
+  <thead>
+    <tr>
+      <th>Título</th>
+      <th>Año</th>
+      <th>Duración</th>
+      <th>Visibilidad</th>
+      <th>Creado</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for movie in pagination.items %}
+    <tr>
+      <td>
+        <div style="font-weight:600;">{{ movie.title }}</div>
+        <div style="font-size:0.75rem; color:var(--color-text-muted);">/pelicula/{{ movie.slug }}</div>
+      </td>
+      <td>{{ movie.year or '-' }}</td>
+      <td>{{ movie.duration ~ ' min' if movie.duration else '-' }}</td>
+      <td>
+        {% if movie.is_active %}
+          <span class="nex-status-badge active">Publicado</span>
+        {% else %}
+          <span class="nex-status-badge inactive">Oculto</span>
+        {% endif %}
+      </td>
+      <td>{{ movie.created_at.strftime('%d/%m/%Y') }}</td>
+      <td>
+        <div style="display:flex; gap:0.5rem;">
+          <a href="{{ url_for('admin.edit_movie', id=movie.id) }}" class="nex-btn nex-btn--ghost nex-btn--sm">Editar</a>
+          <a href="{{ url_for('main.movie_detail', slug=movie.slug) }}" target="_blank" class="nex-btn nex-btn--secondary nex-btn--sm">Ver</a>
+        </div>
+      </td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="6" style="text-align:center; padding:3rem; color:var(--color-text-muted);">
+        No hay películas registradas.
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{# Paginación #}
+{% if pagination.pages > 1 %}
+<div style="display:flex; justify-content:center; gap:0.5rem; margin-top:2rem;">
+  {% for page_num in pagination.iter_pages() %}
+    {% if page_num %}
+      <a href="{{ url_for('admin.list_movies', page=page_num) }}" 
+         class="nex-btn {% if page_num == pagination.page %}nex-btn--primary{% else %}nex-btn--secondary{% endif %} nex-btn--sm">
+        {{ page_num }}
+      </a>
+    {% else %}
+      <span style="color:var(--color-text-muted);">...</span>
+    {% endif %}
+  {% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,91 @@
+{# =============================================================================
+   NEXSTREAM — Template de Login
+   =============================================================================
+   Archivo: app/templates/auth/login.html
+   ============================================================================= #}
+
+{% extends "auth/auth_base.html" %}
+
+{% block title %}Iniciar sesión — {{ platform_name }}{% endblock %}
+{% block meta_description %}Inicia sesión en NEXSTREAM y accede a miles de series y películas.{% endblock %}
+
+{% block hero_title %}Bienvenido<br>de <span class="text-gradient">vuelta.</span>{% endblock %}
+{% block hero_subtitle %}Tu contenido favorito te está esperando. Inicia sesión y continúa disfrutando.{% endblock %}
+
+{% block auth_content %}
+
+  <h1 class="nex-auth-card__title">Iniciar sesión</h1>
+  <p class="nex-auth-card__subtitle">Accede a tu cuenta de {{ platform_name }}</p>
+
+  <form method="POST" action="{{ url_for('auth.login') }}"
+        id="loginForm" novalidate autocomplete="on">
+
+    {{ form.hidden_tag() }}
+
+    {# ── Identificador (email o usuario) ── #}
+    <div class="nex-auth-field">
+      <label class="nex-auth-label" for="{{ form.identifier.id }}">
+        Email o nombre de usuario
+      </label>
+      <div class="nex-auth-input-wrap">
+        {{ form.identifier(
+             class="nex-auth-input" + (" is-invalid" if form.identifier.errors else ""),
+             autofocus=true
+           ) }}
+      </div>
+      {% if form.identifier.errors %}
+        {% for error in form.identifier.errors %}
+          <p class="nex-auth-field-msg error">{{ error }}</p>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    {# ── Contraseña ── #}
+    <div class="nex-auth-field">
+      <label class="nex-auth-label" for="{{ form.password.id }}">
+        Contraseña
+        <a href="{{ url_for('auth.forgot_password') }}" class="nex-auth-label__link" tabindex="-1">
+          ¿Olvidaste tu contraseña?
+        </a>
+      </label>
+      <div class="nex-auth-input-wrap">
+        {{ form.password(
+             class="nex-auth-input" + (" is-invalid" if form.password.errors else ""),
+             id="loginPassword"
+           ) }}
+        <button type="button" class="nex-auth-toggle-pwd"
+                id="toggleLoginPwd" aria-label="Mostrar contraseña">
+          👁
+        </button>
+      </div>
+      {% if form.password.errors %}
+        {% for error in form.password.errors %}
+          <p class="nex-auth-field-msg error">{{ error }}</p>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    {# ── Recordarme ── #}
+    <label class="nex-auth-checkbox" for="{{ form.remember_me.id }}">
+      {{ form.remember_me() }}
+      <span>Mantener sesión iniciada por 30 días</span>
+    </label>
+
+    {# ── Botón submit ── #}
+    <button type="submit" class="nex-auth-submit" id="loginSubmit">
+      <span class="btn-text">Iniciar sesión</span>
+    </button>
+
+  </form>
+
+  {# ── Registrarse ── #}
+  <p class="nex-auth-footer">
+    ¿Aún no tienes cuenta?
+    <a href="{{ url_for('auth.register') }}">Regístrate gratis</a>
+  </p>
+
+  <p class="nex-auth-security" aria-label="Conexión segura">
+    🔒 Conexión cifrada y segura
+  </p>
+
+{% endblock %}

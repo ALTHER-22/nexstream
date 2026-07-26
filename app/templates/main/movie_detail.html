@@ -1,0 +1,118 @@
+{# Detalle de PelÃ­cula #}
+{% extends "base.html" %}
+{% from 'macros/content_card.html' import content_card with context %}
+{% block title %}{{ movie.title }} â€” {{ platform_name }}{% endblock %}
+{% block meta_description %}{{ movie.synopsis[:160] if movie.synopsis else movie.title }}{% endblock %}
+
+{% block meta_desc %}{{ movie.synopsis[:150] if movie.synopsis else 'Mira ' ~ movie.title ~ ' en NEXSTREAM.' }}{% endblock %}
+{% block og_type %}video.movie{% endblock %}
+{% block og_image %}{{ request.host_url[:-1] }}{{ movie.cover_url }}{% endblock %}
+
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', filename='css/catalog.css') }}">{% endblock %}
+
+{% block content %}
+<section class="nex-detail-hero">
+  <div class="nex-detail-hero__bg">
+    {% if movie.banner_url %}<img src="{{ movie.banner_url }}" alt="{{ movie.title }}" loading="lazy">
+    {% elif movie.cover_url %}<img src="{{ movie.cover_url }}" alt="{{ movie.title }}" loading="lazy">
+    {% else %}<div style="width:100%;height:100%;background:var(--color-surface-2);"></div>{% endif %}
+    <div class="nex-detail-hero__gradient"></div>
+  </div>
+  <div class="nex-container" style="position:relative;z-index:1;width:100%;">
+    <div class="nex-detail-hero__content">
+      <div class="nex-detail-hero__poster">
+        {% if movie.cover_url %}<img src="{{ movie.cover_url }}" alt="{{ movie.title }}" loading="lazy">{% endif %}
+      </div>
+      <div class="nex-detail-hero__info">
+        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.875rem;">
+          <span class="nex-badge nex-badge--hd">PELÃCULA</span>
+          {% for cat in movie.categories[:3] %}
+            <a href="{{ url_for('main.category', slug=cat.slug) }}" class="nex-badge nex-badge--primary" style="font-size:0.75rem;">{{ cat.name }}</a>
+          {% endfor %}
+        </div>
+        <h1 class="nex-detail-hero__title">{{ movie.title }}</h1>
+        {% if movie.original_title and movie.original_title != movie.title %}
+          <p style="color:var(--color-text-muted);font-size:0.9rem;margin-top:-0.5rem;margin-bottom:0.75rem;">{{ movie.original_title }}</p>
+        {% endif %}
+        <div class="nex-detail-hero__meta">
+          {% if movie.year %}<span>{{ movie.year }}</span>{% endif %}
+          {% if movie.duration %}<span>{{ movie.duration }} min</span>{% endif %}
+          {% if movie.rating_avg %}<span>â­ {{ "%.1f"|format(movie.rating_avg|float) }}</span>{% endif %}
+        </div>
+        {% if movie.synopsis %}
+          <p class="nex-detail-hero__synopsis">{{ movie.synopsis }}</p>
+        {% endif %}
+        <div class="nex-detail-hero__actions">
+          {% if movie.video_url %}
+            {% if not current_user.is_authenticated %}
+              <a href="{{ url_for('auth.login') }}" class="nex-btn nex-btn--primary nex-btn--lg">🔑 Iniciar sesión para ver</a>
+            {% elif current_user.is_admin or (current_user.subscription and current_user.subscription.is_active) %}
+              <a href="{{ url_for('main.play_movie', movie_id=movie.id) }}" class="nex-btn nex-btn--primary nex-btn--lg">▶ Reproducir</a>
+            {% else %}
+              <a href="{{ url_for('subscription.plans') }}" class="nex-btn nex-btn--primary nex-btn--lg" style="background:var(--color-primary); color:white;">
+                💳 Ver planes para reproducir
+              </a>
+            {% endif %}
+          {% else %}
+            <button class="nex-btn nex-btn--primary nex-btn--lg" disabled>▶ Próximamente</button>
+          {% endif %}
+          
+          {% if current_user.is_authenticated %}
+            <button class="nex-btn nex-btn--secondary nex-btn--lg nex-fav-btn {{ 'active' if is_favorite else '' }}"
+                    id="mainFavBtn"
+                    data-id="{{ movie.id }}"
+                    data-type="movie"
+                    onclick="NexFavorites.toggle(this)">
+              {{ '❤ En favoritos' if is_favorite else '♡ Añadir a favoritos' }}
+            </button>
+          {% endif %}
+        </div>
+        {% if user_progress and user_progress.progress_percentage > 2 %}
+          <div style="margin-top:1.25rem;">
+            <p style="font-size:0.8125rem;color:var(--color-text-muted);margin-bottom:0.375rem;">
+              Visto: {{ "%.0f"|format(user_progress.progress_percentage) }}%
+            </p>
+            <div style="height:3px;background:var(--color-surface-3);border-radius:4px;overflow:hidden;max-width:300px;">
+              <div style="height:100%;background:var(--color-primary);width:{{ user_progress.progress_percentage }}%;border-radius:4px;"></div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if related %}
+<div class="nex-container" style="padding:3rem 0;">
+  <h2 style="font-size:1.375rem;font-weight:800;margin-bottom:1.25rem;letter-spacing:-0.02em;">
+    También te puede gustar
+  </h2>
+  <div class="nex-slider">
+    <button class="nex-slider__btn nex-slider__btn--prev" aria-label="Anterior">â€¹</button>
+    <div class="nex-slider__track">
+      {% for item in related %}{{ content_card(item, type='movie') }}{% endfor %}
+    </div>
+    <button class="nex-slider__btn nex-slider__btn--next" aria-label="Siguiente">â€º</button>
+  </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+window.NexFavorites = {
+  toggle: async function(btn) {
+    btn.disabled = true;
+    try {
+      const res = await nexFetch('/api/v1/favorites/toggle', {
+        method: 'POST', body: JSON.stringify({ type: btn.dataset.type, id: parseInt(btn.dataset.id) }),
+      });
+      const data = await res.json();
+      btn.innerHTML = data.added ? 'â¤ En favoritos' : 'â™¡ Favoritos';
+      btn.classList.toggle('active', data.added);
+      NexStream.Toast[data.added ? 'success' : 'info'](data.message);
+    } catch(e) { NexStream.Toast.error('Error'); } finally { btn.disabled = false; }
+  }
+};
+</script>
+{% endblock %}

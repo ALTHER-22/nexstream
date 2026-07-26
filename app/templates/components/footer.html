@@ -1,0 +1,78 @@
+{# =============================================================================
+   NEXSTREAM — Componente: Footer
+   ============================================================================= #}
+
+<footer class="nex-footer" role="contentinfo">
+  <div class="nex-container">
+
+    <div class="nex-footer__grid">
+
+      {# ── Columna 1: Logo + Descripción ── #}
+      <div>
+        <a href="{{ url_for('main.index') }}" class="nex-footer__logo">
+          {{ platform_name }}
+        </a>
+        <p class="nex-footer__description">
+          Tu plataforma de entretenimiento premium. Disfruta miles de series y películas
+          en la mejor calidad, cuando quieras y donde quieras.
+        </p>
+        <div class="nex-footer__social" style="margin-top:1.5rem;">
+          <a href="#" class="nex-footer__social-link" aria-label="Twitter/X">𝕏</a>
+          <a href="#" class="nex-footer__social-link" aria-label="Instagram">📸</a>
+          <a href="#" class="nex-footer__social-link" aria-label="Facebook">f</a>
+          <a href="#" class="nex-footer__social-link" aria-label="YouTube">▶</a>
+        </div>
+      </div>
+
+      {# ── Columna 2: Explorar ── #}
+      <div>
+        <h3 class="nex-footer__heading">Explorar</h3>
+        <ul class="nex-footer__links">
+          <li><a href="#" class="nex-footer__link">Series</a></li>
+          <li><a href="#" class="nex-footer__link">Películas</a></li>
+          <li><a href="#" class="nex-footer__link">Tendencias</a></li>
+          <li><a href="#" class="nex-footer__link">Más valoradas</a></li>
+          <li><a href="#" class="nex-footer__link">Nuevos lanzamientos</a></li>
+        </ul>
+      </div>
+
+      {# ── Columna 3: Cuenta ── #}
+      <div>
+        <h3 class="nex-footer__heading">Mi Cuenta</h3>
+        <ul class="nex-footer__links">
+          {% if current_user.is_authenticated %}
+            <li><a href="#" class="nex-footer__link">Mi Perfil</a></li>
+            <li><a href="#" class="nex-footer__link">Favoritos</a></li>
+            <li><a href="#" class="nex-footer__link">Historial</a></li>
+            <li><a href="#" class="nex-footer__link">Configuración</a></li>
+          {% else %}
+            <li><a href="{{ url_for('auth.login') }}"    class="nex-footer__link">Iniciar Sesión</a></li>
+            <li><a href="{{ url_for('auth.register') }}" class="nex-footer__link">Crear Cuenta</a></li>
+          {% endif %}
+        </ul>
+      </div>
+
+      {# ── Columna 4: Soporte ── #}
+      <div>
+        <h3 class="nex-footer__heading">Soporte</h3>
+        <ul class="nex-footer__links">
+          <li><a href="#" class="nex-footer__link">Centro de ayuda</a></li>
+          <li><a href="#" class="nex-footer__link">Contacto</a></li>
+          <li><a href="#" class="nex-footer__link">Privacidad</a></li>
+          <li><a href="#" class="nex-footer__link">Términos de uso</a></li>
+          <li><a href="#" class="nex-footer__link">Cookies</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    {# ── Bottom Bar ── #}
+    <div class="nex-footer__bottom">
+      <span>© {{ current_year }} {{ platform_name }}. Todos los derechos reservados.</span>
+      <span style="color:var(--color-text-disabled);">
+        Hecho con ❤️ · v{{ platform_version }}
+      </span>
+    </div>
+
+  </div>
+</footer>

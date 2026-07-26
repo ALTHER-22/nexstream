@@ -1,0 +1,110 @@
+{% extends "admin/layout.html" %}
+
+{% block page_title %}Dashboard General{% endblock %}
+
+{% block styles %}
+<style>
+  .nex-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .nex-stat-card {
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+  .nex-stat-label {
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  .nex-stat-value {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--color-text-primary);
+  }
+  
+  .nex-activity-list {
+    background: var(--color-surface-2);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+  }
+  .nex-activity-item {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .nex-activity-item:last-child {
+    border-bottom: none;
+  }
+  .nex-activity-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(229,9,20,0.1);
+    color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="nex-stat-grid">
+  <div class="nex-stat-card">
+    <span class="nex-stat-label">Usuarios</span>
+    <span class="nex-stat-value">{{ stats.total_users }}</span>
+  </div>
+  <div class="nex-stat-card">
+    <span class="nex-stat-label">Series Activas</span>
+    <span class="nex-stat-value">{{ stats.total_series }}</span>
+  </div>
+  <div class="nex-stat-card">
+    <span class="nex-stat-label">Películas</span>
+    <span class="nex-stat-value">{{ stats.total_movies }}</span>
+  </div>
+  <div class="nex-stat-card" style="border-color:var(--color-primary);">
+    <span class="nex-stat-label" style="color:var(--color-primary);">Suscriptores Activos</span>
+    <span class="nex-stat-value">{{ stats.active_subscriptions }}</span>
+  </div>
+</div>
+
+<h2 style="font-size:1.25rem; margin-bottom:1rem;">Actividad Reciente</h2>
+<div class="nex-activity-list">
+  {% for log in recent_activity %}
+  <div class="nex-activity-item">
+    <div class="nex-activity-icon">
+      {% if 'login' in log.action_type %}👤
+      {% elif 'subscription' in log.action_type %}💳
+      {% elif 'watch' in log.action_type %}▶️
+      {% else %}ℹ️{% endif %}
+    </div>
+    <div style="flex:1;">
+      <p style="margin:0; font-weight:600;">{{ log.description }}</p>
+      <p style="margin:0; font-size:0.875rem; color:var(--color-text-secondary);">
+        {% if log.user %}Usuario: {{ log.user.username }}{% else %}Sistema{% endif %}
+      </p>
+    </div>
+    <div style="color:var(--color-text-muted); font-size:0.875rem;">
+      {{ log.created_at.strftime('%d/%m/%Y %H:%M') }}
+    </div>
+  </div>
+  {% else %}
+  <div class="nex-activity-item" style="justify-content:center; color:var(--color-text-muted);">
+    No hay actividad reciente registrada.
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,339 @@
+{# =============================================================================
+   NEXSTREAM — Homepage (Módulo 3: Completa con Hero + Sliders + Categorías)
+   =============================================================================
+   Archivo: app/templates/main/index.html
+   ============================================================================= #}
+
+{% extends "base.html" %}
+{% from 'macros/content_card.html' import content_card with context %}
+
+{% block title %}{{ platform_name }} — {{ platform_tagline }}{% endblock %}
+{% block body_class %}page-home{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/catalog.css') }}">
+{% endblock %}
+
+{% block content %}
+
+{# ═══════════════════════════════════════════════════════════════════════════════
+   HERO SECTION
+═══════════════════════════════════════════════════════════════════════════════ #}
+
+{% if hero_banners %}
+  {# Hero con contenido real de la BD #}
+  <section class="nex-hero" id="heroSection" aria-label="Contenido destacado"
+           data-autoplay="true" data-interval="7000">
+
+    {% for banner in hero_banners %}
+    <div class="nex-hero__slide {% if loop.first %}active{% endif %}"
+         data-index="{{ loop.index0 }}"
+         style="{{ 'display:none;' if not loop.first else '' }}">
+
+      <div class="nex-hero__bg">
+        {% if banner.image_url %}
+          <img class="nex-hero__bg-img" src="{{ banner.image_url }}" alt="{{ banner.title }}" loading="lazy">
+        {% endif %}
+        <div class="nex-hero__gradient"></div>
+      </div>
+
+      <div class="nex-container" style="position:relative;z-index:1;width:100%;">
+        <div class="nex-hero__content animate-fade-in-up">
+          <div class="nex-hero__badge">
+            <span class="nex-badge nex-badge--primary">
+              {% if banner.content_type == 'series' %}📺 Serie{% else %}🎬 Película{% endif %}
+            </span>
+          </div>
+          <h1 class="nex-hero__title">{{ banner.title }}</h1>
+          <div class="nex-hero__meta">
+            {% if banner.year %}<span>{{ banner.year }}</span><span>•</span>{% endif %}
+            {% if banner.rating %}<span>⭐ {{ "%.1f"|format(banner.rating|float) }}</span><span>•</span>{% endif %}
+            {% if banner.categories %}<span>{{ banner.categories }}</span>{% endif %}
+          </div>
+          {% if banner.description %}
+            <p class="nex-hero__synopsis">{{ banner.description }}</p>
+          {% endif %}
+          <div class="nex-hero__actions">
+            <a href="{{ banner.url or '#' }}" class="nex-btn nex-btn--primary nex-btn--lg">
+              ▶ Ver ahora
+            </a>
+            <button class="nex-btn nex-btn--secondary nex-btn--lg"
+                    onclick="NexStream.Toast.info('Añadido a Mi Lista')">
+              + Mi Lista
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+    {# Indicadores del carousel #}
+    {% if hero_banners|length > 1 %}
+      <div class="nex-hero__indicators" aria-label="Diapositivas">
+        {% for banner in hero_banners %}
+          <button class="nex-hero__dot {% if loop.first %}active{% endif %}"
+                  data-index="{{ loop.index0 }}"
+                  aria-label="Diapositiva {{ loop.index }}"></button>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </section>
+
+{% else %}
+  {# Hero placeholder si no hay banners configurados #}
+  <section class="nex-hero-placeholder" aria-label="Bienvenida">
+    <div class="nex-hero-placeholder__bg"></div>
+    <div class="nex-hero-placeholder__overlay"></div>
+    <div class="nex-hero-placeholder__content nex-container">
+      <div class="animate-fade-in-up">
+        <div class="nex-badge" style="margin-bottom:1.5rem;display:inline-flex;">
+          <span>✦</span> NEXSTREAM 2.0
+        </div>
+        <h1 class="nex-hero-placeholder__title">
+          Tu universo de<br>
+          <span class="text-gradient">entretenimiento.</span>
+        </h1>
+        <p class="nex-hero-placeholder__subtitle animate-fade-in-up delay-200">
+          Miles de series y películas te esperan. Comienza explorando el catálogo.
+        </p>
+        <div class="d-flex gap-4 flex-wrap animate-fade-in-up delay-300" style="margin-top:2.5rem;">
+          <a href="{{ url_for('main.catalog') }}" class="nex-btn nex-btn--primary nex-btn--xl">
+            ▶ Explorar catálogo
+          </a>
+          {% if not current_user.is_authenticated %}
+            <a href="{{ url_for('auth.register') }}" class="nex-btn nex-btn--secondary nex-btn--xl">
+              ✨ Crear cuenta gratis
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="nex-hero-placeholder__scroll-indicator" aria-hidden="true">
+      <div class="nex-hero-placeholder__scroll-dot"></div>
+    </div>
+  </section>
+{% endif %}
+
+{# ─── CONTENIDO PRINCIPAL ──────────────────────────────────────────────────── #}
+<div class="nex-container" style="padding-top:3rem; padding-bottom:4rem;">
+
+  {# Continuar viendo (solo si hay historial) #}
+  {% if continue_watching %}
+  <section class="nex-catalog-section" id="continue" aria-label="Continuar viendo">
+    <div class="nex-catalog-section__header reveal">
+      <h2 class="nex-catalog-section__title">
+        ▶ Continuar viendo
+        <span class="nex-catalog-section__count">{{ continue_watching|length }}</span>
+      </h2>
+    </div>
+    <div class="nex-slider">
+      <button class="nex-slider__btn nex-slider__btn--prev" aria-label="Anterior">‹</button>
+      <div class="nex-slider__track">
+        {% for history in continue_watching %}
+          {% if history.series %}
+            {{ content_card(history.series, type='series') }}
+          {% elif history.movie %}
+            {{ content_card(history.movie, type='movie') }}
+          {% endif %}
+        {% endfor %}
+      </div>
+      <button class="nex-slider__btn nex-slider__btn--next" aria-label="Siguiente">›</button>
+    </div>
+  </section>
+  {% endif %}
+
+  {# Recomendado para ti (basado en historial) #}
+  {% if recommended_for_you %}
+  <section class="nex-catalog-section" id="recommended" aria-label="Recomendado para ti">
+    <div class="nex-catalog-section__header reveal">
+      <h2 class="nex-catalog-section__title">
+        ✨ Recomendado para ti
+      </h2>
+    </div>
+    <div class="nex-slider">
+      <button class="nex-slider__btn nex-slider__btn--prev" aria-label="Anterior">‹</button>
+      <div class="nex-slider__track">
+        {% for item in recommended_for_you %}
+          {% if item.season_count %} {# Check if it's a series #}
+            {{ content_card(item, type='series') }}
+          {% else %}
+            {{ content_card(item, type='movie') }}
+          {% endif %}
+        {% endfor %}
+      </div>
+      <button class="nex-slider__btn nex-slider__btn--next" aria-label="Siguiente">›</button>
+    </div>
+  </section>
+  {% endif %}
+
+  {# Tendencias — Series #}
+  {% if trending_series %}
+  <section class="nex-catalog-section" id="series" aria-label="Series en tendencia">
+    <div class="nex-catalog-section__header reveal">
+      <h2 class="nex-catalog-section__title">
+        🔥 Series en tendencia
+      </h2>
+      <a href="{{ url_for('main.catalog', tipo='series') }}" class="nex-catalog-section__see-all">
+        Ver todas →
+      </a>
+    </div>
+    <div class="nex-slider">
+      <button class="nex-slider__btn nex-slider__btn--prev" aria-label="Anterior">‹</button>
+      <div class="nex-slider__track">
+        {% for item in trending_series %}
+          {{ content_card(item, type='series') }}
+        {% endfor %}
+      </div>
+      <button class="nex-slider__btn nex-slider__btn--next" aria-label="Siguiente">›</button>
+    </div>
+  </section>
+  {% endif %}
+
+  {# Tendencias — Películas #}
+  {% if trending_movies %}
+  <section class="nex-catalog-section" id="movies" aria-label="Películas en tendencia">
+    <div class="nex-catalog-section__header reveal">
+      <h2 class="nex-catalog-section__title">
+        🎬 Películas destacadas
+      </h2>
+      <a href="{{ url_for('main.catalog', tipo='movies') }}" class="nex-catalog-section__see-all">
+        Ver todas →
+      </a>
+    </div>
+    <div class="nex-slider">
+      <button class="nex-slider__btn nex-slider__btn--prev" aria-label="Anterior">‹</button>
+      <div class="nex-slider__track">
+        {% for item in trending_movies %}
+          {{ content_card(item, type='movie') }}
+        {% endfor %}
+      </div>
+      <button class="nex-slider__btn nex-slider__btn--next" aria-label="Siguiente">›</button>
+    </div>
+  </section>
+  {% endif %}
+
+  {# Sliders por categoría #}
+  {% for slider in category_sliders %}
+  <section class="nex-catalog-section" aria-label="Categoría: {{ slider.category.name }}">
+    <div class="nex-catalog-section__header reveal">
+      <h2 class="nex-catalog-section__title">
+        {% if slider.category.icon %}{{ slider.category.icon }} {% endif %}
+        {{ slider.category.name }}
+      </h2>
+      <a href="{{ url_for('main.category', slug=slider.category.slug) }}" class="nex-catalog-section__see-all">
+        Ver todo →
+      </a>
+    </div>
+    <div class="nex-slider">
+      <button class="nex-slider__btn nex-slider__btn--prev" aria-label="Anterior">‹</button>
+      <div class="nex-slider__track">
+        {% for item in slider['items'] %}
+          {% if item.__class__.__name__ == 'Series' %}
+            {{ content_card(item, type='series') }}
+          {% else %}
+            {{ content_card(item, type='movie') }}
+          {% endif %}
+        {% endfor %}
+      </div>
+      <button class="nex-slider__btn nex-slider__btn--next" aria-label="Siguiente">›</button>
+    </div>
+  </section>
+  {% endfor %}
+
+  {# Estado vacío si no hay contenido #}
+  {% if not trending_series and not trending_movies and not category_sliders %}
+  <div class="nex-empty-state reveal">
+    <span class="nex-empty-state__icon">🎬</span>
+    <h2 class="nex-empty-state__title">El catálogo está vacío</h2>
+    <p class="nex-empty-state__desc">
+      Aún no hay contenido publicado. Si eres administrador,
+      <a href="{{ url_for('admin.dashboard') }}" style="color:var(--color-primary);">ve al panel admin</a>
+      para añadir series y películas.
+    </p>
+    {% if current_user.is_admin %}
+      <a href="{{ url_for('admin.dashboard') }}" class="nex-btn nex-btn--primary nex-btn--lg">
+        ⚙️ Ir al Panel Admin
+      </a>
+    {% endif %}
+  </div>
+  {% endif %}
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+// ── Hero Carousel ──────────────────────────────────────────────────────────────
+(function() {
+  const section = document.getElementById('heroSection');
+  if (!section) return;
+
+  const slides    = section.querySelectorAll('.nex-hero__slide');
+  const dots      = section.querySelectorAll('.nex-hero__dot');
+  const interval  = parseInt(section.dataset.interval) || 7000;
+  let current     = 0;
+  let autoplay    = null;
+
+  const goTo = (index) => {
+    slides[current].style.display = 'none';
+    slides[current].classList.remove('active');
+    dots[current]?.classList.remove('active');
+
+    current = (index + slides.length) % slides.length;
+
+    slides[current].style.display = 'block';
+    slides[current].classList.add('active');
+    dots[current]?.classList.add('active');
+  };
+
+  const startAutoplay = () => {
+    autoplay = setInterval(() => goTo(current + 1), interval);
+  };
+
+  const stopAutoplay = () => clearInterval(autoplay);
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => { stopAutoplay(); goTo(i); startAutoplay(); });
+  });
+
+  section.addEventListener('mouseenter', stopAutoplay);
+  section.addEventListener('mouseleave', startAutoplay);
+
+  if (slides.length > 1) startAutoplay();
+})();
+
+// ── Favoritos ─────────────────────────────────────────────────────────────────
+window.NexFavorites = {
+  toggle: async function(btn) {
+    btn.disabled = true;
+    const id   = btn.dataset.id;
+    const type = btn.dataset.type;
+
+    try {
+      const res  = await nexFetch('/api/v1/favorites/toggle', {
+        method: 'POST',
+        body: JSON.stringify({ type, id: parseInt(id) }),
+      });
+      const data = await res.json();
+
+      if (data.added) {
+        btn.innerHTML = '❤';
+        btn.classList.add('is-active');
+        btn.title = 'Quitar de favoritos';
+        NexStream.Toast.success('Añadido a favoritos');
+      } else {
+        btn.innerHTML = '♡';
+        btn.classList.remove('is-active');
+        btn.title = 'Añadir a favoritos';
+        NexStream.Toast.info('Eliminado de favoritos');
+      }
+    } catch(e) {
+      NexStream.Toast.error('Error al actualizar favoritos');
+    } finally {
+      btn.disabled = false;
+    }
+  }
+};
+</script>
+{% endblock %}

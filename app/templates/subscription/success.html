@@ -1,0 +1,40 @@
+{# =============================================================================
+   NEXSTREAM — Pago Exitoso
+   ============================================================================= #}
+
+{% extends "base.html" %}
+
+{% block title %}Suscripción Activada — {{ platform_name }}{% endblock %}
+
+{% block content %}
+<div class="nex-container" style="padding: 8rem 0; text-align: center;">
+  
+  <div class="animate-fade-in-up">
+    <div style="width: 100px; height: 100px; background: var(--color-primary); 
+                border-radius: 50%; display: flex; align-items: center; justify-content: center;
+                margin: 0 auto 2rem; box-shadow: 0 10px 30px rgba(229,9,20,0.4);">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+    
+    <h1 style="font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; margin-bottom: 1rem; letter-spacing: -0.02em;">
+      ¡Bienvenido a la familia {{ platform_name }}!
+    </h1>
+    
+    <p style="font-size: 1.25rem; color: var(--color-text-secondary); max-width: 600px; margin: 0 auto 3rem; line-height: 1.6;">
+      Tu pago ha sido procesado con éxito y tu suscripción está activa. Ya tienes acceso ilimitado a todo el catálogo.
+    </p>
+    
+    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+      <a href="{{ url_for('main.catalog') }}" class="nex-btn nex-btn--primary nex-btn--xl">
+        ▶ Empezar a ver
+      </a>
+      <a href="{{ url_for('user.settings') }}" class="nex-btn nex-btn--secondary nex-btn--xl">
+        Ir a configuración
+      </a>
+    </div>
+  </div>
+  
+</div>
+{% endblock %}

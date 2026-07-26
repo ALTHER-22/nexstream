@@ -1,0 +1,937 @@
+/* =============================================================================
+   NEXSTREAM — CSS de Catálogo y Páginas de Contenido
+   =============================================================================
+   Archivo: app/static/css/catalog.css
+   ============================================================================= */
+
+/* ─── CONTENT CARD ───────────────────────────────────────────────────────────── */
+
+.nex-content-card {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-surface-2);
+  cursor: pointer;
+  transition: transform var(--transition-spring), box-shadow var(--transition-base);
+  display: block;
+}
+
+.nex-content-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(229,9,20,0.2);
+  z-index: 2;
+}
+
+/* Imagen de portada */
+.nex-content-card__cover {
+  position: relative;
+  aspect-ratio: 2/3;
+  overflow: hidden;
+  background: var(--color-surface-3);
+}
+
+.nex-content-card__cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.nex-content-card:hover .nex-content-card__cover img {
+  transform: scale(1.08);
+}
+
+/* Overlay gradiente sobre la imagen */
+.nex-content-card__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.9) 0%,
+    rgba(0,0,0,0.4) 40%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity var(--transition-base);
+  display: flex;
+  align-items: flex-end;
+  padding: 1rem;
+}
+
+.nex-content-card:hover .nex-content-card__overlay { opacity: 1; }
+
+/* Botón de play en el hover */
+.nex-content-card__play {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1rem;
+  box-shadow: 0 4px 16px rgba(229,9,20,0.5);
+  transition: transform var(--transition-spring), box-shadow var(--transition-base);
+  flex-shrink: 0;
+}
+
+.nex-content-card:hover .nex-content-card__play {
+  transform: scale(1.1);
+}
+
+/* Botón de favorito (esquina superior derecha) */
+.nex-content-card__fav {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  z-index: 2;
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.nex-content-card:hover .nex-content-card__fav,
+.nex-content-card__fav.is-active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.nex-content-card__fav.is-active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+/* Badge (NEW, HD, 4K, etc.) */
+.nex-content-card__badge {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 2;
+}
+
+/* Rating badge flotante */
+.nex-content-card__rating {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(4px);
+  border-radius: var(--radius-sm);
+  padding: 2px 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #f5a623;
+  z-index: 2;
+}
+
+/* Info bajo la imagen */
+.nex-content-card__info {
+  padding: 0.75rem 0.5rem 0.5rem;
+}
+
+.nex-content-card__title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.nex-content-card__meta {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  flex-wrap: wrap;
+}
+
+.nex-content-card__meta-dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--color-text-disabled);
+  flex-shrink: 0;
+}
+
+/* Skeleton de carga para cards */
+.nex-content-card.skeleton {
+  pointer-events: none;
+}
+.nex-content-card.skeleton .nex-content-card__cover {
+  background: var(--color-surface-3);
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+.nex-content-card.skeleton .nex-content-card__title,
+.nex-content-card.skeleton .nex-content-card__meta {
+  background: var(--color-surface-3);
+  border-radius: var(--radius-sm);
+  color: transparent;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+/* ─── GRID DE CONTENIDO ──────────────────────────────────────────────────────── */
+
+.nex-content-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+@media (min-width: 480px) {
+  .nex-content-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+}
+@media (min-width: 768px) {
+  .nex-content-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1.25rem; }
+}
+@media (min-width: 1200px) {
+  .nex-content-grid { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1.5rem; }
+}
+
+/* ─── SLIDER DE CONTENIDO ────────────────────────────────────────────────────── */
+
+.nex-catalog-section {
+  padding: 2.5rem 0;
+}
+
+.nex-catalog-section + .nex-catalog-section {
+  border-top: 1px solid var(--color-border);
+}
+
+.nex-catalog-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  gap: 1rem;
+}
+
+.nex-catalog-section__title {
+  font-size: 1.375rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-text-primary);
+}
+
+.nex-catalog-section__count {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: var(--color-surface-3);
+  border-radius: var(--radius-full);
+  padding: 2px 10px;
+}
+
+.nex-catalog-section__see-all {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  white-space: nowrap;
+  transition: opacity var(--transition-fast);
+}
+.nex-catalog-section__see-all:hover { opacity: 0.8; }
+
+/* Slider horizontal */
+.nex-slider {
+  position: relative;
+}
+
+.nex-slider__track {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-bottom: 0.5rem;
+}
+
+.nex-slider__track::-webkit-scrollbar { display: none; }
+
+.nex-slider__track .nex-content-card {
+  flex: 0 0 150px;
+  scroll-snap-align: start;
+}
+
+@media (min-width: 480px)  { .nex-slider__track .nex-content-card { flex: 0 0 160px; } }
+@media (min-width: 768px)  { .nex-slider__track .nex-content-card { flex: 0 0 175px; } }
+@media (min-width: 1200px) { .nex-slider__track .nex-content-card { flex: 0 0 190px; } }
+
+/* Botones prev/next */
+.nex-slider__btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 64px;
+  border-radius: var(--radius-md);
+  background: rgba(10,10,15,0.85);
+  border: 1px solid rgba(255,255,255,0.1);
+  backdrop-filter: blur(8px);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  z-index: 3;
+  font-size: 1.125rem;
+}
+
+.nex-slider__btn:hover { background: var(--color-primary); border-color: var(--color-primary); }
+.nex-slider__btn--prev { left: -22px; }
+.nex-slider__btn--next { right: -22px; }
+
+/* ─── HERO SECTION ───────────────────────────────────────────────────────────── */
+
+.nex-hero {
+  position: relative;
+  min-height: min(85vh, 700px);
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+
+.nex-hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.nex-hero__bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.nex-hero__gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(10,10,15,0.95) 0%,
+    rgba(10,10,15,0.7) 40%,
+    rgba(10,10,15,0.2) 65%,
+    transparent 100%
+  ),
+  linear-gradient(
+    to top,
+    rgba(10,10,15,1) 0%,
+    rgba(10,10,15,0.5) 30%,
+    transparent 60%
+  );
+}
+
+.nex-hero__content {
+  position: relative;
+  z-index: 1;
+  padding: 3rem 0 4rem;
+  max-width: 580px;
+}
+
+.nex-hero__badge {
+  margin-bottom: 1rem;
+  display: inline-flex;
+}
+
+.nex-hero__title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+}
+
+.nex-hero__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+}
+
+.nex-hero__synopsis {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  line-height: 1.65;
+  margin-bottom: 2rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.5);
+}
+
+.nex-hero__actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Indicadores del carousel */
+.nex-hero__indicators {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  display: flex;
+  gap: 0.5rem;
+  z-index: 2;
+}
+
+.nex-hero__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: rgba(255,255,255,0.3);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  padding: 0;
+}
+
+.nex-hero__dot.active {
+  width: 24px;
+  background: var(--color-primary);
+}
+
+/* ─── PÁGINA DE CATÁLOGO ─────────────────────────────────────────────────────── */
+
+.nex-catalog-header {
+  padding: 7rem 0 2rem;
+  background: linear-gradient(to bottom, var(--color-surface-2), var(--color-bg-base));
+  border-bottom: 1px solid var(--color-border);
+}
+
+.nex-catalog-title {
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.5rem;
+}
+
+/* Barra de filtros */
+.nex-filters-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 2rem;
+}
+
+.nex-filter-select {
+  padding: 0.5rem 2rem 0.5rem 0.875rem;
+  background: var(--color-surface-2);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-full);
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  font-family: var(--font-primary);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b6b8a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.625rem center;
+  outline: none;
+  transition: all var(--transition-fast);
+  min-width: 130px;
+}
+
+.nex-filter-select:focus {
+  border-color: var(--color-primary);
+  color: var(--color-text-primary);
+}
+
+.nex-filter-chip {
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  font-family: var(--font-primary);
+}
+
+.nex-filter-chip:hover,
+.nex-filter-chip.active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+.nex-filter-count {
+  margin-left: auto;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}
+
+/* ─── PÁGINA DE DETALLE (Serie / Película) ───────────────────────────────────── */
+
+.nex-detail-hero {
+  position: relative;
+  min-height: min(70vh, 600px);
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+
+.nex-detail-hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.nex-detail-hero__bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  filter: blur(0px) brightness(0.5);
+}
+
+.nex-detail-hero__gradient {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, var(--color-bg-base) 0%, rgba(10,10,15,0.3) 50%, transparent 100%),
+    linear-gradient(to right, rgba(10,10,15,0.8) 0%, transparent 60%);
+}
+
+.nex-detail-hero__content {
+  position: relative;
+  z-index: 1;
+  padding: 3rem 0;
+  display: flex;
+  gap: 2.5rem;
+  align-items: flex-end;
+}
+
+.nex-detail-hero__poster {
+  flex-shrink: 0;
+  width: 160px;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-xl);
+  border: 2px solid rgba(255,255,255,0.1);
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .nex-detail-hero__poster { display: block; }
+}
+
+.nex-detail-hero__poster img {
+  width: 100%;
+  aspect-ratio: 2/3;
+  object-fit: cover;
+  display: block;
+}
+
+.nex-detail-hero__info { flex: 1; min-width: 0; }
+
+.nex-detail-hero__title {
+  font-size: clamp(1.75rem, 5vw, 3rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.75rem;
+  line-height: 1.1;
+}
+
+.nex-detail-hero__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 1rem;
+}
+
+.nex-detail-hero__synopsis {
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+  max-width: 600px;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.nex-detail-hero__actions {
+  display: flex;
+  gap: 0.875rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* ─── SELECTOR DE TEMPORADAS / EPISODIOS ─────────────────────────────────────── */
+
+.nex-season-tabs {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  scrollbar-width: none;
+  margin-bottom: 1.5rem;
+}
+
+.nex-season-tabs::-webkit-scrollbar { display: none; }
+
+.nex-season-tab {
+  flex-shrink: 0;
+  padding: 0.5rem 1.25rem;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-family: var(--font-primary);
+}
+
+.nex-season-tab:hover,
+.nex-season-tab.active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+/* Grid de episodios */
+.nex-episodes-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .nex-episodes-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1024px) {
+  .nex-episodes-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.nex-episode-card {
+  display: flex;
+  gap: 0.875rem;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 0.875rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.nex-episode-card:hover {
+  border-color: rgba(229,9,20,0.3);
+  background: var(--color-surface-3);
+  transform: translateY(-2px);
+}
+
+.nex-episode-card.active {
+  border-color: var(--color-primary);
+  background: rgba(229,9,20,0.06);
+}
+
+.nex-episode-card__thumb {
+  flex-shrink: 0;
+  width: 100px;
+  aspect-ratio: 16/9;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-surface-3);
+  position: relative;
+}
+
+.nex-episode-card__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.nex-episode-card__thumb-play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.4);
+  color: white;
+  font-size: 1.25rem;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.nex-episode-card:hover .nex-episode-card__thumb-play { opacity: 1; }
+
+.nex-episode-card__info { flex: 1; min-width: 0; }
+
+.nex-episode-card__num {
+  font-size: 0.75rem;
+  color: var(--color-primary);
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+
+.nex-episode-card__title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0.25rem;
+}
+
+.nex-episode-card__meta {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+/* Barra de progreso del episodio */
+.nex-episode-card__progress {
+  height: 3px;
+  background: var(--color-surface-3);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
+
+.nex-episode-card__progress-fill {
+  height: 100%;
+  background: var(--color-primary);
+  border-radius: var(--radius-full);
+  transition: width 0.5s ease;
+}
+
+/* ─── PAGINACIÓN ─────────────────────────────────────────────────────────────── */
+
+.nex-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 3rem 0;
+  flex-wrap: wrap;
+}
+
+.nex-page-btn {
+  min-width: 40px;
+  height: 40px;
+  padding: 0 0.75rem;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface-2);
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-family: var(--font-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.nex-page-btn:hover:not(:disabled):not(.active) {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.nex-page-btn.active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+}
+
+.nex-page-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.nex-page-ellipsis {
+  color: var(--color-text-disabled);
+  font-size: 0.875rem;
+  padding: 0 0.25rem;
+}
+
+/* ─── PÁGINA VACÍA / SIN RESULTADOS ─────────────────────────────────────────── */
+
+.nex-empty-state {
+  text-align: center;
+  padding: 5rem 2rem;
+  color: var(--color-text-muted);
+}
+
+.nex-empty-state__icon {
+  font-size: 3.5rem;
+  margin-bottom: 1.5rem;
+  display: block;
+  opacity: 0.5;
+}
+
+.nex-empty-state__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.75rem;
+}
+
+.nex-empty-state__desc {
+  font-size: 1rem;
+  max-width: 400px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+}
+
+/* ─── BREADCRUMBS ────────────────────────────────────────────────────────────── */
+
+.nex-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.nex-breadcrumb a {
+  color: var(--color-text-muted);
+  transition: color var(--transition-fast);
+}
+
+.nex-breadcrumb a:hover { color: var(--color-text-primary); }
+
+.nex-breadcrumb__sep {
+  opacity: 0.4;
+  font-size: 0.75rem;
+}
+
+.nex-breadcrumb__current {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+/* ─── RESPONSIVE ADJUSTMENTS ─────────────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+  .nex-catalog-section { padding: 1.5rem 0; }
+  .nex-hero__synopsis { display: none; }
+  .nex-detail-hero__synopsis { -webkit-line-clamp: 2; }
+}
+
+/* ─── HERO PLACEHOLDER ──────────────────────────────────────────────────────── */
+
+.nex-hero-placeholder {
+  position: relative;
+  min-height: min(85vh, 700px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.nex-hero-placeholder__bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 10%, rgba(229,9,20,0.15), transparent 70%),
+              radial-gradient(ellipse at 80% 80%, rgba(26,111,255,0.1), transparent 50%),
+              var(--color-bg-base);
+  z-index: 0;
+}
+
+.nex-hero-placeholder__overlay {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, black 20%, transparent 100%);
+  z-index: 0;
+}
+
+.nex-hero-placeholder__content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 800px;
+  padding: 2rem;
+}
+
+.nex-hero-placeholder__title {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  margin-bottom: 1.25rem;
+}
+
+.nex-hero-placeholder__subtitle {
+  font-size: clamp(1.125rem, 2vw, 1.375rem);
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.nex-hero-placeholder__scroll-indicator {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 40px;
+  border: 2px solid rgba(255,255,255,0.2);
+  border-radius: var(--radius-full);
+  display: flex;
+  justify-content: center;
+  padding-top: 6px;
+  z-index: 1;
+}
+
+.nex-hero-placeholder__scroll-dot {
+  width: 4px;
+  height: 8px;
+  background: var(--color-primary);
+  border-radius: var(--radius-full);
+  animation: scroll-dot-bounce 2s infinite cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+@keyframes scroll-dot-bounce {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(12px); opacity: 0; }
+}

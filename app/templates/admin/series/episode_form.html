@@ -1,0 +1,63 @@
+{% extends "admin/layout.html" %}
+
+{% block page_title %}Añadir Episodio — {{ serie.title }}{% endblock %}
+
+{% block content %}
+<div class="nex-admin-panel" style="max-width: 600px; margin: 0 auto;">
+  <h2 style="margin-top:0; font-size:1.25rem;">Temporada {{ season_num }}</h2>
+  <p style="color:var(--color-text-secondary); margin-bottom: 2rem;">
+    Completa los datos del episodio para agregarlo a la serie.
+  </p>
+
+  <form method="POST" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+    
+    <div style="display:flex; gap:1rem;">
+      <div class="nex-form-group" style="width: 120px;">
+        {{ form.number.label(class="nex-label") }}
+        {{ form.number(class="nex-input") }}
+        {% for error in form.number.errors %}
+          <span class="nex-form-error">{{ error }}</span>
+        {% endfor %}
+      </div>
+      
+      <div class="nex-form-group" style="flex:1;">
+        {{ form.title.label(class="nex-label") }}
+        {{ form.title(class="nex-input") }}
+      </div>
+    </div>
+    
+    <div class="nex-form-group">
+      {{ form.synopsis.label(class="nex-label") }}
+      {{ form.synopsis(class="nex-input", rows=3) }}
+    </div>
+    
+    <div style="display:flex; gap:1rem;">
+      <div class="nex-form-group" style="flex:1;">
+        {{ form.duration.label(class="nex-label") }}
+        {{ form.duration(class="nex-input") }}
+      </div>
+      <div class="nex-form-group" style="flex:1;">
+        {{ form.air_date.label(class="nex-label") }}
+        {{ form.air_date(class="nex-input", type="date") }}
+      </div>
+    </div>
+    
+    <div class="nex-form-group">
+      {{ form.video_url.label(class="nex-label") }}
+      {{ form.video_url(class="nex-input", placeholder="https://...") }}
+    </div>
+    
+    <div class="nex-form-group" style="margin-bottom: 2rem;">
+      {{ form.thumbnail.label(class="nex-label") }}
+      {{ form.thumbnail(class="nex-input") }}
+      <div style="font-size:0.75rem; color:var(--color-text-muted); margin-top:0.25rem;">Recomendado: 1280x720px (JPG/PNG/WEBP)</div>
+    </div>
+    
+    <div style="display:flex; gap:1rem; justify-content:flex-end;">
+      <a href="{{ url_for('admin.list_series') }}" class="nex-btn nex-btn--ghost">Cancelar</a>
+      <button type="submit" class="nex-btn nex-btn--primary">Guardar Episodio</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

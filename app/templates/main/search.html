@@ -1,0 +1,49 @@
+﻿{# BÃºsqueda #}
+{% extends "base.html" %}
+{% from 'macros/content_card.html' import content_card with context %}
+{% block title %}{{ title }}{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', filename='css/catalog.css') }}">{% endblock %}
+{% block content %}
+<div class="nex-container" style="padding-top:7rem;padding-bottom:4rem;">
+  <h1 style="font-size:2rem;font-weight:900;letter-spacing:-0.03em;margin-bottom:1.5rem;">
+    {% if q %}Resultados para "<span style="color:var(--color-primary);">{{ q }}</span>"
+    {% else %}Buscar contenido{% endif %}
+  </h1>
+
+  {# Barra de bÃºsqueda en la pÃ¡gina #}
+  <form action="{{ url_for('main.search') }}" method="GET" style="margin-bottom:2rem;">
+    <div style="position:relative;max-width:600px;">
+      <input type="search" name="q" value="{{ q }}" placeholder="Buscar series, pelÃ­culas..."
+             class="nex-auth-input" style="padding:0.875rem 1rem;font-size:1rem;"
+             autofocus autocomplete="off">
+    </div>
+  </form>
+
+  {% if q %}
+    <p style="color:var(--color-text-muted);margin-bottom:2rem;">
+      {{ total }} resultado{{ 's' if total != 1 }} encontrado{{ 's' if total != 1 }}
+    </p>
+    {% if total > 0 %}
+      {% if series_results %}
+        <h2 style="font-size:1.25rem;font-weight:700;margin-bottom:1rem;">Series</h2>
+        <div class="nex-content-grid" style="margin-bottom:2.5rem;">
+          {% for item in series_results %}{{ content_card(item, type='series') }}{% endfor %}
+        </div>
+      {% endif %}
+      {% if movies_results %}
+        <h2 style="font-size:1.25rem;font-weight:700;margin-bottom:1rem;">PelÃ­culas</h2>
+        <div class="nex-content-grid">
+          {% for item in movies_results %}{{ content_card(item, type='movie') }}{% endfor %}
+        </div>
+      {% endif %}
+    {% else %}
+      <div class="nex-empty-state">
+        <span class="nex-empty-state__icon">ðŸ”</span>
+        <h2 class="nex-empty-state__title">Sin resultados</h2>
+        <p class="nex-empty-state__desc">No encontramos nada para "{{ q }}". Prueba con otro tÃ©rmino.</p>
+        <a href="{{ url_for('main.catalog') }}" class="nex-btn nex-btn--primary">Ver catÃ¡logo completo</a>
+      </div>
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,82 @@
+{# =============================================================================
+   NEXSTREAM — Layout del Panel de Usuario
+   ============================================================================= #}
+
+{% extends "base.html" %}
+
+{% block body_class %}page-profile{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/catalog.css') }}"> {# Para los grids de favoritos #}
+{% endblock %}
+
+{% block content %}
+<div class="nex-container">
+  <div class="nex-profile-layout animate-fade-in-up">
+
+    {# ── Sidebar ── #}
+    <aside class="nex-profile-sidebar">
+      
+      {# User Card #}
+      <div class="nex-user-card">
+        <div class="nex-user-card__avatar">
+          <img src="{{ current_user.avatar_url }}" alt="{{ current_user.display }}" id="sidebarAvatar">
+        </div>
+        <h2 class="nex-user-card__name">{{ current_user.display }}</h2>
+        <p class="nex-user-card__handle">@{{ current_user.username }}</p>
+        
+        {% if current_user.is_admin %}
+          <span class="nex-user-card__badge">ADMIN</span>
+        {% elif current_user.is_moderator %}
+          <span class="nex-user-card__badge">MODERADOR</span>
+        {% endif %}
+      </div>
+
+      {# Navegación #}
+      <nav class="nex-profile-nav" aria-label="Menú de perfil">
+        <a href="{{ url_for('user.profile') }}" 
+           class="nex-profile-nav__link {{ 'active' if request.endpoint == 'user.profile' else '' }}">
+          <span class="nex-profile-nav__icon">👤</span> Editar Perfil
+        </a>
+        <a href="{{ url_for('user.history') }}" 
+           class="nex-profile-nav__link {{ 'active' if request.endpoint == 'user.history' else '' }}">
+          <span class="nex-profile-nav__icon">🕒</span> Historial
+        </a>
+        <a href="{{ url_for('user.favorites') }}" 
+           class="nex-profile-nav__link {{ 'active' if request.endpoint == 'user.favorites' else '' }}">
+          <span class="nex-profile-nav__icon">❤</span> Mi Lista
+        </a>
+        <a href="{{ url_for('user.settings') }}" 
+           class="nex-profile-nav__link {{ 'active' if request.endpoint == 'user.settings' else '' }}">
+          <span class="nex-profile-nav__icon">⚙️</span> Configuración
+        </a>
+        
+        <div style="height:1px;background:var(--color-border);margin:1rem 0;" class="d-none-mobile"></div>
+        
+        {% if current_user.is_admin %}
+        <a href="{{ url_for('admin.dashboard') }}" class="nex-profile-nav__link" style="color:var(--color-primary);">
+          <span class="nex-profile-nav__icon">🛡️</span> Panel Admin
+        </a>
+        {% endif %}
+        
+        <a href="{{ url_for('auth.logout') }}" class="nex-profile-nav__link">
+          <span class="nex-profile-nav__icon">🚪</span> Cerrar sesión
+        </a>
+      </nav>
+
+    </aside>
+
+    {# ── Contenido Principal ── #}
+    <main class="nex-profile-content">
+      <header class="nex-profile-header">
+        <h1 class="nex-profile-title">{% block profile_title %}{% endblock %}</h1>
+        <p class="nex-profile-subtitle">{% block profile_subtitle %}{% endblock %}</p>
+      </header>
+      
+      {% block profile_content %}{% endblock %}
+    </main>
+
+  </div>
+</div>
+{% endblock %}

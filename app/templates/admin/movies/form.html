@@ -1,0 +1,165 @@
+{% extends "admin/layout.html" %}
+
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block styles %}
+<style>
+  .nex-form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  @media (min-width: 992px) {
+    .nex-form-grid {
+      grid-template-columns: 2fr 1fr;
+    }
+  }
+  .nex-admin-panel {
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .checkbox-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 0.5rem;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 1rem;
+    background: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    margin-top: 0.5rem;
+  }
+  .checkbox-list li {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<form method="POST" enctype="multipart/form-data">
+  {{ form.hidden_tag() }}
+  
+  <div class="nex-form-grid">
+    {# Columna Principal #}
+    <div class="nex-admin-panel">
+      <h3 style="margin-top:0; margin-bottom:1.5rem; font-size:1.25rem;">Información Básica</h3>
+      
+      <div class="nex-form-group">
+        {{ form.title.label(class="nex-label") }}
+        {{ form.title(class="nex-input") }}
+        {% for error in form.title.errors %}
+          <span class="nex-form-error">{{ error }}</span>
+        {% endfor %}
+      </div>
+      
+      <div style="display:flex; gap:1rem;">
+        <div class="nex-form-group" style="flex:1;">
+          {{ form.original_title.label(class="nex-label") }}
+          {{ form.original_title(class="nex-input") }}
+        </div>
+        <div class="nex-form-group" style="flex:1;">
+          {{ form.slug.label(class="nex-label") }}
+          {{ form.slug(class="nex-input") }}
+          <span style="font-size:0.75rem; color:var(--color-text-muted);">Debe ser único, sin espacios ni caracteres especiales.</span>
+        </div>
+      </div>
+      
+      <div class="nex-form-group">
+        {{ form.synopsis.label(class="nex-label") }}
+        {{ form.synopsis(class="nex-input", rows=5) }}
+      </div>
+      
+      <h3 style="margin-top:2rem; margin-bottom:1.5rem; font-size:1.25rem;">Multimedia & Streaming</h3>
+      
+      <!-- Trailer was here -->
+      
+      <div class="nex-form-group">
+        {{ form.video_url.label(class="nex-label") }}
+        {{ form.video_url(class="nex-input", placeholder="https://...") }}
+        <span style="font-size:0.75rem; color:var(--color-text-muted);">URL del video (M3U8 HLS, MP4 o similar).</span>
+      </div>
+    </div>
+    
+    {# Columna Lateral #}
+    <div>
+      <div class="nex-admin-panel">
+        <h3 style="margin-top:0; margin-bottom:1.5rem; font-size:1.25rem;">Configuración</h3>
+        
+        <div style="display:flex; gap:1rem;">
+          <div class="nex-form-group" style="flex:1;">
+            {{ form.year.label(class="nex-label") }}
+            {{ form.year(class="nex-input") }}
+          </div>
+          <div class="nex-form-group" style="flex:1;">
+            {{ form.duration.label(class="nex-label") }}
+            {{ form.duration(class="nex-input") }}
+          </div>
+        </div>
+        
+        <div class="nex-form-group">
+          {{ form.categories.label(class="nex-label") }}
+          <ul class="checkbox-list">
+            {% for subfield in form.categories %}
+              <li>
+                {{ subfield() }}
+                {{ subfield.label }}
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+        
+        <div class="nex-form-group" style="display:flex; align-items:center; gap:0.5rem; margin-top:1.5rem;">
+          {{ form.is_active(class="nex-checkbox") }}
+          {{ form.is_active.label(style="margin:0; font-weight:600;") }}
+        </div>
+      </div>
+      
+      <div class="nex-admin-panel">
+        <h3 style="margin-top:0; margin-bottom:1.5rem; font-size:1.25rem;">Imágenes</h3>
+        
+        <div class="nex-form-group">
+          {{ form.cover.label(class="nex-label") }}
+          {{ form.cover(class="nex-input") }}
+          <div style="font-size:0.75rem; color:var(--color-text-muted); margin-top:0.25rem;">Recomendado: 600x900px (JPG/PNG/WEBP)</div>
+        </div>
+        
+        <div class="nex-form-group">
+          {{ form.banner.label(class="nex-label") }}
+          {{ form.banner(class="nex-input") }}
+          <div style="font-size:0.75rem; color:var(--color-text-muted); margin-top:0.25rem;">Recomendado: 1920x1080px (JPG/PNG/WEBP)</div>
+        </div>
+      </div>
+      
+      <div style="display:flex; gap:1rem; justify-content:flex-end;">
+        <a href="{{ url_for('admin.list_movies') }}" class="nex-btn nex-btn--ghost">Cancelar</a>
+        <button type="submit" class="nex-btn nex-btn--primary">Guardar Película</button>
+      </div>
+    </div>
+  </div>
+</form>
+
+<script>
+  // Autogenerar slug a partir del título (solo si el slug está vacío)
+  document.getElementById('title').addEventListener('input', function(e) {
+    const slugInput = document.getElementById('slug');
+    if (!slugInput.value || slugInput.dataset.auto == "true") {
+      slugInput.dataset.auto = "true";
+      slugInput.value = e.target.value.toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)+/g, '');
+    }
+  });
+  
+  document.getElementById('slug').addEventListener('input', function() {
+    this.dataset.auto = "false";
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title }}</title>
+  
+  {# Video.js CSS #}
+  <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/nexstream.css') }}">
+  
+  <style>
+    :root {
+      --player-ui-color: var(--color-primary, #E50914);
+    }
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+    .nex-player-container {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+    }
+    
+    /* Overlay Superior (Botón Volver, Título) */
+    .nex-player-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 2rem;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 100%);
+      z-index: 10;
+      display: flex;
+      align-items: flex-start;
+      gap: 1.5rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+    .nex-player-container.vjs-user-active .nex-player-header,
+    .nex-player-container.vjs-paused .nex-player-header {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    
+    .nex-player-back {
+      background: none;
+      border: none;
+      color: white;
+      cursor: pointer;
+      padding: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background 0.2s;
+    }
+    .nex-player-back:hover {
+      background: rgba(255,255,255,0.1);
+    }
+    
+    .nex-player-title h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: white;
+    }
+    .nex-player-title h2 {
+      margin: 0.25rem 0 0;
+      font-size: 1rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.7);
+    }
+    
+    /* Video.js Premium Theme overrides */
+    .video-js {
+      width: 100% !important;
+      height: 100% !important;
+    }
+    .vjs-big-play-button {
+      background-color: rgba(0, 0, 0, 0.5) !important;
+      border: 2px solid var(--player-ui-color) !important;
+      border-radius: 50% !important;
+      width: 80px !important;
+      height: 80px !important;
+      line-height: 76px !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%);
+    }
+    .vjs-play-progress {
+      background-color: var(--player-ui-color) !important;
+    }
+    .vjs-control-bar {
+      background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%) !important;
+      height: 90px !important;
+      padding: 0 1rem;
+      display: flex !important;
+      align-items: flex-end !important;
+      padding-bottom: 1rem;
+    }
+    .vjs-progress-control {
+      position: absolute;
+      top: 0;
+      left: 1rem;
+      right: 1rem;
+      width: auto !important;
+      height: 30px !important;
+    }
+    .vjs-slider {
+      background-color: rgba(255, 255, 255, 0.2) !important;
+      border-radius: 4px;
+    }
+    .vjs-load-progress {
+      background: rgba(255,255,255,0.4) !important;
+    }
+    .vjs-load-progress div {
+      background: transparent !important;
+    }
+    .vjs-play-progress:before {
+      font-size: 1.25em !important;
+      top: -0.3em !important;
+    }
+    
+    /* Next Episode Overlay */
+    .nex-next-ep-overlay {
+      position: absolute;
+      bottom: 100px;
+      right: 2rem;
+      background: rgba(20, 20, 20, 0.9);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 1rem;
+      width: 300px;
+      display: none;
+      z-index: 20;
+      animation: slideInRight 0.5s ease;
+    }
+    .nex-next-ep-overlay.show {
+      display: block;
+    }
+    .nex-next-thumb {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+    }
+    
+    @keyframes slideInRight {
+      from { transform: translateX(50px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    {% set is_embed = False %}
+    {% if item.video_url and ('drive.google.com' in item.video_url or 'youtube.com' in item.video_url or 'youtu.be' in item.video_url or 'vimeo.com' in item.video_url) %}
+      {% set is_embed = True %}
+    {% endif %}
+    
+    {% if is_embed %}
+    .nex-embed-iframe {
+      width: 100vw;
+      height: 100vh;
+      border: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 5;
+    }
+    .nex-player-header {
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
+    }
+    {% endif %}
+  </style>
+</head>
+<body>
+
+  <div class="nex-player-container" id="playerContainer">
+    
+    <header class="nex-player-header">
+      <button class="nex-player-back" onclick="goBack()" aria-label="Volver">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+      </button>
+      <div class="nex-player-title">
+        {% if type == 'series' %}
+          <h1>{{ parent.title }}</h1>
+          <h2>T{{ item.season.number }} E{{ item.number }} — {{ item.title }}</h2>
+        {% else %}
+          <h1>{{ item.title }}</h1>
+        {% endif %}
+      </div>
+    </header>
+
+    {% if is_embed %}
+      <iframe src="{{ item.video_url }}" class="nex-embed-iframe" allowfullscreen allow="autoplay; fullscreen" frameborder="0"></iframe>
+    {% else %}
+      <video
+        id="nex-video"
+        class="video-js vjs-default-skin vjs-big-play-centered"
+        controls
+        preload="auto"
+        poster="{{ item.thumbnail_url if type == 'series' else item.banner_url }}"
+        data-setup='{"fluid": false, "inactivityTimeout": 3000}'>
+        
+        {% if item.video_url %}
+          <source src="{{ item.video_url }}" type="video/mp4" />
+        {% else %}
+          <!-- Fallback video loop for demo -->
+          <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" />
+        {% endif %}
+        
+        <p class="vjs-no-js">
+          Para ver este video, por favor habilita JavaScript y considera actualizar a un navegador que soporte HTML5.
+        </p>
+      </video>
+    {% endif %}
+    
+    {% if type == 'series' and next_item %}
+    <div class="nex-next-ep-overlay" id="nextEpOverlay">
+      <div style="font-size:0.75rem; color:var(--color-text-muted); font-weight:600; text-transform:uppercase; margin-bottom:0.5rem;">
+        Siguiente Episodio en <span id="nextEpCountdown">10</span>s
+      </div>
+      <img src="{{ next_item.thumbnail_url or parent.banner_url }}" class="nex-next-thumb" alt="Siguiente">
+      <h3 style="margin:0 0 0.25rem; font-size:1rem;">{{ next_item.title }}</h3>
+      <p style="margin:0 0 1rem; font-size:0.875rem; color:var(--color-text-secondary);">T{{ next_item.season.number }} E{{ next_item.number }}</p>
+      <div style="display:flex; gap:0.5rem;">
+        <a href="{{ url_for('main.play_episode', episode_id=next_item.id) }}" class="nex-btn nex-btn--primary nex-btn--sm" style="flex:1;">Reproducir ya</a>
+        <button onclick="cancelAutoplay()" class="nex-btn nex-btn--secondary nex-btn--sm">Cancelar</button>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+
+  <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+  <script>
+    const contentType = "{{ type }}";
+    
+    // --- Funciones de Navegación ---
+    function goBack() {
+      // Guardar progreso antes de salir
+      saveProgress(true).then(() => {
+        if (contentType === 'series') {
+          window.location.href = "{{ url_for('main.series_detail', slug=parent.slug) if type == 'series' else '#' }}";
+        } else {
+          window.location.href = "{{ url_for('main.movie_detail', slug=item.slug) if type == 'movie' else '#' }}";
+        }
+      });
+    }
+
+    {% if not is_embed %}
+    // --- Configuración e Inicialización ---
+    const player = videojs('nex-video');
+    const container = document.getElementById('playerContainer');
+    const csrfToken = "{{ csrf_token() }}";
+    
+    const contentId = {{ item.id }};
+    const contentType = "{{ type }}";
+    const seriesId = {{ parent.id if type == 'series' else 'null' }};
+    const startTime = {{ start_time|default(0) }};
+    
+    const autoplayNext = {{ 'true' if autoplay_next else 'false' }};
+    let hasEnded = false;
+    
+    // --- Tracking de Progreso ---
+    let lastSavedTime = -1;
+    
+    async function saveProgress(force = false) {
+      if (player.duration() === 0) return;
+      
+      const currentTime = Math.floor(player.currentTime());
+      const duration = Math.floor(player.duration());
+      
+      // Solo guardar si han pasado al menos 10 segundos desde el último guardado o forzado
+      if (!force && Math.abs(currentTime - lastSavedTime) < 10) return;
+      
+      lastSavedTime = currentTime;
+      
+      const payload = {
+        type: contentType,
+        id: contentType === 'series' ? seriesId : contentId,
+        progress: currentTime,
+        duration: duration
+      };
+      
+      if (contentType === 'series') {
+        payload.episode_id = contentId;
+      }
+      
+      try {
+        await fetch('/api/v1/history/update', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+          },
+          body: JSON.stringify(payload)
+        });
+      } catch (err) {
+        console.error("Error saving progress", err);
+      }
+    }
+
+    // --- Autoplay Siguiente Episodio ---
+    let autoplayTimer = null;
+    let countdownInterval = null;
+    let countdownVal = 10;
+    
+    function showNextEpisodePrompt() {
+      const overlay = document.getElementById('nextEpOverlay');
+      const counterEl = document.getElementById('nextEpCountdown');
+      if (!overlay) return;
+      
+      overlay.classList.add('show');
+      
+      if (autoplayNext) {
+        countdownInterval = setInterval(() => {
+          countdownVal--;
+          counterEl.textContent = countdownVal;
+          if (countdownVal <= 0) {
+            clearInterval(countdownInterval);
+            // Navigate to next episode
+            window.location.href = "{{ url_for('main.play_episode', episode_id=next_item.id) if type == 'series' and next_item else '#' }}";
+          }
+        }, 1000);
+      } else {
+        counterEl.parentElement.style.display = 'none';
+      }
+    }
+    
+    function cancelAutoplay() {
+      const overlay = document.getElementById('nextEpOverlay');
+      if (overlay) overlay.classList.remove('show');
+      if (countdownInterval) clearInterval(countdownInterval);
+    }
+
+    // --- Eventos del Reproductor ---
+    player.ready(function() {
+      // Reanudar reproducción
+      if (startTime > 0) {
+        player.currentTime(startTime);
+      }
+      
+      // Guardar progreso periódicamente
+      player.on('timeupdate', () => {
+        saveProgress();
+        
+        // Mostrar popup de siguiente episodio 15 segundos antes del final (si es serie)
+        if (contentType === 'series' && !hasEnded) {
+          const timeLeft = player.duration() - player.currentTime();
+          if (timeLeft <= 15 && timeLeft > 0) {
+            hasEnded = true; // Para no triggerear varias veces
+            showNextEpisodePrompt();
+          }
+        }
+      });
+      
+      player.on('ended', () => {
+        saveProgress(true);
+        if (contentType === 'movie') {
+          // Volver al detalle al terminar la peli
+          setTimeout(goBack, 3000);
+        }
+      });
+      
+      // Intentar auto-play (muchos navegadores lo bloquean sin mute)
+      const playPromise = player.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          console.log("Auto-play was prevented. Waiting for user interaction.");
+        });
+      }
+      
+      // Sincronizar UI de Video.js con el mouse del contenedor
+      container.addEventListener('mousemove', () => {
+        container.classList.add('vjs-user-active');
+        clearTimeout(container.userActiveTimeout);
+        container.userActiveTimeout = setTimeout(() => {
+          if (!player.paused()) {
+            container.classList.remove('vjs-user-active');
+          }
+        }, 3000);
+      });
+    });
+    {% else %}
+    // Funciones dummy si es embed para que goBack funcione sin errores
+    async function saveProgress() { return; }
+    {% endif %}
+  </script>
+</body>
+</html>

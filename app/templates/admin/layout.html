@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Panel de Administración — {{ platform_name }}{% endblock %}</title>
+  
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/nexstream.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+  
+  <style>
+    :root {
+      --admin-sidebar-width: 250px;
+    }
+    body {
+      background: var(--color-background);
+      color: var(--color-text-primary);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    .nex-admin-sidebar {
+      width: var(--admin-sidebar-width);
+      background: var(--color-surface-2);
+      border-right: 1px solid var(--color-border);
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+    }
+    
+    .nex-admin-brand {
+      padding: 1.5rem;
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--color-primary);
+      text-decoration: none;
+      letter-spacing: -0.05em;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .nex-admin-nav {
+      flex: 1;
+      padding: 1rem 0;
+      overflow-y: auto;
+    }
+    
+    .nex-admin-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1.5rem;
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+    
+    .nex-admin-link:hover {
+      background: rgba(255,255,255,0.05);
+      color: white;
+    }
+    
+    .nex-admin-link.active {
+      color: var(--color-primary);
+      background: rgba(229,9,20,0.1);
+      border-right: 3px solid var(--color-primary);
+    }
+    
+    .nex-admin-main {
+      flex: 1;
+      margin-left: var(--admin-sidebar-width);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .nex-admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .nex-admin-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      margin: 0;
+    }
+    
+    .nex-admin-user {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .nex-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--color-surface-2);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+    .nex-table th, .nex-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .nex-table th {
+      background: var(--color-surface-3);
+      color: var(--color-text-secondary);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .nex-table tr:hover td {
+      background: rgba(255,255,255,0.02);
+    }
+    
+    .nex-status-badge {
+      padding: 0.25rem 0.5rem;
+      border-radius: 99px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .nex-status-badge.active { background: rgba(46,213,115,0.2); color: #2ed573; }
+    .nex-status-badge.inactive { background: rgba(255,71,87,0.2); color: #ff4757; }
+    
+    @media (max-width: 768px) {
+      .nex-admin-sidebar {
+        transform: translateX(-100%);
+      }
+      .nex-admin-main {
+        margin-left: 0;
+        padding: 1rem;
+      }
+    }
+  </style>
+  {% block styles %}{% endblock %}
+</head>
+<body>
+
+  {# Sidebar #}
+  <aside class="nex-admin-sidebar">
+    <a href="{{ url_for('admin.dashboard') }}" class="nex-admin-brand">NEXSTREAM Admin</a>
+    <nav class="nex-admin-nav">
+      <a href="{{ url_for('admin.dashboard') }}" class="nex-admin-link {% if request.endpoint == 'admin.dashboard' %}active{% endif %}">
+        📊 Dashboard
+      </a>
+      <a href="{{ url_for('admin.list_series') }}" class="nex-admin-link {% if request.endpoint and 'list_series' in request.endpoint %}active{% endif %}">
+        📺 Series
+      </a>
+      <a href="{{ url_for('admin.list_movies') }}" class="nex-admin-link {% if request.endpoint and 'list_movies' in request.endpoint %}active{% endif %}">
+        🎬 Películas
+      </a>
+      <a href="#" class="nex-admin-link">
+        📁 Categorías
+      </a>
+      <a href="#" class="nex-admin-link">
+        👥 Usuarios
+      </a>
+    </nav>
+    <div style="padding: 1.5rem; border-top: 1px solid var(--color-border);">
+      <a href="{{ url_for('main.index') }}" class="nex-btn nex-btn--ghost nex-btn--sm" style="width:100%; justify-content:center;">
+        Volver a la App
+      </a>
+    </div>
+  </aside>
+
+  {# Contenido Principal #}
+  <main class="nex-admin-main">
+    <header class="nex-admin-header">
+      <h1 class="nex-admin-title">{% block page_title %}Dashboard{% endblock %}</h1>
+      <div class="nex-admin-user">
+        <span style="color:var(--color-text-secondary);">{{ current_user.display }}</span>
+        <img src="{{ current_user.avatar_url }}" alt="Admin" style="width:36px; height:36px; border-radius:50%;">
+      </div>
+    </header>
+    
+    {# Mensajes Flash #}
+    {% with messages = get_flashed_messages(with_categories=True) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="nex-alert nex-alert--{{ 'error' if category == 'danger' else category }}" style="margin-bottom: 1.5rem;">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="nex-admin-content">
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

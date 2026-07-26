@@ -1,0 +1,315 @@
+/* =============================================================================
+   NEXSTREAM — CSS del Panel de Usuario
+   =============================================================================
+   Archivo: app/static/css/profile.css
+   ============================================================================= */
+
+/* ─── LAYOUT DEL PANEL ──────────────────────────────────────────────────────── */
+
+.nex-profile-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 6rem 0 4rem;
+  min-height: calc(100vh - 100px);
+}
+
+@media (min-width: 900px) {
+  .nex-profile-layout {
+    flex-direction: row;
+    gap: 3rem;
+  }
+}
+
+/* ─── SIDEBAR ────────────────────────────────────────────────────────────────── */
+
+.nex-profile-sidebar {
+  width: 100%;
+}
+
+@media (min-width: 900px) {
+  .nex-profile-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+  }
+}
+
+/* Tarjeta resumen del usuario */
+.nex-user-card {
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.nex-user-card__avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin: 0 auto 1.25rem;
+  position: relative;
+  border: 4px solid var(--color-bg-base);
+  box-shadow: 0 0 0 2px var(--color-primary), 0 8px 24px rgba(0,0,0,0.3);
+  overflow: hidden;
+  background: var(--color-surface-3);
+}
+
+.nex-user-card__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.nex-user-card__name {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.25rem;
+}
+
+.nex-user-card__handle {
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+  margin-bottom: 1rem;
+}
+
+.nex-user-card__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  background: rgba(229, 9, 20, 0.1);
+  color: var(--color-primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: 1px solid rgba(229, 9, 20, 0.2);
+}
+
+/* Menú de navegación lateral */
+.nex-profile-nav {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+  scrollbar-width: none;
+}
+
+.nex-profile-nav::-webkit-scrollbar { display: none; }
+
+@media (min-width: 900px) {
+  .nex-profile-nav {
+    flex-direction: column;
+    padding-bottom: 0;
+  }
+}
+
+.nex-profile-nav__link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.25rem;
+  border-radius: var(--radius-lg);
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.nex-profile-nav__link:hover {
+  background: var(--color-surface-2);
+  color: var(--color-text-primary);
+}
+
+.nex-profile-nav__link.active {
+  background: var(--color-primary);
+  color: white;
+  box-shadow: 0 4px 12px rgba(229, 9, 20, 0.2);
+}
+
+.nex-profile-nav__icon {
+  font-size: 1.25rem;
+  opacity: 0.8;
+}
+
+/* ─── CONTENIDO PRINCIPAL ────────────────────────────────────────────────────── */
+
+.nex-profile-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.nex-profile-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.nex-profile-title {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.5rem;
+}
+
+.nex-profile-subtitle {
+  color: var(--color-text-secondary);
+}
+
+/* ─── PÁGINA: EDITAR PERFIL Y CONFIGURACIÓN ──────────────────────────────────── */
+
+.nex-settings-card {
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.nex-settings-card__title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Upload de avatar custom */
+.nex-avatar-upload {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.nex-avatar-upload__preview {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--color-surface-3);
+  border: 2px solid var(--color-border);
+}
+
+.nex-avatar-upload__actions {
+  flex: 1;
+}
+
+.nex-avatar-upload__label {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: var(--color-surface-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  margin-bottom: 0.5rem;
+}
+
+.nex-avatar-upload__label:hover {
+  background: var(--color-border);
+  color: white;
+}
+
+.nex-avatar-upload input[type="file"] {
+  display: none;
+}
+
+.nex-avatar-upload__hint {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+/* ─── PÁGINA: HISTORIAL ──────────────────────────────────────────────────────── */
+
+.nex-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.nex-history-item {
+  display: flex;
+  gap: 1rem;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1rem;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+  color: inherit;
+}
+
+.nex-history-item:hover {
+  background: var(--color-surface-3);
+  border-color: rgba(255,255,255,0.15);
+  transform: translateY(-2px);
+}
+
+.nex-history-item__thumb {
+  width: 120px;
+  aspect-ratio: 16/9;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-surface-3);
+  flex-shrink: 0;
+  position: relative;
+}
+
+@media (max-width: 480px) {
+  .nex-history-item__thumb { width: 90px; }
+}
+
+.nex-history-item__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.nex-history-item__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.nex-history-item__title {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nex-history-item__meta {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.nex-history-item__progress {
+  width: 100%;
+  height: 4px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.nex-history-item__progress-fill {
+  height: 100%;
+  background: var(--color-primary);
+  border-radius: 2px;
+}
+
+.nex-history-item__date {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-top: 0.25rem;
+}

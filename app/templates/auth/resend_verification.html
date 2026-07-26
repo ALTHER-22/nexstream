@@ -1,0 +1,29 @@
+{# Resend Verification Template #}
+{% extends "auth/auth_base.html" %}
+{% block title %}Reenviar verificación — {{ platform_name }}{% endblock %}
+{% block hero_title %}Verifica tu<br><span class="text-gradient">cuenta.</span>{% endblock %}
+{% block hero_subtitle %}Revisa tu bandeja de entrada. Si no lo encuentras, te enviamos otro enlace.{% endblock %}
+
+{% block auth_content %}
+  <h1 class="nex-auth-card__title">Verificar cuenta</h1>
+  <p class="nex-auth-card__subtitle">Ingresa tu email para reenviar el enlace</p>
+
+  <form method="POST" id="resendForm">
+    {{ csrf_token() | safe }}
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <div class="nex-auth-field">
+      <label class="nex-auth-label" for="email">Correo electrónico</label>
+      <div class="nex-auth-input-wrap">
+        <input type="email" name="email" id="email" class="nex-auth-input"
+               placeholder="tu@email.com" required autofocus>
+      </div>
+    </div>
+
+    <button type="submit" class="nex-auth-submit">Reenviar enlace de verificación</button>
+  </form>
+
+  <p class="nex-auth-footer">
+    <a href="{{ url_for('auth.login') }}">← Volver a iniciar sesión</a>
+  </p>
+{% endblock %}

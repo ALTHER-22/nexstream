@@ -1,0 +1,172 @@
+{# =============================================================================
+   NEXSTREAM — Template de Registro
+   =============================================================================
+   Archivo: app/templates/auth/register.html
+   ============================================================================= #}
+
+{% extends "auth/auth_base.html" %}
+
+{% block title %}Crear cuenta — {{ platform_name }}{% endblock %}
+
+{% block hero_title %}Únete a<br><span class="text-gradient">NEXSTREAM.</span>{% endblock %}
+{% block hero_subtitle %}Crea tu cuenta gratuita y accede a todo el catálogo de series y películas.{% endblock %}
+
+{% block auth_content %}
+
+  <h1 class="nex-auth-card__title">Crear cuenta</h1>
+  <p class="nex-auth-card__subtitle">Es gratis y tarda menos de 1 minuto</p>
+
+  <form method="POST" action="{{ url_for('auth.register') }}"
+        id="registerForm" novalidate autocomplete="off">
+
+    {{ form.hidden_tag() }}
+
+    {# ── Nombre de usuario ── #}
+    <div class="nex-auth-field">
+      <label class="nex-auth-label" for="{{ form.username.id }}">
+        Nombre de usuario
+      </label>
+      <div class="nex-auth-input-wrap">
+        {{ form.username(
+             class="nex-auth-input" + (" is-invalid" if form.username.errors else ""),
+             autofocus=true,
+             autocomplete="off"
+           ) }}
+      </div>
+      <div class="nex-auth-username-status" id="usernameStatus" aria-live="polite"></div>
+      {% if form.username.errors %}
+        {% for error in form.username.errors %}
+          <p class="nex-auth-field-msg error">{{ error }}</p>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    {# ── Email ── #}
+    <div class="nex-auth-field">
+      <label class="nex-auth-label" for="{{ form.email.id }}">
+        Correo electrónico
+      </label>
+      <div class="nex-auth-input-wrap">
+        {{ form.email(
+             class="nex-auth-input" + (" is-invalid" if form.email.errors else ""),
+             autocomplete="off"
+           ) }}
+      </div>
+      <div class="nex-auth-field-msg info" id="emailStatus" aria-live="polite"></div>
+      {% if form.email.errors %}
+        {% for error in form.email.errors %}
+          <p class="nex-auth-field-msg error">{{ error }}</p>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    {# ── Nombre para mostrar (opcional) ── #}
+    <div class="nex-auth-field">
+      <label class="nex-auth-label" for="{{ form.display_name.id }}">
+        Nombre para mostrar
+        <span style="font-weight:400; color:var(--color-text-disabled);">Opcional</span>
+      </label>
+      <div class="nex-auth-input-wrap">
+        {{ form.display_name(
+             class="nex-auth-input",
+             autocomplete="off"
+           ) }}
+      </div>
+    </div>
+
+    {# ── Contraseña ── #}
+    <div class="nex-auth-field">
+      <label class="nex-auth-label" for="{{ form.password.id }}">
+        Contraseña
+      </label>
+      <div class="nex-auth-input-wrap">
+        {{ form.password(
+             class="nex-auth-input" + (" is-invalid" if form.password.errors else ""),
+             id="registerPassword",
+             autocomplete="new-password"
+           ) }}
+        <button type="button" class="nex-auth-toggle-pwd"
+                id="toggleRegPwd" aria-label="Mostrar contraseña">👁</button>
+      </div>
+
+      {# Indicador de fortaleza #}
+      <div class="nex-pwd-strength" id="pwdStrength" style="display:none;">
+        <div class="nex-pwd-strength__bar">
+          <div class="nex-pwd-strength__fill" id="pwdStrengthFill"></div>
+        </div>
+        <div class="nex-pwd-strength__rules">
+          <div class="nex-pwd-rule" id="rule-length">
+            <div class="nex-pwd-rule__dot"></div> 8+ caracteres
+          </div>
+          <div class="nex-pwd-rule" id="rule-upper">
+            <div class="nex-pwd-rule__dot"></div> Mayúscula
+          </div>
+          <div class="nex-pwd-rule" id="rule-lower">
+            <div class="nex-pwd-rule__dot"></div> Minúscula
+          </div>
+          <div class="nex-pwd-rule" id="rule-number">
+            <div class="nex-pwd-rule__dot"></div> Número
+          </div>
+        </div>
+      </div>
+
+      {% if form.password.errors %}
+        {% for error in form.password.errors %}
+          <p class="nex-auth-field-msg error">{{ error }}</p>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    {# ── Confirmar contraseña ── #}
+    <div class="nex-auth-field">
+      <label class="nex-auth-label" for="{{ form.password2.id }}">
+        Confirmar contraseña
+      </label>
+      <div class="nex-auth-input-wrap">
+        {{ form.password2(
+             class="nex-auth-input" + (" is-invalid" if form.password2.errors else ""),
+             id="registerPassword2",
+             autocomplete="new-password"
+           ) }}
+        <button type="button" class="nex-auth-toggle-pwd"
+                id="toggleRegPwd2" aria-label="Mostrar contraseña">👁</button>
+      </div>
+      <div class="nex-auth-field-msg" id="pwdMatchMsg" aria-live="polite"></div>
+      {% if form.password2.errors %}
+        {% for error in form.password2.errors %}
+          <p class="nex-auth-field-msg error">{{ error }}</p>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    {# ── Aceptar términos ── #}
+    <div class="nex-auth-field" style="margin-top:1.25rem;">
+      <label class="nex-auth-checkbox" for="{{ form.accept_terms.id }}">
+        {{ form.accept_terms() }}
+        <span>Acepto los
+          <a href="#" target="_blank">términos de uso</a> y la
+          <a href="#" target="_blank">política de privacidad</a>
+        </span>
+      </label>
+      {% if form.accept_terms.errors %}
+        {% for error in form.accept_terms.errors %}
+          <p class="nex-auth-field-msg error">{{ error }}</p>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    {# ── Botón submit ── #}
+    <button type="submit" class="nex-auth-submit" id="registerSubmit">
+      <span class="btn-text">Crear mi cuenta</span>
+    </button>
+
+  </form>
+
+  <p class="nex-auth-footer">
+    ¿Ya tienes cuenta?
+    <a href="{{ url_for('auth.login') }}">Iniciar sesión</a>
+  </p>
+
+  <p class="nex-auth-security">🔒 Tu información está protegida y cifrada</p>
+
+{% endblock %}

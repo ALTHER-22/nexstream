@@ -1,0 +1,88 @@
+{# =============================================================================
+   NEXSTREAM — Editar Perfil
+   ============================================================================= #}
+
+{% extends "user/layout.html" %}
+
+{% block title %}Mi Perfil — {{ platform_name }}{% endblock %}
+{% block profile_title %}Editar Perfil{% endblock %}
+{% block profile_subtitle %}Actualiza tu información pública y personaliza tu cuenta.{% endblock %}
+
+{% block profile_content %}
+<form method="POST" action="{{ url_for('user.profile') }}" enctype="multipart/form-data" novalidate>
+  {{ form.hidden_tag() }}
+
+  <div class="nex-settings-card">
+    <h2 class="nex-settings-card__title">Información Básica</h2>
+    
+    {# ── Avatar Upload ── #}
+    <div class="nex-avatar-upload">
+      <img src="{{ current_user.avatar_url }}" alt="Preview" class="nex-avatar-upload__preview" id="avatarPreview">
+      <div class="nex-avatar-upload__actions">
+        <label class="nex-avatar-upload__label" for="{{ form.avatar.id }}">
+          📷 Seleccionar nueva foto
+        </label>
+        {{ form.avatar(accept="image/png, image/jpeg, image/webp, image/avif") }}
+        <p class="nex-avatar-upload__hint">Archivos permitidos: JPG, PNG, WEBP. Máximo 5MB.</p>
+        {% for error in form.avatar.errors %}
+          <p class="nex-auth-field-msg error">{{ error }}</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="nex-grid-2">
+      {# Display Name #}
+      <div class="nex-auth-field">
+        <label class="nex-auth-label" for="{{ form.display_name.id }}">Nombre para mostrar</label>
+        <div class="nex-auth-input-wrap">
+          {{ form.display_name(class="nex-auth-input" + (" is-invalid" if form.display_name.errors else "")) }}
+        </div>
+        {% for error in form.display_name.errors %}
+          <p class="nex-auth-field-msg error">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      {# Username #}
+      <div class="nex-auth-field">
+        <label class="nex-auth-label" for="{{ form.username.id }}">Nombre de usuario</label>
+        <div class="nex-auth-input-wrap">
+          {{ form.username(class="nex-auth-input" + (" is-invalid" if form.username.errors else "")) }}
+        </div>
+        {% for error in form.username.errors %}
+          <p class="nex-auth-field-msg error">{{ error }}</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    {# Bio #}
+    <div class="nex-auth-field" style="margin-top:1rem;">
+      <label class="nex-auth-label" for="{{ form.bio.id }}">Biografía (opcional)</label>
+      <div class="nex-auth-input-wrap">
+        {{ form.bio(class="nex-auth-input" + (" is-invalid" if form.bio.errors else "")) }}
+      </div>
+      {% for error in form.bio.errors %}
+        <p class="nex-auth-field-msg error">{{ error }}</p>
+      {% endfor %}
+    </div>
+
+  </div>
+
+  <div style="display:flex; justify-content:flex-end;">
+    <button type="submit" class="nex-btn nex-btn--primary nex-btn--lg">Guardar cambios</button>
+  </div>
+</form>
+
+<script>
+// Preview de imagen al seleccionar
+document.getElementById('{{ form.avatar.id }}').addEventListener('change', function(e) {
+  if (this.files && this.files[0]) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      document.getElementById('avatarPreview').src = e.target.result;
+      document.getElementById('sidebarAvatar').src = e.target.result;
+    }
+    reader.readAsDataURL(this.files[0]);
+  }
+});
+</script>
+{% endblock %}

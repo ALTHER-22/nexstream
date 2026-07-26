@@ -1,0 +1,84 @@
+{# =============================================================================
+   NEXSTREAM — Template Base de Autenticación
+   =============================================================================
+   Archivo: app/templates/auth/auth_base.html
+   Descripción: Layout base para todas las páginas de autenticación.
+                Extiende base.html y añade el layout de 2 columnas.
+   ============================================================================= #}
+
+{% extends "base.html" %}
+
+{% block body_class %}page-auth{% endblock %}
+
+{# Sin footer en páginas de auth #}
+{% block footer %}{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+  {% block auth_styles %}{% endblock %}
+{% endblock %}
+
+{% block content %}
+{# ── Fondo animado ── #}
+<div class="nex-auth-bg" aria-hidden="true">
+  <div class="nex-auth-bg__gradient"></div>
+  <div class="nex-auth-bg__grid"></div>
+  <div class="nex-auth-bg__orb nex-auth-bg__orb--1"></div>
+  <div class="nex-auth-bg__orb nex-auth-bg__orb--2"></div>
+</div>
+
+<div class="nex-auth-wrapper">
+
+  {# ── Panel lateral (solo visible en desktop) ── #}
+  <div class="nex-auth-hero animate-fade-in-left">
+    <a href="{{ url_for('main.index') }}" class="nex-auth-hero__logo">
+      {{ platform_name }}
+    </a>
+    <h1 class="nex-auth-hero__title">
+      {% block hero_title %}Tu universo de<br><span class="text-gradient">entretenimiento.</span>{% endblock %}
+    </h1>
+    <p class="nex-auth-hero__subtitle">
+      {% block hero_subtitle %}Miles de series y películas en la más alta calidad. Cuando quieras, donde quieras.{% endblock %}
+    </p>
+    <div class="nex-auth-hero__features">
+      <div class="nex-auth-feature">
+        <div class="nex-auth-feature__icon">▶</div>
+        <span>Catálogo completo de series y películas</span>
+      </div>
+      <div class="nex-auth-feature">
+        <div class="nex-auth-feature__icon">📱</div>
+        <span>Compatible con todos tus dispositivos</span>
+      </div>
+      <div class="nex-auth-feature">
+        <div class="nex-auth-feature__icon">🔒</div>
+        <span>Tu cuenta protegida y segura</span>
+      </div>
+      <div class="nex-auth-feature">
+        <div class="nex-auth-feature__icon">❤</div>
+        <span>Guarda tus favoritos y continúa viendo</span>
+      </div>
+    </div>
+  </div>
+
+  {# ── Tarjeta del formulario ── #}
+  <div class="nex-auth-card animate-fade-in-up">
+    <div class="nex-auth-card__inner">
+
+      {# Logo visible solo en mobile (el panel lateral lo oculta en desktop) #}
+      <a href="{{ url_for('main.index') }}" class="nex-auth-card__logo d-none-desktop"
+         aria-label="{{ platform_name }} — Inicio" style="display:none;">
+        {{ platform_name }}
+      </a>
+
+      {% block auth_content %}{% endblock %}
+
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/auth.js') }}" defer></script>
+  {% block auth_scripts %}{% endblock %}
+{% endblock %}

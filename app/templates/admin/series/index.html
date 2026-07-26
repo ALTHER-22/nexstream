@@ -1,0 +1,78 @@
+{% extends "admin/layout.html" %}
+
+{% block page_title %}Gestión de Series{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 1.5rem; display: flex; justify-content: flex-end;">
+  <a href="{{ url_for('admin.create_series') }}" class="nex-btn nex-btn--primary">
+    + Nueva Serie
+  </a>
+</div>
+
+<table class="nex-table">
+  <thead>
+    <tr>
+      <th>Título</th>
+      <th>Año</th>
+      <th>Estado</th>
+      <th>Visibilidad</th>
+      <th>Creado</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for serie in pagination.items %}
+    <tr>
+      <td>
+        <div style="font-weight:600;">{{ serie.title }}</div>
+        <div style="font-size:0.75rem; color:var(--color-text-muted);">/serie/{{ serie.slug }}</div>
+      </td>
+      <td>{{ serie.year or '-' }}</td>
+      <td>
+        <span class="nex-status-badge {{ 'active' if serie.status == 'ongoing' else 'inactive' }}">
+          {{ serie.status }}
+        </span>
+      </td>
+      <td>
+        {% if serie.is_active %}
+          <span class="nex-status-badge active">Publicado</span>
+        {% else %}
+          <span class="nex-status-badge inactive">Oculto</span>
+        {% endif %}
+      </td>
+      <td>{{ serie.created_at.strftime('%d/%m/%Y') }}</td>
+      <td>
+        <div style="display:flex; gap:0.5rem; align-items:center;">
+          <a href="{{ url_for('admin.edit_series', id=serie.id) }}" class="nex-btn nex-btn--ghost nex-btn--sm">Editar</a>
+          <a href="{{ url_for('admin.create_episode', series_id=serie.id, season=1) }}" class="nex-btn nex-btn--ghost nex-btn--sm" title="Añadir episodio a la Temp 1">+ Ep</a>
+          <a href="{{ url_for('main.series_detail', slug=serie.slug) }}" target="_blank" class="nex-btn nex-btn--secondary nex-btn--sm">Ver</a>
+        </div>
+      </td>
+    </tr>
+    {% else %}
+    <tr>
+      <td colspan="6" style="text-align:center; padding:3rem; color:var(--color-text-muted);">
+        No hay series registradas.
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{# Paginación #}
+{% if pagination.pages > 1 %}
+<div style="display:flex; justify-content:center; gap:0.5rem; margin-top:2rem;">
+  {% for page_num in pagination.iter_pages() %}
+    {% if page_num %}
+      <a href="{{ url_for('admin.list_series', page=page_num) }}" 
+         class="nex-btn {% if page_num == pagination.page %}nex-btn--primary{% else %}nex-btn--secondary{% endif %} nex-btn--sm">
+        {{ page_num }}
+      </a>
+    {% else %}
+      <span style="color:var(--color-text-muted);">...</span>
+    {% endif %}
+  {% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}

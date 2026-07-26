@@ -1,0 +1,560 @@
+/* =============================================================================
+   NEXSTREAM — CSS de Autenticación
+   =============================================================================
+   Archivo: app/static/css/auth.css
+   Descripción: Estilos premium para las páginas de autenticación.
+                Diseño tipo Apple TV / Netflix con glassmorphism.
+   ============================================================================= */
+
+/* ─── LAYOUT BASE DE AUTH ────────────────────────────────────────────────────── */
+
+.page-auth body,
+.nex-auth-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+.nex-auth-wrapper {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem 1.5rem 3rem;
+  gap: 4rem;
+}
+
+/* ─── FONDO ANIMADO ──────────────────────────────────────────────────────────── */
+
+.nex-auth-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.nex-auth-bg__gradient {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 15% 30%, rgba(229,9,20,0.10) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 70% at 85% 70%, rgba(26,111,255,0.06) 0%, transparent 65%),
+    radial-gradient(ellipse 60% 40% at 50% 100%, rgba(123,92,245,0.05) 0%, transparent 65%),
+    var(--color-bg-base);
+  animation: gradient-shift 15s ease infinite;
+  background-size: 300% 300%;
+}
+
+.nex-auth-bg__grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+}
+
+.nex-auth-bg__orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  animation: float 8s ease-in-out infinite;
+}
+
+.nex-auth-bg__orb--1 {
+  width: 400px; height: 400px;
+  background: rgba(229, 9, 20, 0.06);
+  top: -100px; left: -100px;
+  animation-delay: 0s;
+}
+
+.nex-auth-bg__orb--2 {
+  width: 300px; height: 300px;
+  background: rgba(26, 111, 255, 0.05);
+  bottom: -50px; right: -50px;
+  animation-delay: -4s;
+}
+
+/* ─── PANEL LATERAL (Desktop) ────────────────────────────────────────────────── */
+
+.nex-auth-hero {
+  flex: 1;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.nex-auth-hero__logo {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--color-primary);
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  margin-bottom: 3rem;
+  text-shadow: 0 0 40px rgba(229,9,20,0.3);
+  display: inline-block;
+  text-decoration: none;
+}
+
+.nex-auth-hero__title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.5rem;
+  color: var(--color-text-primary);
+}
+
+.nex-auth-hero__subtitle {
+  font-size: 1.0625rem;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  margin-bottom: 3rem;
+}
+
+.nex-auth-hero__features {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.nex-auth-feature {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+}
+
+.nex-auth-feature__icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(229, 9, 20, 0.1);
+  border: 1px solid rgba(229, 9, 20, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+  color: var(--color-primary);
+}
+
+/* ─── TARJETA DEL FORMULARIO ─────────────────────────────────────────────────── */
+
+.nex-auth-card {
+  width: 100%;
+  max-width: 420px;
+  flex-shrink: 0;
+}
+
+.nex-auth-card__inner {
+  background: rgba(22, 22, 30, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-2xl);
+  padding: 2.5rem;
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.04) inset,
+    0 24px 64px rgba(0,0,0,0.6),
+    0 4px 24px rgba(0,0,0,0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Brillo sutil en el borde superior */
+.nex-auth-card__inner::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 10%; right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+}
+
+[data-theme="light"] .nex-auth-card__inner {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 24px 64px rgba(0,0,0,0.12);
+}
+
+.nex-auth-card__logo {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: var(--color-primary);
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 2rem;
+  text-decoration: none;
+  transition: transform var(--transition-spring);
+}
+
+.nex-auth-card__logo:hover {
+  transform: scale(1.05);
+  color: var(--color-primary-light);
+}
+
+.nex-auth-card__title {
+  font-size: 1.625rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 0.375rem;
+  color: var(--color-text-primary);
+  letter-spacing: -0.02em;
+}
+
+.nex-auth-card__subtitle {
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 0.9375rem;
+  margin-bottom: 2rem;
+}
+
+/* ─── CAMPOS DEL FORMULARIO ──────────────────────────────────────────────────── */
+
+.nex-auth-field {
+  margin-bottom: 1.125rem;
+  position: relative;
+}
+
+.nex-auth-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.01em;
+}
+
+.nex-auth-label__link {
+  font-weight: 500;
+  color: var(--color-primary);
+  font-size: 0.8125rem;
+  transition: color var(--transition-fast);
+}
+
+.nex-auth-label__link:hover { color: var(--color-primary-light); }
+
+.nex-auth-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.nex-auth-input {
+  width: 100%;
+  padding: 0.875rem 3rem 0.875rem 0.875rem;
+  background: rgba(255,255,255,0.04);
+  border: 1.5px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-primary);
+  font-size: 0.9375rem;
+  font-family: var(--font-primary);
+  outline: none;
+  transition: all var(--transition-fast);
+  -webkit-appearance: none;
+}
+
+.nex-auth-input::placeholder { color: var(--color-text-disabled); }
+
+.nex-auth-input:focus {
+  border-color: var(--color-primary);
+  background: rgba(229,9,20,0.04);
+  box-shadow: 0 0 0 3px rgba(229,9,20,0.1);
+}
+
+.nex-auth-input:hover:not(:focus) {
+  border-color: rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.06);
+}
+
+.nex-auth-input.is-valid {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16,185,129,0.1);
+}
+
+.nex-auth-input.is-invalid {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239,68,68,0.1);
+}
+
+[data-theme="light"] .nex-auth-input {
+  background: rgba(0,0,0,0.03);
+  border-color: rgba(0,0,0,0.12);
+  color: var(--color-text-primary);
+}
+[data-theme="light"] .nex-auth-input:focus {
+  background: rgba(229,9,20,0.02);
+}
+
+/* Icono de estado dentro del input */
+.nex-auth-input-icon {
+  position: absolute;
+  right: 0.875rem;
+  font-size: 1rem;
+  pointer-events: none;
+  transition: all var(--transition-fast);
+  opacity: 0;
+}
+
+.nex-auth-input.is-valid  + .nex-auth-input-icon { opacity: 1; color: #10b981; }
+.nex-auth-input.is-invalid + .nex-auth-input-icon { opacity: 1; color: #ef4444; }
+
+/* Botón mostrar/ocultar contraseña */
+.nex-auth-toggle-pwd {
+  position: absolute;
+  right: 0.875rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  padding: 0.25rem;
+  line-height: 1;
+  transition: color var(--transition-fast);
+  z-index: 1;
+}
+
+.nex-auth-toggle-pwd:hover { color: var(--color-text-primary); }
+
+/* Mensaje de error/ayuda bajo el campo */
+.nex-auth-field-msg {
+  font-size: 0.8125rem;
+  margin-top: 0.375rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.3rem;
+  line-height: 1.4;
+}
+
+.nex-auth-field-msg.error   { color: #ef4444; }
+.nex-auth-field-msg.success  { color: #10b981; }
+.nex-auth-field-msg.info     { color: var(--color-text-muted); }
+
+/* Feedback en tiempo real del username */
+.nex-auth-username-status {
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  min-height: 1rem;
+  transition: all var(--transition-fast);
+}
+
+/* ─── INDICADOR DE FORTALEZA DE CONTRASEÑA ───────────────────────────────────── */
+
+.nex-pwd-strength {
+  margin-top: 0.5rem;
+}
+
+.nex-pwd-strength__bar {
+  height: 3px;
+  background: var(--color-surface-3);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: 0.375rem;
+}
+
+.nex-pwd-strength__fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.4s ease, background 0.4s ease;
+  width: 0%;
+}
+
+.nex-pwd-strength__fill.weak   { width: 25%; background: #ef4444; }
+.nex-pwd-strength__fill.fair   { width: 50%; background: #f59e0b; }
+.nex-pwd-strength__fill.good   { width: 75%; background: #3b82f6; }
+.nex-pwd-strength__fill.strong { width: 100%; background: #10b981; }
+
+.nex-pwd-strength__label {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.nex-pwd-strength__rules {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.nex-pwd-rule {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+  color: var(--color-text-disabled);
+  transition: color var(--transition-fast);
+}
+
+.nex-pwd-rule.met {
+  color: #10b981;
+}
+
+.nex-pwd-rule__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+
+/* ─── CHECKBOX ───────────────────────────────────────────────────────────────── */
+
+.nex-auth-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.nex-auth-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1.5px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.04);
+  appearance: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-top: 2px;
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.nex-auth-checkbox input[type="checkbox"]:checked {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.nex-auth-checkbox input[type="checkbox"]:checked::before {
+  content: '✓';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.nex-auth-checkbox a {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+/* ─── BOTÓN SUBMIT ───────────────────────────────────────────────────────────── */
+
+.nex-auth-submit {
+  width: 100%;
+  padding: 0.9375rem;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  border-radius: var(--radius-lg);
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 20px rgba(229,9,20,0.3);
+}
+
+.nex-auth-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(229,9,20,0.4);
+}
+
+.nex-auth-submit:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.nex-auth-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ─── DIVIDER ────────────────────────────────────────────────────────────────── */
+
+.nex-auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  font-size: 0.8125rem;
+  color: var(--color-text-disabled);
+}
+
+.nex-auth-divider::before,
+.nex-auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
+
+/* ─── FOOTER DEL FORMULARIO ──────────────────────────────────────────────────── */
+
+.nex-auth-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.nex-auth-footer a {
+  color: var(--color-primary);
+  font-weight: 600;
+  transition: color var(--transition-fast);
+}
+
+.nex-auth-footer a:hover { color: var(--color-primary-light); }
+
+/* ─── RECAPTCHA / SECURITY NOTE ──────────────────────────────────────────────── */
+
+.nex-auth-security {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  color: var(--color-text-disabled);
+  margin-top: 1.25rem;
+}
+
+/* ─── RESPONSIVE ─────────────────────────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .nex-auth-hero { display: none; }
+  .nex-auth-wrapper { gap: 0; justify-content: center; }
+}
+
+@media (max-width: 480px) {
+  .nex-auth-card__inner {
+    padding: 2rem 1.5rem;
+    border-radius: var(--radius-xl);
+  }
+  .nex-auth-wrapper { padding: 5rem 1rem 2rem; }
+}
