@@ -34,7 +34,7 @@
       </a>
     </li>
     {% if nav_categories %}
-      {% for cat in nav_categories[:4] %}
+      {% for cat in nav_categories %}
       <li>
         <a href="{{ url_for('main.category', slug=cat.slug) }}" class="nex-navbar__link">{{ cat.name }}</a>
       </li>
