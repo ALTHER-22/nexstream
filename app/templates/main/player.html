@@ -267,7 +267,6 @@
     const csrfToken = "{{ csrf_token() }}";
     
     const contentId = {{ item.id }};
-    const contentType = "{{ type }}";
     const seriesId = {{ parent.id if type == 'series' else 'null' }};
     const startTime = {{ start_time|default(0) }};
     
