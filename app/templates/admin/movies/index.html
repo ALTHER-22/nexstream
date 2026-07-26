@@ -42,6 +42,7 @@
           <a href="{{ url_for('admin.edit_movie', id=movie.id) }}" class="nex-btn nex-btn--ghost nex-btn--sm">Editar</a>
           <a href="{{ url_for('main.movie_detail', slug=movie.slug) }}" target="_blank" class="nex-btn nex-btn--secondary nex-btn--sm">Ver</a>
           <form action="{{ url_for('admin.delete_movie', id=movie.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de eliminar esta película?');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <button type="submit" class="nex-btn nex-btn--sm" style="background-color: var(--color-error, #e50914); color: white; border: none; cursor: pointer;">Eliminar</button>
           </form>
         </div>
