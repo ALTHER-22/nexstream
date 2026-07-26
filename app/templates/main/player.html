@@ -396,6 +396,21 @@
     {% else %}
     // Funciones dummy si es embed para que goBack funcione sin errores
     async function saveProgress() { return; }
+    
+    // Ocultar automáticamente la barra superior para los embeds (como Google Drive)
+    let embedTimeout;
+    const header = document.querySelector('.nex-player-header');
+    function resetEmbedTimeout() {
+      header.style.transition = 'opacity 0.5s';
+      header.style.opacity = '1';
+      clearTimeout(embedTimeout);
+      embedTimeout = setTimeout(() => {
+        header.style.opacity = '0';
+      }, 3500);
+    }
+    document.addEventListener('mousemove', resetEmbedTimeout);
+    document.addEventListener('touchstart', resetEmbedTimeout);
+    resetEmbedTimeout();
     {% endif %}
   </script>
 </body>
