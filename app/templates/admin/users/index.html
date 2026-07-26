@@ -36,7 +36,7 @@
               <span class="nex-status-badge inactive">USER</span>
             {% endfor %}
           </div>
-          {% if user.subscriptions.filter_by(is_active=True).first() %}
+          {% if user.subscription and user.subscription.is_active %}
             <span class="nex-status-badge active" style="font-size:0.65rem;">Suscrito</span>
           {% else %}
             <span class="nex-status-badge inactive" style="font-size:0.65rem;">Gratis</span>
