@@ -157,6 +157,8 @@ class Series(db.Model):
     def cover_url(self) -> str:
         """URL de la portada o imagen por defecto."""
         if self.cover:
+            if self.cover.startswith('/static/'):
+                return self.cover
             return f'/static/uploads/covers/{self.cover}'
         return '/static/images/default-cover.webp'
 
@@ -164,6 +166,8 @@ class Series(db.Model):
     def banner_url(self) -> str:
         """URL del banner o imagen por defecto."""
         if self.banner:
+            if self.banner.startswith('/static/'):
+                return self.banner
             return f'/static/uploads/banners/{self.banner}'
         return '/static/images/default-banner.webp'
 
@@ -303,12 +307,16 @@ class Movie(db.Model):
     @property
     def cover_url(self) -> str:
         if self.cover:
+            if self.cover.startswith('/static/'):
+                return self.cover
             return f'/static/uploads/covers/{self.cover}'
         return '/static/images/default-cover.webp'
 
     @property
     def banner_url(self) -> str:
         if self.banner:
+            if self.banner.startswith('/static/'):
+                return self.banner
             return f'/static/uploads/banners/{self.banner}'
         return '/static/images/default-banner.webp'
 
@@ -430,6 +438,8 @@ class Episode(db.Model):
     @property
     def thumbnail_url(self) -> str:
         if self.thumbnail:
+            if self.thumbnail.startswith('/static/'):
+                return self.thumbnail
             return f'/static/uploads/thumbnails/{self.thumbnail}'
         return '/static/images/default-thumbnail.webp'
 
