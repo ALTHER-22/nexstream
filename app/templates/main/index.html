@@ -301,6 +301,11 @@
   section.addEventListener('mouseleave', startAutoplay);
 
   if (slides.length > 1) startAutoplay();
+  
+  // Add loaded class for slow zoom animation
+  setTimeout(() => {
+    section.classList.add('loaded');
+  }, 100);
 })();
 
 // ── Favoritos ─────────────────────────────────────────────────────────────────

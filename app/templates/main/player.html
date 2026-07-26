@@ -83,50 +83,69 @@
     .video-js {
       width: 100% !important;
       height: 100% !important;
+      font-family: 'Inter', sans-serif !important;
     }
     .vjs-big-play-button {
-      background-color: rgba(0, 0, 0, 0.5) !important;
-      border: 2px solid var(--player-ui-color) !important;
+      background-color: rgba(229, 9, 20, 0.8) !important;
+      border: none !important;
       border-radius: 50% !important;
-      width: 80px !important;
-      height: 80px !important;
-      line-height: 76px !important;
+      width: 70px !important;
+      height: 70px !important;
+      line-height: 70px !important;
       top: 50% !important;
       left: 50% !important;
       transform: translate(-50%, -50%);
+      box-shadow: 0 0 30px rgba(229, 9, 20, 0.5);
+      transition: all 0.3s ease;
     }
-    .vjs-play-progress {
-      background-color: var(--player-ui-color) !important;
+    .vjs-big-play-button:hover {
+      background-color: #ff0f1f !important;
+      transform: translate(-50%, -50%) scale(1.1);
+      box-shadow: 0 0 40px rgba(229, 9, 20, 0.7);
     }
     .vjs-control-bar {
-      background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%) !important;
-      height: 90px !important;
+      background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.5) 60%, transparent 100%) !important;
+      height: 100px !important;
       padding: 0 1rem;
       display: flex !important;
       align-items: flex-end !important;
-      padding-bottom: 1rem;
+      padding-bottom: 1.5rem;
     }
     .vjs-progress-control {
       position: absolute;
-      top: 0;
-      left: 1rem;
-      right: 1rem;
+      top: 15px;
+      left: 1.5rem;
+      right: 1.5rem;
       width: auto !important;
       height: 30px !important;
     }
     .vjs-slider {
-      background-color: rgba(255, 255, 255, 0.2) !important;
+      background-color: rgba(255, 255, 255, 0.3) !important;
       border-radius: 4px;
+      height: 4px !important;
     }
     .vjs-load-progress {
-      background: rgba(255,255,255,0.4) !important;
+      background: rgba(255,255,255,0.2) !important;
     }
-    .vjs-load-progress div {
-      background: transparent !important;
+    .vjs-play-progress {
+      background-color: var(--player-ui-color) !important;
+      border-radius: 4px;
+      box-shadow: 0 0 10px var(--player-ui-color);
     }
     .vjs-play-progress:before {
-      font-size: 1.25em !important;
-      top: -0.3em !important;
+      font-size: 1.5em !important;
+      top: -0.4em !important;
+      color: white !important;
+      text-shadow: 0 0 5px var(--player-ui-color);
+    }
+    .vjs-button > .vjs-icon-placeholder:before {
+      font-size: 2.2em;
+      line-height: 1.5;
+    }
+    .vjs-time-control {
+      font-size: 1.1em;
+      line-height: 40px !important;
+      font-weight: 500;
     }
     
     /* Next Episode Overlay */

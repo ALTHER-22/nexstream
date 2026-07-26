@@ -39,10 +39,10 @@
   --color-primary-light: #ff2c38;        /* Rojo luminoso */
 
   /* ── Fondo (Dark Mode por defecto) ── */
-  --color-bg-base:       #0a0a0f;        /* Negro profundo */
-  --color-bg-secondary:  #111118;        /* Negro secundario */
-  --color-bg-card:       #16161e;        /* Fondo de tarjeta */
-  --color-bg-elevated:   #1e1e2a;        /* Elementos elevados */
+  --color-bg-base:       #050508;        /* Negro profundo cinematográfico */
+  --color-bg-secondary:  #0a0a0f;        /* Negro secundario */
+  --color-bg-card:       #111118;        /* Fondo de tarjeta */
+  --color-bg-elevated:   #16161e;        /* Elementos elevados */
   --color-bg-overlay:    rgba(0, 0, 0, 0.85);
 
   /* ── Superficies con Azul Oscuro Sutil ── */
@@ -70,8 +70,8 @@
   --color-accent-teal:   #0ea5e9;
 
   /* ── Gradientes ── */
-  --gradient-primary:    linear-gradient(135deg, #e50914 0%, #b20710 100%);
-  --gradient-dark:       linear-gradient(180deg, transparent 0%, #0a0a0f 100%);
+  --gradient-primary:    linear-gradient(135deg, #ff0f1f 0%, #b20710 100%);
+  --gradient-dark:       linear-gradient(180deg, transparent 0%, #050508 100%);
   --gradient-hero:       linear-gradient(90deg, rgba(10,10,15,0.95) 0%, rgba(10,10,15,0.6) 50%, transparent 100%);
   --gradient-card:       linear-gradient(180deg, transparent 40%, rgba(10,10,15,0.98) 100%);
   --gradient-glass:      linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
@@ -81,10 +81,10 @@
   --shadow-sm:    0 1px 3px rgba(0, 0, 0, 0.5);
   --shadow-md:    0 4px 16px rgba(0, 0, 0, 0.6);
   --shadow-lg:    0 8px 32px rgba(0, 0, 0, 0.7);
-  --shadow-xl:    0 16px 48px rgba(0, 0, 0, 0.8);
-  --shadow-glow:  0 0 30px rgba(229, 9, 20, 0.3);
-  --shadow-card:  0 4px 20px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.04);
-  --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(229, 9, 20, 0.2);
+  --shadow-xl:    0 20px 50px rgba(0, 0, 0, 0.9);
+  --shadow-glow:  0 0 35px rgba(229, 9, 20, 0.4);
+  --shadow-card:  0 8px 24px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255,255,255,0.05);
+  --shadow-hover: 0 16px 48px rgba(0, 0, 0, 0.9), 0 0 30px rgba(229, 9, 20, 0.35);
 
   /* ── Tipografía ── */
   --font-primary:  'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -311,10 +311,10 @@ p {
 
 /* Navbar sólido al hacer scroll */
 .nex-navbar.scrolled {
-  background: rgba(10, 10, 15, 0.95);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  box-shadow: 0 1px 0 var(--color-border), var(--shadow-md);
+  background: rgba(5, 5, 8, 0.85);
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05), var(--shadow-md);
 }
 
 [data-theme="light"] .nex-navbar.scrolled {
@@ -663,21 +663,25 @@ p {
 
 .nex-slider__btn {
   position: absolute;
-  top: 50%;
+  top: 45%;
   transform: translateY(-50%);
-  width: 48px;
-  height: 80px;
+  width: 50px;
+  height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(10, 10, 15, 0.9);
-  border: 1px solid var(--color-border);
-  color: var(--color-text-primary);
-  font-size: var(--text-lg);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  color: white;
+  font-size: var(--text-2xl);
+  font-weight: bold;
   cursor: pointer;
   z-index: var(--z-above);
-  transition: all var(--transition-base);
+  transition: all var(--transition-spring);
   opacity: 0;
+  box-shadow: var(--shadow-md);
 }
 
 .nex-slider:hover .nex-slider__btn {
@@ -691,13 +695,11 @@ p {
 }
 
 .nex-slider__btn--prev {
-  left: 0;
-  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  left: var(--space-2);
 }
 
 .nex-slider__btn--next {
-  right: 0;
-  border-radius: var(--radius-md) 0 0 var(--radius-md);
+  right: var(--space-2);
 }
 
 /* Tarjeta individual */
@@ -709,12 +711,13 @@ p {
   cursor: pointer;
   position: relative;
   scroll-snap-align: start;
-  transition: transform var(--transition-spring), box-shadow var(--transition-base);
+  transition: transform var(--transition-spring), box-shadow var(--transition-spring), filter var(--transition-base);
   transform-origin: center bottom;
+  box-shadow: var(--shadow-card);
 }
 
 .nex-card:hover {
-  transform: scale(1.08) translateY(-4px);
+  transform: scale(1.06) translateY(-8px);
   box-shadow: var(--shadow-hover);
   z-index: var(--z-above);
 }
