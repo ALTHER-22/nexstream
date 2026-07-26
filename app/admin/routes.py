@@ -187,6 +187,18 @@ def edit_series(id):
         return redirect(url_for('admin.list_series'))
         
     return render_template('admin/series/form.html', form=form, serie=serie, title=f'Editar: {serie.title}')
+    
+
+@bp.route('/series/<int:id>/eliminar', methods=['POST'])
+@login_required
+@admin_required
+def delete_series(id):
+    """Eliminar una serie."""
+    serie = Series.query.get_or_404(id)
+    db.session.delete(serie)
+    db.session.commit()
+    flash(f'Serie "{serie.title}" eliminada.', 'success')
+    return redirect(url_for('admin.list_series'))
 
 
 # ─── GESTIÓN DE PELÍCULAS ──────────────────────────────────────────────────
@@ -274,6 +286,18 @@ def edit_movie(id):
         return redirect(url_for('admin.list_movies'))
         
     return render_template('admin/movies/form.html', form=form, movie=movie, title=f'Editar: {movie.title}')
+
+
+@bp.route('/peliculas/<int:id>/eliminar', methods=['POST'])
+@login_required
+@admin_required
+def delete_movie(id):
+    """Eliminar una película."""
+    movie = Movie.query.get_or_404(id)
+    db.session.delete(movie)
+    db.session.commit()
+    flash(f'Película "{movie.title}" eliminada.', 'success')
+    return redirect(url_for('admin.list_movies'))
 
 
 # ─── GESTIÓN DE EPISODIOS ──────────────────────────────────────────────────
