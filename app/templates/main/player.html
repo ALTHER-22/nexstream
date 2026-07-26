@@ -209,8 +209,7 @@
         class="video-js vjs-default-skin vjs-big-play-centered"
         playsinline
         preload="auto"
-        poster="{{ item.thumbnail_url if type == 'series' else item.banner_url }}"
-        data-setup='{"controls": true, "fluid": false, "inactivityTimeout": 3000}'>
+        poster="{{ item.thumbnail_url if type == 'series' else item.banner_url }}">
         
         {% if item.video_url %}
           <source src="{{ item.video_url }}" type="video/mp4" />
@@ -260,7 +259,11 @@
 
     {% if not is_embed %}
     // --- Configuración e Inicialización ---
-    const player = videojs('nex-video');
+    const player = videojs('nex-video', {
+      controls: true,
+      fluid: false,
+      inactivityTimeout: 3000
+    });
     const container = document.getElementById('playerContainer');
     const csrfToken = "{{ csrf_token() }}";
     
