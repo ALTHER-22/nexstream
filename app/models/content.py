@@ -160,7 +160,7 @@ class Series(db.Model):
             if self.cover.startswith('/static/'):
                 return self.cover
             return f'/static/uploads/covers/{self.cover}'
-        return '/static/images/default-cover.webp'
+        return '/static/images/default-cover.svg'
 
     @property
     def banner_url(self) -> str:
@@ -169,7 +169,7 @@ class Series(db.Model):
             if self.banner.startswith('/static/'):
                 return self.banner
             return f'/static/uploads/banners/{self.banner}'
-        return '/static/images/default-banner.webp'
+        return '/static/images/default-banner.svg'
 
     @property
     def total_episodes(self) -> int:
@@ -310,7 +310,7 @@ class Movie(db.Model):
             if self.cover.startswith('/static/'):
                 return self.cover
             return f'/static/uploads/covers/{self.cover}'
-        return '/static/images/default-cover.webp'
+        return '/static/images/default-cover.svg'
 
     @property
     def banner_url(self) -> str:
@@ -318,7 +318,7 @@ class Movie(db.Model):
             if self.banner.startswith('/static/'):
                 return self.banner
             return f'/static/uploads/banners/{self.banner}'
-        return '/static/images/default-banner.webp'
+        return '/static/images/default-banner.svg'
 
     def increment_views(self) -> None:
         self.views_count += 1
@@ -441,7 +441,7 @@ class Episode(db.Model):
             if self.thumbnail.startswith('/static/'):
                 return self.thumbnail
             return f'/static/uploads/thumbnails/{self.thumbnail}'
-        return '/static/images/default-thumbnail.webp'
+        return '/static/images/default-thumbnail.svg'
 
     @property
     def duration_formatted(self) -> str:

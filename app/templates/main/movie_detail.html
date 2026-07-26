@@ -25,7 +25,7 @@
       </div>
       <div class="nex-detail-hero__info">
         <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.875rem;">
-          <span class="nex-badge nex-badge--hd">PELÃCULA</span>
+          <span class="nex-badge nex-badge--hd">PEL&Iacute;CULA</span>
           {% for cat in movie.categories[:3] %}
             <a href="{{ url_for('main.category', slug=cat.slug) }}" class="nex-badge nex-badge--primary" style="font-size:0.75rem;">{{ cat.name }}</a>
           {% endfor %}
