@@ -1,0 +1,51 @@
+{% extends "admin/layout.html" %}
+
+{% block page_title %}Gestión de Categorías{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 1.5rem; display: flex; justify-content: flex-end;">
+  <a href="{{ url_for('admin.create_category') }}" class="nex-btn nex-btn--primary">
+    + Nueva Categoría
+  </a>
+</div>
+
+<div class="nex-admin-panel">
+  <table class="nex-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Slug</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for category in categories %}
+      <tr>
+        <td>{{ category.id }}</td>
+        <td>
+          <div style="font-weight:600;">{{ category.name }}</div>
+          <div style="font-size:0.85rem; color:var(--color-text-muted);">{{ category.description or 'Sin descripción' }}</div>
+        </td>
+        <td><span style="font-family:monospace; background:rgba(255,255,255,0.1); padding:0.2rem 0.4rem; border-radius:4px;">{{ category.slug }}</span></td>
+        <td>
+          <div style="display:flex; gap:0.5rem; align-items:center;">
+            <a href="{{ url_for('admin.edit_category', id=category.id) }}" class="nex-btn nex-btn--ghost nex-btn--sm">Editar</a>
+            <form action="{{ url_for('admin.delete_category', id=category.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de eliminar esta categoría? (Esto no borrará las películas/series, solo la categoría)');">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+              <button type="submit" class="nex-btn nex-btn--sm" style="background-color: var(--color-error, #e50914); color: white; border: none; cursor: pointer;">Eliminar</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="4" style="text-align:center; padding:3rem; color:var(--color-text-muted);">
+          No hay categorías registradas.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

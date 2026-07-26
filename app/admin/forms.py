@@ -95,3 +95,10 @@ class EpisodeForm(FlaskForm):
     ])
     
     video_url = StringField('URL del Video / HLS / MP4', validators=[Optional(), Length(max=255)])
+
+
+class CategoryForm(FlaskForm):
+    """Formulario para añadir/editar Categorías."""
+    name = StringField('Nombre', validators=[DataRequired(), Length(max=100)])
+    slug = StringField('Slug (URL amigable)', validators=[DataRequired(), Length(max=100)])
+    description = TextAreaField('Descripción', validators=[Optional()])

@@ -162,10 +162,10 @@
       <a href="{{ url_for('admin.list_movies') }}" class="nex-admin-link {% if request.endpoint and 'list_movies' in request.endpoint %}active{% endif %}">
         🎬 Películas
       </a>
-      <a href="#" class="nex-admin-link">
+      <a href="{{ url_for('admin.list_categories') }}" class="nex-admin-link {% if request.endpoint and 'list_categories' in request.endpoint %}active{% endif %}">
         📁 Categorías
       </a>
-      <a href="#" class="nex-admin-link">
+      <a href="{{ url_for('admin.list_users') }}" class="nex-admin-link {% if request.endpoint and 'list_users' in request.endpoint %}active{% endif %}">
         👥 Usuarios
       </a>
     </nav>

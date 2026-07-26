@@ -1,0 +1,85 @@
+{% extends "admin/layout.html" %}
+
+{% block page_title %}Gestión de Usuarios{% endblock %}
+
+{% block content %}
+<div class="nex-admin-panel">
+  <h3 style="margin-top:0; margin-bottom:1.5rem; font-size:1.25rem;">Lista de Usuarios Registrados</h3>
+  <table class="nex-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Usuario</th>
+        <th>Rol / Plan</th>
+        <th>Registrado</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in pagination.items %}
+      <tr>
+        <td>{{ user.id }}</td>
+        <td>
+          <div style="font-weight:600; display:flex; align-items:center; gap:0.5rem;">
+            {{ user.username }}
+            {% if user.id == current_user.id %}
+              <span class="nex-badge nex-badge--primary" style="font-size:0.65rem; padding:0.1rem 0.3rem;">TÚ</span>
+            {% endif %}
+          </div>
+          <div style="font-size:0.85rem; color:var(--color-text-muted);">{{ user.email }}</div>
+        </td>
+        <td>
+          <div style="font-size:0.85rem; margin-bottom:0.25rem;">
+            {% for role in user.roles %}
+              <span class="nex-status-badge {{ 'active' if role.name == 'admin' else '' }}">{{ role.name|upper }}</span>
+            {% else %}
+              <span class="nex-status-badge inactive">USER</span>
+            {% endfor %}
+          </div>
+          {% if user.subscriptions.filter_by(is_active=True).first() %}
+            <span class="nex-status-badge active" style="font-size:0.65rem;">Suscrito</span>
+          {% else %}
+            <span class="nex-status-badge inactive" style="font-size:0.65rem;">Gratis</span>
+          {% endif %}
+        </td>
+        <td>{{ user.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+        <td>
+          <div style="display:flex; gap:0.5rem; align-items:center;">
+            {% if user.id != current_user.id %}
+            <form action="{{ url_for('admin.delete_user', id=user.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás SEGURO de eliminar a este usuario de forma permanente? Se borrarán sus comentarios y valoraciones.');">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+              <button type="submit" class="nex-btn nex-btn--sm" style="background-color: var(--color-error, #e50914); color: white; border: none; cursor: pointer;">Eliminar</button>
+            </form>
+            {% else %}
+            <span style="color:var(--color-text-muted); font-size:0.8rem;">(No puedes eliminarte a ti mismo)</span>
+            {% endif %}
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="5" style="text-align:center; padding:3rem; color:var(--color-text-muted);">
+          No hay usuarios registrados.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {# Paginación #}
+  {% if pagination.pages > 1 %}
+  <div style="display:flex; justify-content:center; gap:0.5rem; margin-top:2rem;">
+    {% for page_num in pagination.iter_pages() %}
+      {% if page_num %}
+        <a href="{{ url_for('admin.list_users', page=page_num) }}" 
+           class="nex-btn {% if page_num == pagination.page %}nex-btn--primary{% else %}nex-btn--secondary{% endif %} nex-btn--sm">
+          {{ page_num }}
+        </a>
+      {% else %}
+        <span style="color:var(--color-text-muted);">...</span>
+      {% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

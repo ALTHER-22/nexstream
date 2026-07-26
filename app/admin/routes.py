@@ -16,7 +16,7 @@ from sqlalchemy import func
 
 from extensions import db
 from app.admin import bp
-from app.admin.forms import SeriesForm, MovieForm, SeasonForm, EpisodeForm
+from app.admin.forms import SeriesForm, MovieForm, SeasonForm, EpisodeForm, CategoryForm
 from app.models import User, Series, Movie, Category, Subscription, ActivityLog
 
 # ─── UTILIDADES DE IMAGEN (PILLOW) ────────────────────────────────────────
@@ -344,3 +344,80 @@ def create_episode(series_id):
         
     return render_template('admin/series/episode_form.html', form=form, serie=serie, season_num=season_number)
 
+
+# ─── GESTIÓN DE CATEGORÍAS ─────────────────────────────────────────────────
+
+@bp.route('/categorias')
+@login_required
+@admin_required
+def list_categories():
+    """Listado de categorías."""
+    categories = Category.query.order_by(Category.name).all()
+    return render_template('admin/categories/index.html', categories=categories, title='Gestión de Categorías')
+
+@bp.route('/categorias/nueva', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def create_category():
+    """Crear nueva categoría."""
+    form = CategoryForm()
+    if form.validate_on_submit():
+        category = Category(name=form.name.data, slug=form.slug.data, description=form.description.data)
+        db.session.add(category)
+        db.session.commit()
+        flash(f'Categoría "{category.name}" creada.', 'success')
+        return redirect(url_for('admin.list_categories'))
+    return render_template('admin/categories/form.html', form=form, title='Nueva Categoría')
+
+@bp.route('/categorias/<int:id>/editar', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def edit_category(id):
+    """Editar categoría."""
+    category = Category.query.get_or_404(id)
+    form = CategoryForm(obj=category)
+    if form.validate_on_submit():
+        form.populate_obj(category)
+        db.session.commit()
+        flash(f'Categoría "{category.name}" actualizada.', 'success')
+        return redirect(url_for('admin.list_categories'))
+    return render_template('admin/categories/form.html', form=form, category=category, title=f'Editar: {category.name}')
+
+@bp.route('/categorias/<int:id>/eliminar', methods=['POST'])
+@login_required
+@admin_required
+def delete_category(id):
+    """Eliminar categoría."""
+    category = Category.query.get_or_404(id)
+    db.session.delete(category)
+    db.session.commit()
+    flash(f'Categoría eliminada.', 'success')
+    return redirect(url_for('admin.list_categories'))
+
+
+# ─── GESTIÓN DE USUARIOS ───────────────────────────────────────────────────
+
+@bp.route('/usuarios')
+@login_required
+@admin_required
+def list_users():
+    """Listado de usuarios."""
+    page = request.args.get('page', 1, type=int)
+    users_q = User.query.order_by(User.created_at.desc())
+    pagination = users_q.paginate(page=page, per_page=20, error_out=False)
+    return render_template('admin/users/index.html', pagination=pagination, title='Gestión de Usuarios')
+
+@bp.route('/usuarios/<int:id>/eliminar', methods=['POST'])
+@login_required
+@admin_required
+def delete_user(id):
+    """Eliminar usuario."""
+    user = User.query.get_or_404(id)
+    if user.id == current_user.id:
+        flash('No puedes eliminar tu propia cuenta.', 'error')
+        return redirect(url_for('admin.list_users'))
+        
+    db.session.delete(user)
+    db.session.commit()
+    flash(f'Usuario {user.username} eliminado.', 'success')
+    return redirect(url_for('admin.list_users'))

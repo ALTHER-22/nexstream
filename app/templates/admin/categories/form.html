@@ -1,0 +1,68 @@
+{% extends "admin/layout.html" %}
+
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block styles %}
+<style>
+  .nex-admin-panel {
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<form method="POST">
+  {{ form.hidden_tag() }}
+  
+  <div class="nex-admin-panel">
+    <div class="nex-form-group">
+      {{ form.name.label(class="nex-label") }}
+      {{ form.name(class="nex-input") }}
+      {% for error in form.name.errors %}
+        <span class="nex-form-error">{{ error }}</span>
+      {% endfor %}
+    </div>
+    
+    <div class="nex-form-group">
+      {{ form.slug.label(class="nex-label") }}
+      {{ form.slug(class="nex-input") }}
+      <span style="font-size:0.75rem; color:var(--color-text-muted);">Se usa en la URL: /categoria/accion</span>
+      {% for error in form.slug.errors %}
+        <span class="nex-form-error">{{ error }}</span>
+      {% endfor %}
+    </div>
+    
+    <div class="nex-form-group">
+      {{ form.description.label(class="nex-label") }}
+      {{ form.description(class="nex-input", rows=4) }}
+    </div>
+    
+    <div style="display:flex; gap:1rem; justify-content:flex-end; margin-top:2rem;">
+      <a href="{{ url_for('admin.list_categories') }}" class="nex-btn nex-btn--ghost">Cancelar</a>
+      <button type="submit" class="nex-btn nex-btn--primary">Guardar Categoría</button>
+    </div>
+  </div>
+</form>
+
+<script>
+  // Autogenerar slug a partir del nombre
+  document.getElementById('name').addEventListener('input', function(e) {
+    const slugInput = document.getElementById('slug');
+    if (!slugInput.value || slugInput.dataset.auto == "true") {
+      slugInput.dataset.auto = "true";
+      slugInput.value = e.target.value.toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)+/g, '');
+    }
+  });
+  
+  document.getElementById('slug').addEventListener('input', function() {
+    this.dataset.auto = "false";
+  });
+</script>
+{% endblock %}
