@@ -169,8 +169,6 @@ def edit_series(id):
         old_cover = serie.cover
         old_banner = serie.banner
         
-        del form.cover
-        del form.banner
         form.populate_obj(serie)
         
         serie.cover = old_cover
@@ -258,8 +256,6 @@ def edit_movie(id):
         old_cover = movie.cover
         old_banner = movie.banner
         
-        del form.cover
-        del form.banner
         form.populate_obj(movie)
         
         movie.cover = old_cover
