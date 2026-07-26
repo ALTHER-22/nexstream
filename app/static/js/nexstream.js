@@ -546,12 +546,7 @@ const NexSlider = (() => {
     track.addEventListener('scroll', updateButtons, { passive: true });
     updateButtons();
 
-    // Soporte para scroll con mouse wheel horizontal
-    track.addEventListener('wheel', (e) => {
-      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return; // Scroll horizontal nativo
-      e.preventDefault();
-      track.scrollBy({ left: e.deltaY * 3, behavior: 'smooth' });
-    }, { passive: false });
+    // Soporte para scroll con mouse wheel horizontal eliminado por problemas de UX (bloqueaba el scroll vertical de la página)
   };
 
   const init = () => {
