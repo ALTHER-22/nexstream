@@ -197,6 +197,7 @@ def _register_context_processors(app: Flask) -> None:
         }
 
     @app.context_processor
+    @cache.cached(timeout=3600, key_prefix='categories_nav')
     def inject_categories():
         """Inyectar categorías disponibles para la navegación."""
         try:

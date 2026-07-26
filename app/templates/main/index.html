@@ -131,9 +131,9 @@
       <div class="nex-slider__track">
         {% for history in continue_watching %}
           {% if history.series %}
-            {{ content_card(history.series, type='series') }}
+            {{ content_card(history.series, type='series', progress=history.progress_percentage) }}
           {% elif history.movie %}
-            {{ content_card(history.movie, type='movie') }}
+            {{ content_card(history.movie, type='movie', progress=history.progress_percentage) }}
           {% endif %}
         {% endfor %}
       </div>

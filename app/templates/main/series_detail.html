@@ -5,10 +5,11 @@
 {% extends "base.html" %}
 {% from 'macros/content_card.html' import content_card with context %}
 
-{% block title %}{{ series.title }} â€” {{ platform_name }}{% endblock %}
+{% block title %}{{ series.title }} — {{ platform_name }}{% endblock %}
 {% block meta_description %}{{ series.synopsis[:160] if series.synopsis else series.title }}{% endblock %}
 
-{% block meta_desc %}{{ series.synopsis[:150] if series.synopsis else 'Mira ' ~ series.title ~ ' en NEXSTREAM.' }}{% endblock %}
+{% block og_title %}{{ series.title }} — NEXSTREAM{% endblock %}
+{% block og_desc %}{{ series.synopsis[:150] if series.synopsis else 'Mira ' ~ series.title ~ ' en NEXSTREAM.' }}{% endblock %}
 {% block og_type %}video.tv_show{% endblock %}
 {% block og_image %}{{ request.host_url[:-1] }}{{ series.cover_url }}{% endblock %}
 

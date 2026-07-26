@@ -1,4 +1,4 @@
-﻿{# =============================================================================
+{# =============================================================================
    NEXSTREAM â€” Macro: Content Card
    =============================================================================
    Archivo: app/templates/macros/content_card.html
@@ -6,7 +6,7 @@
         {{ content_card(item, type='series') }}
    ============================================================================= #}
 
-{% macro content_card(item, type='series', show_info=True) %}
+{% macro content_card(item, type='series', show_info=True, progress=0) %}
 <a href="{{ url_for('main.series_detail', slug=item.slug) if type == 'series' else url_for('main.movie_detail', slug=item.slug) }}"
    class="nex-content-card reveal"
    data-content-id="{{ item.id }}"
@@ -59,6 +59,13 @@
               onclick="event.preventDefault(); NexFavorites.toggle(this)">
         {{ 'â¤' if item.is_favorite else 'â™¡' }}
       </button>
+    {% endif %}
+
+    {# Barra de progreso (Continuar viendo) #}
+    {% if progress > 0 %}
+    <div class="nex-content-card__progress-container" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: rgba(255,255,255,0.2); z-index: 10;">
+      <div class="nex-content-card__progress-bar" style="height: 100%; background: var(--color-primary); width: {{ progress }}%;"></div>
+    </div>
     {% endif %}
   </div>
 

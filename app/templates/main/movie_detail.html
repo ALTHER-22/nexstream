@@ -1,10 +1,11 @@
 {# Detalle de PelÃ­cula #}
 {% extends "base.html" %}
 {% from 'macros/content_card.html' import content_card with context %}
-{% block title %}{{ movie.title }} â€” {{ platform_name }}{% endblock %}
+{% block title %}{{ movie.title }} — {{ platform_name }}{% endblock %}
 {% block meta_description %}{{ movie.synopsis[:160] if movie.synopsis else movie.title }}{% endblock %}
 
-{% block meta_desc %}{{ movie.synopsis[:150] if movie.synopsis else 'Mira ' ~ movie.title ~ ' en NEXSTREAM.' }}{% endblock %}
+{% block og_title %}{{ movie.title }} — NEXSTREAM{% endblock %}
+{% block og_desc %}{{ movie.synopsis[:150] if movie.synopsis else 'Mira ' ~ movie.title ~ ' en NEXSTREAM.' }}{% endblock %}
 {% block og_type %}video.movie{% endblock %}
 {% block og_image %}{{ request.host_url[:-1] }}{{ movie.cover_url }}{% endblock %}
 
