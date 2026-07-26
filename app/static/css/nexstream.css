@@ -309,6 +309,23 @@ p {
   backdrop-filter: none;
 }
 
+.nex-navbar.transparent .nex-navbar__link {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.nex-navbar.transparent .nex-navbar__link:hover,
+.nex-navbar.transparent .nex-navbar__link.active {
+  color: #ffffff;
+}
+
+.nex-navbar.transparent .nex-navbar__search-btn {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.nex-navbar.transparent .nex-navbar__search-btn:hover {
+  color: #ffffff;
+}
+
 /* Navbar sólido al hacer scroll */
 .nex-navbar.scrolled {
   background: rgba(5, 5, 8, 0.85);
@@ -514,7 +531,7 @@ p {
   inset: 0;
   background:
     linear-gradient(90deg, rgba(10,10,15,0.92) 0%, rgba(10,10,15,0.5) 45%, transparent 100%),
-    linear-gradient(0deg, rgba(10,10,15,1) 0%, transparent 50%);
+    linear-gradient(0deg, var(--color-bg-base) 0%, transparent 50%);
   z-index: 1;
 }
 
@@ -546,7 +563,7 @@ p {
   font-weight: 900;
   line-height: 1.05;
   letter-spacing: -0.03em;
-  color: var(--color-text-primary);
+  color: #ffffff;
   margin-bottom: var(--space-4);
   text-shadow: 0 2px 20px rgba(0,0,0,0.5);
 }
