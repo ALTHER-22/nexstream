@@ -974,6 +974,18 @@ p {
   border-color: var(--color-border);
 }
 
+.nex-btn--danger-text {
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+.nex-btn--danger-text:hover {
+  background: rgba(229, 9, 20, 0.1);
+  color: var(--color-primary-light);
+  border-color: transparent;
+}
+
 /* Tamaños */
 .nex-btn--sm {
   padding: 0.5rem 1rem;

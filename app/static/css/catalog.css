@@ -792,28 +792,39 @@
 .nex-empty-state {
   text-align: center;
   padding: 5rem 2rem;
-  color: var(--color-text-muted);
+  background: rgba(26, 26, 36, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-xl);
+  margin: 2rem 0;
+  box-shadow: inset 0 0 30px rgba(0,0,0,0.2);
 }
 
 .nex-empty-state__icon {
-  font-size: 3.5rem;
+  font-size: 4rem;
   margin-bottom: 1.5rem;
-  display: block;
-  opacity: 0.5;
+  display: inline-block;
+  opacity: 0.8;
+  filter: drop-shadow(0 4px 12px rgba(229, 9, 20, 0.3));
 }
 
 .nex-empty-state__title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--color-text-secondary);
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--color-text-primary);
   margin-bottom: 0.75rem;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .nex-empty-state__desc {
   font-size: 1rem;
   max-width: 400px;
-  margin: 0 auto 2rem;
+  margin: 0 auto 2.5rem;
   line-height: 1.6;
+  color: var(--color-text-secondary);
 }
 
 /* ─── BREADCRUMBS ────────────────────────────────────────────────────────────── */
