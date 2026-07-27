@@ -48,10 +48,10 @@ def index():
             'description': s.synopsis,
             'image_url': s.banner_url,
             'content_type': 'series',
-            'year': s.release_year,
+            'year': s.year,
             'rating': s.rating_avg,
             'categories': ', '.join([c.name for c in s.categories]) if s.categories else '',
-            'url': url_for('main.series_detail', series_id=s.id)
+            'url': url_for('main.series_detail', series_id=s.id, slug=s.slug)
         })
         
     # 2 mejores películas
@@ -62,10 +62,10 @@ def index():
             'description': m.synopsis,
             'image_url': m.banner_url,
             'content_type': 'movie',
-            'year': m.release_year,
+            'year': m.year,
             'rating': m.rating_avg,
             'categories': ', '.join([c.name for c in m.categories]) if m.categories else '',
-            'url': url_for('main.play_movie', movie_id=m.id)
+            'url': url_for('main.play_movie', movie_id=m.id, slug=m.slug)
         })
 
     # Tendencias: Series
