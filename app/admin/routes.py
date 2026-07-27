@@ -178,7 +178,11 @@ def edit_series(id):
         old_cover = serie.cover
         old_banner = serie.banner
         
+        # Evitar que populate_obj intente poblar 'categories' con lista de enteros
+        categories_field = form._fields.pop('categories', None)
         form.populate_obj(serie)
+        if categories_field:
+            form._fields['categories'] = categories_field
         
         serie.cover = old_cover
         serie.banner = old_banner
@@ -285,7 +289,11 @@ def edit_movie(id):
         old_cover = movie.cover
         old_banner = movie.banner
         
+        # Evitar que populate_obj intente poblar 'categories' con lista de enteros
+        categories_field = form._fields.pop('categories', None)
         form.populate_obj(movie)
+        if categories_field:
+            form._fields['categories'] = categories_field
         
         movie.cover = old_cover
         movie.banner = old_banner
