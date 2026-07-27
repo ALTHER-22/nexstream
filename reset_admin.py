@@ -32,6 +32,8 @@ with app.app_context():
         print("==================================================")
     else:
         admin_user.set_password('Admin123!')
+        admin_user.failed_login_attempts = 0
+        admin_user.locked_until = None
         db.session.commit()
         print("==================================================")
         print(f"¡Éxito! Se encontró el administrador:")
