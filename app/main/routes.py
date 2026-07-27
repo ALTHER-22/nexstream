@@ -103,13 +103,14 @@ def index():
         # Generar recomendaciones basadas en la última categoría vista
         last_history = WatchHistory.query.filter_by(user_id=current_user.id).order_by(desc(WatchHistory.watched_at)).first()
         if last_history:
-            last_item = last_history.series or last_history.movie
+            last_series = last_history.episode.series if last_history.episode else None
+            last_item = last_series or last_history.movie
             if last_item and last_item.categories:
                 last_cat = last_item.categories[0]
                 rec_series = Series.query.join(Series.categories).filter(
                     Category.id == last_cat.id,
                     Series.is_active == True,
-                    Series.id != (last_item.id if last_history.series else 0)
+                    Series.id != (last_item.id if last_series else 0)
                 ).order_by(desc(Series.rating_avg)).limit(8).all()
                 
                 rec_movies = Movie.query.join(Movie.categories).filter(
