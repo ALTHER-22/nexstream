@@ -509,6 +509,15 @@ p {
   z-index: var(--z-below);
 }
 
+.nex-hero__bg-fallback {
+  position: absolute;
+  inset: -10%; /* Sobresale un poco para que los bordes del blur no se vean feos */
+  background-size: cover;
+  background-position: center top;
+  filter: blur(25px) brightness(0.4);
+  z-index: 0;
+}
+
 .nex-hero__bg img,
 .nex-hero__bg video {
   width: 100%;
