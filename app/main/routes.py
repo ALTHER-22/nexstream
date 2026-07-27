@@ -23,7 +23,7 @@ from flask_login import current_user
 from sqlalchemy import desc, or_, func
 from extensions import db
 from app.main import bp
-from app.models.content import Series, Movie, Category, Episode, Banner
+from app.models.content import Series, Movie, Category, Episode, Season, Banner
 from app.models.interaction import WatchHistory, Favorite
 
 
@@ -279,9 +279,9 @@ def series_detail(slug):
     current_episode   = None
 
     if current_user.is_authenticated:
-        last_watch = WatchHistory.query.filter_by(
-            user_id=current_user.id,
-            series_id=series.id,
+        last_watch = WatchHistory.query.join(Episode).join(Season).filter(
+            WatchHistory.user_id == current_user.id,
+            Season.series_id == series.id
         ).order_by(desc(WatchHistory.watched_at)).first()
         if last_watch and last_watch.episode:
             active_season_num = last_watch.episode.season.number
@@ -445,7 +445,7 @@ def play_episode(episode_id):
     start_time = 0
     if current_user.is_authenticated:
         history = WatchHistory.query.filter_by(
-            user_id=current_user.id, series_id=series.id, episode_id=episode.id
+            user_id=current_user.id, episode_id=episode.id
         ).first()
         if history and history.progress_percentage < 95:
             start_time = history.progress
