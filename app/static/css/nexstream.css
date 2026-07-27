@@ -569,7 +569,7 @@ p {
   position: relative;
   z-index: 2;
   padding: var(--space-12) var(--space-12) var(--space-16);
-  max-width: 640px;
+  max-width: 800px;
 }
 
 .nex-hero__badge {
@@ -626,10 +626,9 @@ p {
 .nex-hero__synopsis {
   font-size: var(--text-base);
   line-height: 1.6;
-  color: rgba(255,255,255,0.85);
   margin-bottom: var(--space-8);
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 5;
   -webkit-box-orient: vertical;
   overflow: hidden;
   color: var(--color-text-secondary);
@@ -1599,7 +1598,7 @@ p {
   }
 
   .nex-hero__synopsis {
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
     font-size: var(--text-sm);
   }
 
