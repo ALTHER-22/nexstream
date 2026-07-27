@@ -22,13 +22,13 @@ Endpoints:
 =============================================================================
 """
 
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from flask import jsonify, request, current_app
 from flask_login import current_user, login_required
 from sqlalchemy import or_, func, desc
 from extensions import db, limiter, cache
 from app.api import bp
-from app.models.content import Series, Movie, Category, Episode
+from app.models.content import Series, Movie, Category, Episode, Season
 from app.models.interaction import (
     Favorite, WatchHistory, Rating, ActivityLog
 )
@@ -217,7 +217,9 @@ def trending():
 
     # Series con más historial de visualización reciente
     trending_series = db.session.query(Series).join(
-        Episode, Episode.series_id == Series.id
+        Season, Season.series_id == Series.id
+    ).join(
+        Episode, Episode.season_id == Season.id
     ).join(
         WatchHistory,
         WatchHistory.episode_id == Episode.id,
