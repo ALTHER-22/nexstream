@@ -213,6 +213,7 @@ def trending():
     Contenido en tendencia: más visto y mejor valorado últimamente.
     """
     limit = min(int(request.args.get('limit', 20)), 50)
+    since = datetime.now(timezone.utc) - timedelta(days=30)
 
     # Series con más historial de visualización reciente
     trending_series = db.session.query(Series).join(
