@@ -47,7 +47,7 @@
 
       {# Info #}
       <div class="nex-detail-hero__info">
-        {# CategorÃ­as #}
+        {# Categorías #}
         <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.875rem;">
           {% for cat in series.categories[:3] %}
             <a href="{{ url_for('main.category', slug=cat.slug) }}"
@@ -187,13 +187,13 @@
       También te puede gustar
     </h2>
     <div class="nex-slider">
-      <button class="nex-slider__btn nex-slider__btn--prev" aria-label="Anterior">â€¹</button>
+      <button class="nex-slider__btn nex-slider__btn--prev" aria-label="Anterior">‹</button>
       <div class="nex-slider__track">
         {% for item in related %}
           {{ content_card(item, type='series') }}
         {% endfor %}
       </div>
-      <button class="nex-slider__btn nex-slider__btn--next" aria-label="Siguiente">â€º</button>
+      <button class="nex-slider__btn nex-slider__btn--next" aria-label="Siguiente">›</button>
     </div>
   </section>
   {% endif %}
@@ -236,9 +236,9 @@ window.NexFavorites = {
       if (data.added) {
         btn.innerHTML = 'â¤ En favoritos';
         btn.classList.add('active');
-        NexStream.Toast.success('AÃ±adido a favoritos');
+        NexStream.Toast.success('Añadido a favoritos');
       } else {
-        btn.innerHTML = 'â™¡ AÃ±adir a favoritos';
+        btn.innerHTML = '♡ Añadir a favoritos';
         btn.classList.remove('active');
         NexStream.Toast.info('Eliminado de favoritos');
       }

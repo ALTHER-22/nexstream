@@ -1,4 +1,4 @@
-﻿{# BÃºsqueda #}
+{# Búsqueda #}
 {% extends "base.html" %}
 {% from 'macros/content_card.html' import content_card with context %}
 {% block title %}{{ title }}{% endblock %}
@@ -10,10 +10,10 @@
     {% else %}Buscar contenido{% endif %}
   </h1>
 
-  {# Barra de bÃºsqueda en la pÃ¡gina #}
+  {# Barra de búsqueda en la página #}
   <form action="{{ url_for('main.search') }}" method="GET" style="margin-bottom:2rem;">
     <div style="position:relative;max-width:600px;">
-      <input type="search" name="q" value="{{ q }}" placeholder="Buscar series, pelÃ­culas..."
+      <input type="search" name="q" value="{{ q }}" placeholder="Buscar series, películas..."
              class="nex-auth-input" style="padding:0.875rem 1rem;font-size:1rem;"
              autofocus autocomplete="off">
     </div>
@@ -31,17 +31,17 @@
         </div>
       {% endif %}
       {% if movies_results %}
-        <h2 style="font-size:1.25rem;font-weight:700;margin-bottom:1rem;">PelÃ­culas</h2>
+        <h2 style="font-size:1.25rem;font-weight:700;margin-bottom:1rem;">Películas</h2>
         <div class="nex-content-grid">
           {% for item in movies_results %}{{ content_card(item, type='movie') }}{% endfor %}
         </div>
       {% endif %}
     {% else %}
       <div class="nex-empty-state">
-        <span class="nex-empty-state__icon">ðŸ”</span>
+        <span class="nex-empty-state__icon">🔍</span>
         <h2 class="nex-empty-state__title">Sin resultados</h2>
-        <p class="nex-empty-state__desc">No encontramos nada para "{{ q }}". Prueba con otro tÃ©rmino.</p>
-        <a href="{{ url_for('main.catalog') }}" class="nex-btn nex-btn--primary">Ver catÃ¡logo completo</a>
+        <p class="nex-empty-state__desc">No encontramos nada para "{{ q }}". Prueba con otro término.</p>
+        <a href="{{ url_for('main.catalog') }}" class="nex-btn nex-btn--primary">Ver catálogo completo</a>
       </div>
     {% endif %}
   {% endif %}

@@ -48,15 +48,15 @@
       <div class="nex-content-card__play" aria-hidden="true">â–¶</div>
     </div>
 
-    {# BotÃ³n favorito #}
+    {# Botón favorito #}
     {% if current_user.is_authenticated %}
       <button class="nex-content-card__fav nex-fav-btn {{ 'is-active' if item.is_favorite else '' }}"
               data-id="{{ item.id }}"
               data-type="{{ type }}"
-              aria-label="{{ 'Quitar de favoritos' if item.is_favorite else 'AÃ±adir a favoritos' }}"
-              title="{{ 'Quitar de favoritos' if item.is_favorite else 'AÃ±adir a favoritos' }}"
+              aria-label="{{ 'Quitar de favoritos' if item.is_favorite else 'Añadir a favoritos' }}"
+              title="{{ 'Quitar de favoritos' if item.is_favorite else 'Añadir a favoritos' }}"
               onclick="event.preventDefault(); NexFavorites.toggle(this)">
-        {{ 'â¤' if item.is_favorite else 'â™¡' }}
+        {{ 'â¤' if item.is_favorite else '♡' }}
       </button>
     {% endif %}
 

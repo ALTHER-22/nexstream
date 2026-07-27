@@ -1,4 +1,4 @@
-{# Detalle de PelÃ­cula #}
+{# Detalle de Película #}
 {% extends "base.html" %}
 {% from 'macros/content_card.html' import content_card with context %}
 {% block title %}{{ movie.title }} — {{ platform_name }}{% endblock %}
@@ -81,11 +81,11 @@
     También te puede gustar
   </h2>
   <div class="nex-slider">
-    <button class="nex-slider__btn nex-slider__btn--prev" aria-label="Anterior">â€¹</button>
+    <button class="nex-slider__btn nex-slider__btn--prev" aria-label="Anterior">‹</button>
     <div class="nex-slider__track">
       {% for item in related %}{{ content_card(item, type='movie') }}{% endfor %}
     </div>
-    <button class="nex-slider__btn nex-slider__btn--next" aria-label="Siguiente">â€º</button>
+    <button class="nex-slider__btn nex-slider__btn--next" aria-label="Siguiente">›</button>
   </div>
 </div>
 {% endif %}
@@ -101,7 +101,7 @@ window.NexFavorites = {
         method: 'POST', body: JSON.stringify({ type: btn.dataset.type, id: parseInt(btn.dataset.id) }),
       });
       const data = await res.json();
-      btn.innerHTML = data.added ? 'â¤ En favoritos' : 'â™¡ Favoritos';
+      btn.innerHTML = data.added ? 'â¤ En favoritos' : '♡ Favoritos';
       btn.classList.toggle('active', data.added);
       NexStream.Toast[data.added ? 'success' : 'info'](data.message);
     } catch(e) { NexStream.Toast.error('Error'); } finally { btn.disabled = false; }
