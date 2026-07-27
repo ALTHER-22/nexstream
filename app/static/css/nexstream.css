@@ -514,6 +514,8 @@ p {
   inset: -10%; /* Sobresale un poco para que los bordes del blur no se vean feos */
   background-size: cover;
   background-position: center top;
+  background-color: rgba(229, 9, 20, 0.15);
+  background-blend-mode: overlay;
   filter: blur(25px) brightness(0.4);
   z-index: 0;
 }
@@ -1359,10 +1361,25 @@ p {
 /* ─── 17. UTILIDADES ──────────────────────────────────────────────────────── */
 
 /* Display */
-.d-none    { display: none; }
+.d-none    { display: none !important; }
 .d-flex    { display: flex; }
 .d-grid    { display: grid; }
 .d-block   { display: block; }
+.d-inline  { display: inline; }
+.d-inline-block { display: inline-block; }
+
+/* ── Media queries for display ── */
+@media (min-width: 992px) {
+  .d-lg-block { display: block !important; }
+  .d-lg-flex  { display: flex !important; }
+  .d-lg-none  { display: none !important; }
+}
+
+@media (min-width: 768px) {
+  .d-md-block { display: block !important; }
+  .d-md-flex  { display: flex !important; }
+  .d-md-none  { display: none !important; }
+}
 
 /* Flexbox */
 .align-center   { align-items: center; }
