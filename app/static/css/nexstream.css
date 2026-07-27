@@ -181,6 +181,8 @@
   --shadow-lg:    0 8px 32px rgba(0, 0, 0, 0.15);
   --shadow-xl:    0 16px 48px rgba(0, 0, 0, 0.18);
   --shadow-card:  0 2px 12px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0,0,0,0.04);
+  
+  --gradient-hero: linear-gradient(90deg, rgba(245,245,250,0.95) 0%, rgba(245,245,250,0.7) 50%, transparent 100%);
 }
 
 /* ─── 3. RESET & BASE ─────────────────────────────────────────────────────── */
@@ -324,6 +326,17 @@ p {
 
 .nex-navbar.transparent .nex-navbar__search-btn:hover {
   color: #ffffff;
+}
+
+[data-theme="light"] .nex-navbar.transparent .nex-navbar__link,
+[data-theme="light"] .nex-navbar.transparent .nex-navbar__search-btn {
+  color: rgba(10, 10, 15, 0.7);
+}
+
+[data-theme="light"] .nex-navbar.transparent .nex-navbar__link:hover,
+[data-theme="light"] .nex-navbar.transparent .nex-navbar__link.active,
+[data-theme="light"] .nex-navbar.transparent .nex-navbar__search-btn:hover {
+  color: #0a0a0f;
 }
 
 /* Navbar sólido al hacer scroll */
@@ -541,9 +554,9 @@ p {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(5,5,8,0.95) 0%, rgba(5,5,8,0.6) 40%, transparent 100%),
+    var(--gradient-hero),
     linear-gradient(0deg, var(--color-bg-base) 0%, transparent 60%),
-    radial-gradient(circle at 100% 0%, transparent 40%, rgba(0,0,0,0.4) 100%);
+    radial-gradient(circle at 100% 0%, transparent 40%, rgba(0,0,0,0.2) 100%);
   z-index: 1;
 }
 
@@ -575,9 +588,13 @@ p {
   font-weight: 900;
   line-height: 1.05;
   letter-spacing: -0.02em;
-  color: #ffffff;
+  color: var(--color-text-primary);
   margin-bottom: var(--space-4);
   text-shadow: 0 4px 30px rgba(0,0,0,0.8), 0 2px 10px rgba(0,0,0,0.5);
+}
+
+[data-theme="light"] .nex-hero__title {
+  text-shadow: 0 4px 30px rgba(0,0,0,0.05), 0 2px 10px rgba(0,0,0,0.02);
 }
 
 .nex-hero__meta {
@@ -610,7 +627,12 @@ p {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  color: var(--color-text-secondary);
   text-shadow: 0 1px 8px rgba(0,0,0,0.8);
+}
+
+[data-theme="light"] .nex-hero__synopsis {
+  text-shadow: none;
 }
 
 .nex-hero__actions {
