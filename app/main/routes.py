@@ -37,9 +37,36 @@ def index():
     Muestra hero, contenido destacado, tendencias y sliders por categoría.
     """
     # Banners del hero
-    hero_banners = Banner.query.filter_by(
-        is_active=True
-    ).order_by(Banner.position).limit(6).all()
+    # Banners del hero generados a partir de contenido real
+    hero_banners = []
+    
+    # 3 mejores series
+    top_series = Series.query.filter_by(is_active=True).order_by(desc(Series.rating_avg)).limit(3).all()
+    for s in top_series:
+        hero_banners.append({
+            'title': s.title,
+            'description': s.synopsis,
+            'image_url': s.banner_url(),
+            'content_type': 'series',
+            'year': s.release_year,
+            'rating': s.rating_avg,
+            'categories': ', '.join([c.name for c in s.categories]) if s.categories else '',
+            'url': url_for('main.series_detail', series_id=s.id)
+        })
+        
+    # 2 mejores películas
+    top_movies = Movie.query.filter_by(is_active=True).order_by(desc(Movie.rating_avg)).limit(2).all()
+    for m in top_movies:
+        hero_banners.append({
+            'title': m.title,
+            'description': m.synopsis,
+            'image_url': m.banner_url(),
+            'content_type': 'movie',
+            'year': m.release_year,
+            'rating': m.rating_avg,
+            'categories': ', '.join([c.name for c in m.categories]) if m.categories else '',
+            'url': url_for('main.play_movie', movie_id=m.id)
+        })
 
     # Tendencias: Series
     trending_series = Series.query.filter_by(
