@@ -83,8 +83,8 @@
 
         <div class="nex-detail-hero__actions">
           {# Botón de reproducir / Suscripción #}
-          {% if seasons and seasons[0].episodes %}
-            {% set first_ep = seasons[0].episodes[0] %}
+          {% if seasons and seasons[0].episodes.first() %}
+            {% set first_ep = seasons[0].episodes.first() %}
             
               <a href="{{ url_for('main.play_episode', episode_id=first_ep.id) }}" class="nex-btn nex-btn--primary nex-btn--lg">
                 ▶ Reproducir
