@@ -32,16 +32,15 @@
            loading="lazy"
            width="190" height="285">
     {% else %}
-      {# Placeholder de color si no hay imagen #}
-      <div style="width:100%;height:100%;background:linear-gradient(135deg,var(--color-surface-3),var(--color-surface-2));
-                  display:flex;align-items:center;justify-content:center;font-size:3rem;opacity:0.3;">
-        {% if type == 'series' %}ðŸ“º{% else %}ðŸŽ¬{% endif %}
+      <div class="nex-content-card__empty">
+        <span class="nex-content-card__empty-icon">{% if type == 'series' %}📺{% else %}🎬{% endif %}</span>
+        <span class="nex-content-card__empty-brand">NEXSTREAM</span>
       </div>
     {% endif %}
 
     {# Rating flotante #}
     {% if item.rating_avg %}
-      <span class="nex-content-card__rating">â­ {{ "%.1f"|format(item.rating_avg|float) }}</span>
+      <span class="nex-content-card__rating">⭐ {{ "%.1f"|format(item.rating_avg|float) }}</span>
     {% endif %}
 
     {# Overlay con play #}
