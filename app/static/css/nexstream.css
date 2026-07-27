@@ -639,6 +639,28 @@ p {
   text-shadow: none;
 }
 
+.nex-hero__synopsis.expanded {
+  -webkit-line-clamp: unset;
+}
+
+.nex-hero__read-more {
+  background: transparent;
+  border: none;
+  color: var(--color-primary);
+  font-weight: 700;
+  font-size: var(--text-sm);
+  padding: 0;
+  margin-top: calc(-1 * var(--space-6));
+  margin-bottom: var(--space-8);
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+}
+
+.nex-hero__read-more:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
 .nex-hero__actions {
   display: flex;
   align-items: center;

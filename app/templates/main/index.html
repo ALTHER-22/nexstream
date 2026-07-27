@@ -53,7 +53,12 @@
             {% if banner.categories %}<span>{{ banner.categories }}</span>{% endif %}
           </div>
           {% if banner.description %}
-            <p class="nex-hero__synopsis">{{ banner.description }}</p>
+            <div class="nex-hero__synopsis-wrapper">
+              <p class="nex-hero__synopsis">{{ banner.description }}</p>
+              {% if banner.description|length > 150 %}
+                <button type="button" class="nex-hero__read-more" onclick="this.previousElementSibling.classList.add('expanded'); this.style.display='none';">Leer más</button>
+              {% endif %}
+            </div>
           {% endif %}
           <div class="nex-hero__actions">
             <a href="{{ banner.url or '#' }}" class="nex-btn nex-btn--primary nex-btn--lg">
