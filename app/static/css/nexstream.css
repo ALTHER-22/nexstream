@@ -77,6 +77,11 @@
   --gradient-glass:      linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
   --gradient-glow:       radial-gradient(ellipse at center, rgba(229,9,20,0.15) 0%, transparent 70%);
 
+  --hero-overlay: 
+    linear-gradient(90deg, rgba(10,10,15,0.95) 0%, rgba(10,10,15,0.6) 50%, transparent 100%),
+    linear-gradient(0deg, var(--color-bg-base) 0%, transparent 60%),
+    radial-gradient(circle at 100% 0%, transparent 40%, rgba(0,0,0,0.2) 100%);
+
   /* ── Sombras ── */
   --shadow-sm:    0 1px 3px rgba(0, 0, 0, 0.5);
   --shadow-md:    0 4px 16px rgba(0, 0, 0, 0.6);
@@ -183,6 +188,11 @@
   --shadow-card:  0 2px 12px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0,0,0,0.04);
   
   --gradient-hero: linear-gradient(90deg, rgba(245,245,250,0.95) 0%, rgba(245,245,250,0.7) 50%, transparent 100%);
+  
+  --hero-overlay: 
+    linear-gradient(90deg, rgba(245,245,250,0.95) 0%, rgba(245,245,250,0.7) 50%, transparent 100%),
+    linear-gradient(0deg, var(--color-bg-base) 0%, transparent 60%),
+    radial-gradient(circle at 100% 0%, transparent 40%, rgba(0,0,0,0.1) 100%);
 }
 
 /* ─── 3. RESET & BASE ─────────────────────────────────────────────────────── */
@@ -553,10 +563,7 @@ p {
 .nex-hero__gradient {
   position: absolute;
   inset: 0;
-  background:
-    var(--gradient-hero),
-    linear-gradient(0deg, var(--color-bg-base) 0%, transparent 60%),
-    radial-gradient(circle at 100% 0%, transparent 40%, rgba(0,0,0,0.2) 100%);
+  background: var(--hero-overlay);
   z-index: 1;
 }
 
