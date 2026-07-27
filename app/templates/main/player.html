@@ -394,6 +394,39 @@
         }
       });
       
+      // Guardar progreso al pausar
+      player.on('pause', () => {
+        saveProgress(true);
+      });
+      
+      // Guardar progreso si el usuario cierra la pestaña o navega hacia atrás en el navegador
+      window.addEventListener('beforeunload', () => {
+        // Usa keepalive para que la petición no se cancele al cerrar la pestaña
+        if (player.duration() > 0) {
+          const payload = {
+            type: contentType,
+            id: contentType === 'series' ? seriesId : contentId,
+            progress: Math.floor(player.currentTime()),
+            duration: Math.floor(player.duration())
+          };
+          if (contentType === 'series') {
+            payload.episode_id = contentId;
+          }
+          const blob = new Blob([JSON.stringify(payload)], {type : 'application/json'});
+          navigator.sendBeacon('/api/v1/history/update_beacon', blob); // Asumiendo que podemos usar beacon, pero mejor usamos fetch keepalive
+          
+          fetch('/api/v1/history/update', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify(payload),
+            keepalive: true
+          }).catch(() => {});
+        }
+      });
+      
       // Intentar auto-play (muchos navegadores lo bloquean sin mute)
       const playPromise = player.play();
       if (playPromise !== undefined) {

@@ -216,11 +216,14 @@ def trending():
 
     # Series con más historial de visualización reciente
     trending_series = db.session.query(Series).join(
+        Episode, Episode.series_id == Series.id
+    ).join(
         WatchHistory,
-        WatchHistory.series_id == Series.id,
+        WatchHistory.episode_id == Episode.id,
         isouter=True
     ).filter(
-        Series.is_active == True
+        Series.is_active == True,
+        WatchHistory.watched_at >= since
     ).group_by(Series.id).order_by(
         desc(func.count(WatchHistory.id)),
         desc(Series.rating_avg)
@@ -304,8 +307,8 @@ def series_detail(series_id):
     # Progreso del usuario en esta serie
     user_progress = {}
     if current_user.is_authenticated:
-        history = WatchHistory.query.filter_by(
-            user_id=current_user.id, series_id=series_id
+        history = WatchHistory.query.join(Episode).filter(
+            WatchHistory.user_id == current_user.id, Episode.series_id == series_id
         ).order_by(desc(WatchHistory.watched_at)).first()
         if history:
             user_progress = {
@@ -470,7 +473,7 @@ def update_history():
     # Buscar historial existente o crear nuevo
     q = WatchHistory.query.filter_by(user_id=current_user.id)
     if content_type == 'series':
-        entry = q.filter_by(series_id=content_id, episode_id=episode_id).first()
+        entry = q.filter_by(episode_id=episode_id).first()
     else:
         entry = q.filter_by(movie_id=content_id).first()
 
@@ -486,7 +489,6 @@ def update_history():
             watched_at=datetime.now(timezone.utc),
         )
         if content_type == 'series':
-            entry.series_id  = content_id
             entry.episode_id = episode_id
         else:
             entry.movie_id = content_id
