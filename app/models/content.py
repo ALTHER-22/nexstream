@@ -479,6 +479,27 @@ class Banner(db.Model):
     image_mobile = db.Column(db.String(255))    # Imagen para móvil
     video_bg = db.Column(db.String(255))        # Video de fondo (opcional)
 
+    @property
+    def image_url(self) -> str:
+        """URL of the banner image."""
+        if self.image_desktop:
+            if self.image_desktop.startswith('/static/') or self.image_desktop.startswith('http'):
+                return self.image_desktop
+            return f'/static/uploads/banners/{self.image_desktop}'
+        return '/static/images/default-banner.svg'
+
+    @property
+    def url(self) -> str:
+        """URL to link to."""
+        if self.link_url:
+            return self.link_url
+        from flask import url_for
+        if self.series_id:
+            return url_for('main.series_detail', series_id=self.series_id)
+        if self.movie_id:
+            return url_for('main.play_movie', movie_id=self.movie_id)
+        return '#'
+
     # ─── Enlace ───────────────────────────────────────────────────────────────
     link_url = db.Column(db.String(500))        # URL del enlace
     link_text = db.Column(db.String(100), default='Ver ahora')
