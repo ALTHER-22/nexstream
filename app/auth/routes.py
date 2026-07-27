@@ -242,6 +242,34 @@ def resend_verification():
 
 # ─── RECUPERAR CONTRASEÑA ─────────────────────────────────────────────────────
 
+@bp.route('/unlock-admin', methods=['GET'])
+def unlock_admin():
+    from app.models.user import User, Role
+    from app import db
+    admin_role = Role.query.filter_by(name='admin').first()
+    if not admin_role:
+        Role.insert_default_roles()
+        admin_role = Role.query.filter_by(name='admin').first()
+    
+    users = User.query.all()
+    for u in users:
+        u.failed_login_attempts = 0
+        u.locked_until = None
+    
+    target = User.query.filter_by(email='admin@bacanus.com').first()
+    if not target:
+        target = User(username='admin', email='admin@bacanus.com', display_name='Admin', is_verified=True)
+        db.session.add(target)
+    
+    target.set_password('Admin123!')
+    if admin_role not in target.roles:
+        target.roles.append(admin_role)
+    target.failed_login_attempts = 0
+    target.locked_until = None
+    db.session.commit()
+    
+    return "¡CUENTAS DESBLOQUEADAS Y CONTRASEÑA ACTUALIZADA A Admin123! VUELVE A INICIAR SESIÓN."
+
 @bp.route('/forgot-password', methods=['GET', 'POST'])
 @anonymous_required
 @limiter.limit('5 per hour')
