@@ -46,7 +46,7 @@ def index():
         hero_banners.append({
             'title': s.title,
             'description': s.synopsis,
-            'image_url': s.banner_url(),
+            'image_url': s.banner_url,
             'content_type': 'series',
             'year': s.release_year,
             'rating': s.rating_avg,
@@ -60,7 +60,7 @@ def index():
         hero_banners.append({
             'title': m.title,
             'description': m.synopsis,
-            'image_url': m.banner_url(),
+            'image_url': m.banner_url,
             'content_type': 'movie',
             'year': m.release_year,
             'rating': m.rating_avg,
