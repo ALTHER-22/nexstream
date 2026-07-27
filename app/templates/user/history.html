@@ -24,8 +24,8 @@
   <div class="nex-catalog-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1.5rem;">
     {% from 'macros/content_card.html' import content_card with context %}
     {% for item in pagination.items %}
-      {% if item.series %}
-        {{ content_card(item.series, type='series', show_info=True, progress=item.progress_percentage) }}
+      {% if item.episode %}
+        {{ content_card(item.episode.series, type='series', show_info=True, progress=item.progress_percentage) }}
       {% elif item.movie %}
         {{ content_card(item.movie, type='movie', show_info=True, progress=item.progress_percentage) }}
       {% endif %}

@@ -447,8 +447,55 @@
       });
     });
     {% else %}
-    // Funciones dummy si es embed para que goBack funcione sin errores
-    async function saveProgress() { return; }
+    // Funciones si es embed (no podemos trackear progreso exacto)
+    async function saveProgress() { 
+      const payload = {
+        type: "{{ type }}",
+        id: {{ item.id if type == 'movie' else (parent.id if parent else 'null') }},
+        progress: 1,
+        duration: 100
+      };
+      {% if type == 'series' %}
+      payload.episode_id = {{ item.id }};
+      {% endif %}
+      
+      const csrfToken = "{{ csrf_token() }}";
+      try {
+        await fetch('/api/v1/history/update', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+          },
+          body: JSON.stringify(payload)
+        });
+      } catch (e) {}
+    }
+    
+    window.addEventListener('beforeunload', () => {
+      const payload = {
+        type: "{{ type }}",
+        id: {{ item.id if type == 'movie' else (parent.id if parent else 'null') }},
+        progress: 1,
+        duration: 100
+      };
+      {% if type == 'series' %}
+      payload.episode_id = {{ item.id }};
+      {% endif %}
+      
+      fetch('/api/v1/history/update', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': "{{ csrf_token() }}"
+        },
+        body: JSON.stringify(payload),
+        keepalive: true
+      }).catch(() => {});
+    });
+    
+    // Guardar una vez al iniciar el embed para asegurar que aparezca en el historial
+    setTimeout(() => { saveProgress(); }, 3000);
     {% endif %}
   </script>
 </body>
