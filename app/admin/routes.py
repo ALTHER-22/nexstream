@@ -26,7 +26,7 @@ def _save_image(upload, folder_name, target_size=None):
     Guarda una imagen optimizada usando Pillow.
     Retorna la URL relativa para guardar en BD.
     """
-    if not upload or not upload.filename:
+    if not upload or not hasattr(upload, 'filename') or not upload.filename:
         return None
         
     from PIL import Image
@@ -34,30 +34,34 @@ def _save_image(upload, folder_name, target_size=None):
     from werkzeug.utils import secure_filename
     
     random_hex = secrets.token_hex(8)
-    _, f_ext = os.path.splitext(secure_filename(upload.filename))
-    # Forzar WEBP para mejor compresión
-    filename = random_hex + '.webp'
+    raw_ext = os.path.splitext(secure_filename(upload.filename))[1].lower()
     
     # Asegurar directorio
     base_dir = os.path.join(current_app.root_path, 'static', 'uploads', folder_name)
     os.makedirs(base_dir, exist_ok=True)
     
-    filepath = os.path.join(base_dir, filename)
-    
     try:
         img = Image.open(upload)
-        # Convertir a RGB si tiene transparencia para guardar correctamente
         if img.mode in ('RGBA', 'P'):
             img = img.convert('RGB')
             
         if target_size:
-            # Resize cover (2:3) or banner (16:9)
             from PIL import ImageOps
             img = ImageOps.fit(img, target_size, method=Image.Resampling.LANCZOS)
             
-        # Guardar comprimido
-        img.save(filepath, format='WEBP', quality=85, optimize=True)
-        return filename
+        # Intentar guardar como WEBP, con fallback a JPG/PNG
+        try:
+            filename = random_hex + '.webp'
+            filepath = os.path.join(base_dir, filename)
+            img.save(filepath, format='WEBP', quality=85, optimize=True)
+            return filename
+        except Exception:
+            ext = 'png' if raw_ext == '.png' else 'jpg'
+            filename = random_hex + '.' + ext
+            filepath = os.path.join(base_dir, filename)
+            fmt = 'PNG' if ext == 'png' else 'JPEG'
+            img.save(filepath, format=fmt, quality=85)
+            return filename
     except Exception as e:
         current_app.logger.error(f"Error procesando imagen: {e}")
         return None
@@ -121,7 +125,7 @@ def create_series():
     """Crear una nueva serie."""
     form = SeriesForm()
     # Llenar opciones de categorías
-    form.categories.choices = [(c.id, c.name) for c in Category.query.order_by('name').all()]
+    form.categories.choices = [(c.id, c.name) for c in Category.query.order_by(Category.name).all()]
     
     if form.validate_on_submit():
         serie = Series(
@@ -135,7 +139,7 @@ def create_series():
         )
         
         # Asignar categorías
-        selected_cats = Category.query.filter(Category.id.in_(form.categories.data)).all()
+        selected_cats = Category.query.filter(Category.id.in_(form.categories.data or [])).all()
         serie.categories = selected_cats
         
         db.session.add(serie)
@@ -143,9 +147,14 @@ def create_series():
         
         # Procesar imágenes
         if form.cover.data and form.cover.data.filename:
-            serie.cover = _save_image(form.cover.data, 'covers', (600, 900))
+            saved = _save_image(form.cover.data, 'covers', (600, 900))
+            if saved:
+                serie.cover = saved
         if form.banner.data and form.banner.data.filename:
-            serie.banner = _save_image(form.banner.data, 'banners', (1920, 1080))
+            saved = _save_image(form.banner.data, 'banners', (1920, 1080))
+            if saved:
+                serie.banner = saved
+        db.session.commit()
             
         flash(f'Serie "{serie.title}" creada correctamente.', 'success')
         return redirect(url_for('admin.list_series'))
@@ -160,7 +169,7 @@ def edit_series(id):
     """Editar una serie existente."""
     serie = Series.query.get_or_404(id)
     form = SeriesForm(obj=serie)
-    form.categories.choices = [(c.id, c.name) for c in Category.query.order_by('name').all()]
+    form.categories.choices = [(c.id, c.name) for c in Category.query.order_by(Category.name).all()]
     
     if request.method == 'GET':
         form.categories.data = [c.id for c in serie.categories]
@@ -175,11 +184,15 @@ def edit_series(id):
         serie.banner = old_banner
         
         if request.files.get('cover') and request.files['cover'].filename:
-            serie.cover = _save_image(request.files['cover'], 'covers', (600, 900))
+            saved = _save_image(request.files['cover'], 'covers', (600, 900))
+            if saved:
+                serie.cover = saved
         if request.files.get('banner') and request.files['banner'].filename:
-            serie.banner = _save_image(request.files['banner'], 'banners', (1920, 1080))
+            saved = _save_image(request.files['banner'], 'banners', (1920, 1080))
+            if saved:
+                serie.banner = saved
             
-        selected_cats = Category.query.filter(Category.id.in_(form.categories.data)).all()
+        selected_cats = Category.query.filter(Category.id.in_(form.categories.data or [])).all()
         serie.categories = selected_cats
         
         db.session.commit()
@@ -221,7 +234,7 @@ def list_movies():
 def create_movie():
     """Crear una nueva película."""
     form = MovieForm()
-    form.categories.choices = [(c.id, c.name) for c in Category.query.order_by('name').all()]
+    form.categories.choices = [(c.id, c.name) for c in Category.query.order_by(Category.name).all()]
     
     if form.validate_on_submit():
         movie = Movie(
@@ -235,14 +248,18 @@ def create_movie():
             is_active=form.is_active.data
         )
         
-        selected_cats = Category.query.filter(Category.id.in_(form.categories.data)).all()
+        selected_cats = Category.query.filter(Category.id.in_(form.categories.data or [])).all()
         movie.categories = selected_cats
         
         # Procesar imágenes
         if form.cover.data and form.cover.data.filename:
-            movie.cover = _save_image(form.cover.data, 'covers', (600, 900))
+            saved = _save_image(form.cover.data, 'covers', (600, 900))
+            if saved:
+                movie.cover = saved
         if form.banner.data and form.banner.data.filename:
-            movie.banner = _save_image(form.banner.data, 'banners', (1920, 1080))
+            saved = _save_image(form.banner.data, 'banners', (1920, 1080))
+            if saved:
+                movie.banner = saved
             
         db.session.add(movie)
         db.session.commit()
@@ -259,7 +276,7 @@ def edit_movie(id):
     """Editar una película existente."""
     movie = Movie.query.get_or_404(id)
     form = MovieForm(obj=movie)
-    form.categories.choices = [(c.id, c.name) for c in Category.query.order_by('name').all()]
+    form.categories.choices = [(c.id, c.name) for c in Category.query.order_by(Category.name).all()]
     
     if request.method == 'GET':
         form.categories.data = [c.id for c in movie.categories]
@@ -274,11 +291,15 @@ def edit_movie(id):
         movie.banner = old_banner
         
         if request.files.get('cover') and request.files['cover'].filename:
-            movie.cover = _save_image(request.files['cover'], 'covers', (600, 900))
+            saved = _save_image(request.files['cover'], 'covers', (600, 900))
+            if saved:
+                movie.cover = saved
         if request.files.get('banner') and request.files['banner'].filename:
-            movie.banner = _save_image(request.files['banner'], 'banners', (1920, 1080))
+            saved = _save_image(request.files['banner'], 'banners', (1920, 1080))
+            if saved:
+                movie.banner = saved
 
-        selected_cats = Category.query.filter(Category.id.in_(form.categories.data)).all()
+        selected_cats = Category.query.filter(Category.id.in_(form.categories.data or [])).all()
         movie.categories = selected_cats
         db.session.commit()
         
