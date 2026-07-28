@@ -375,7 +375,7 @@ def create_episode(series_id):
             season_id=season.id,
             number=form.number.data,
             title=form.title.data,
-            synopsis=form.synopsis.data,
+            description=form.synopsis.data,
             duration=form.duration.data,
             video_url=form.video_url.data,
             air_date=form.air_date.data
