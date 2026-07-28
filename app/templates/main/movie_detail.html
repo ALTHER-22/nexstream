@@ -38,17 +38,23 @@
         <div class="nex-detail-hero__meta">
           {% if movie.year %}<span>{{ movie.year }}</span>{% endif %}
           {% if movie.duration %}<span>{{ movie.duration }} min</span>{% endif %}
-          {% if movie.rating_avg %}<span>â­ {{ "%.1f"|format(movie.rating_avg|float) }}</span>{% endif %}
+          {% if movie.rating_avg %}<span>â­  {{ "%.1f"|format(movie.rating_avg|float) }}</span>{% endif %}
         </div>
         {% if movie.synopsis %}
           <p class="nex-detail-hero__synopsis">{{ movie.synopsis }}</p>
         {% endif %}
         <div class="nex-detail-hero__actions">
-          {% if movie.video_url %}
-              <a href="{{ url_for('main.play_movie', movie_id=movie.id) }}" class="nex-btn nex-btn--primary nex-btn--lg">▶ Reproducir</a>
-          {% else %}
-            <button class="nex-btn nex-btn--primary nex-btn--lg" disabled>▶ Próximamente</button>
-          {% endif %}
+            {% if movie.video_url %}
+                {% set is_embed = ('drive.google.com' in movie.video_url or 'youtube.com' in movie.video_url or 'youtu.be' in movie.video_url or 'vimeo.com' in movie.video_url) %}
+                <a href="{{ url_for('main.play_movie', movie_id=movie.id) }}" 
+                   class="nex-btn nex-btn--primary nex-btn--lg nex-play-link"
+                   data-video-url="{{ movie.video_url }}"
+                   data-is-embed="{{ 'true' if is_embed else 'false' }}">
+                  ▶ Reproducir
+                </a>
+            {% else %}
+              <button class="nex-btn nex-btn--primary nex-btn--lg" disabled>▶ Próximamente</button>
+            {% endif %}
           
           {% if current_user.is_authenticated %}
             <button class="nex-btn nex-btn--secondary nex-btn--lg nex-fav-btn {{ 'active' if is_favorite else '' }}"

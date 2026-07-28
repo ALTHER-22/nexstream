@@ -173,5 +173,27 @@
     })();
   </script>
 
+  <!-- Direct Play Interceptor for Mobile Embeds -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      if (!isMobileDevice) return;
+
+      document.querySelectorAll('.nex-play-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+          const isEmbed = link.getAttribute('data-is-embed') === 'true';
+          const videoUrl = link.getAttribute('data-video-url');
+          
+          if (isEmbed && videoUrl) {
+            e.preventDefault();
+            e.stopPropagation();
+            window.location.href = videoUrl;
+          } else if (link.hasAttribute('data-href') && link.tagName.toLowerCase() !== 'a') {
+            window.location.href = link.getAttribute('data-href');
+          }
+        });
+      });
+    });
+  </script>
 </body>
 </html>
