@@ -313,6 +313,14 @@
         iframe.style.transform = 'translate(-50%, -50%) scale(' + scale + ')';
         iframe.style.width = '1280px';
         iframe.style.height = '720px';
+
+        // Position the custom fullscreen button exactly inside the top edge of the video area
+        const videoHeight = 720 * scale;
+        const videoTop = (window.innerHeight - videoHeight) / 2;
+        const btn = document.getElementById('custom-fullscreen-btn');
+        if (btn) {
+          btn.style.top = (videoTop + 15) + 'px';
+        }
       } else {
         iframe.style.position = 'absolute';
         iframe.style.top = '50%';
