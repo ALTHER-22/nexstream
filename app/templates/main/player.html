@@ -196,9 +196,44 @@
       border: none;
       display: block;
     }
-    /* Ocultar el header de NEXSTREAM en embeds de escritorio (Drive tiene sus controles) */
-    .nex-player-header.is-embed-header {
-      display: none;
+    /* TRUCO MAESTRO DEFINITIVO: Engañar a Google Drive forzando resolución de PC en celulares */
+    @media (max-width: 768px) {
+      .nex-embed-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 9999;
+        background: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+      
+      .nex-embed-iframe {
+        /* Forzamos que Google Drive crea que está en una pantalla de PC (1280x720) */
+        width: 1280px !important;
+        height: 720px !important;
+        flex-shrink: 0;
+        
+        /* Escalamos matemáticamente el iframe de 1280px para que quepa en la pantalla real del celular */
+        transform: scale(calc(100vw / 1280));
+        transform-origin: center center;
+      }
+      
+      /* Si el usuario voltea el celular en horizontal, escalamos basados en la altura para que no se corte */
+      @media (orientation: landscape) {
+        .nex-embed-iframe {
+          transform: scale(calc(100vh / 720));
+        }
+      }
+      
+      /* Ocultar COMPLETAMENTE el header en celular para que Drive tenga toda la pantalla */
+      .nex-player-header.is-embed-header {
+        display: none !important;
+      }
     }
     {% endif %}
     /* Native video fallback styles */
@@ -281,25 +316,7 @@
     const contentType = "{{ type }}";
     const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
-    {% if is_embed %}
-    if (isMobileDevice) {
-      let driveUrl = "{{ item.video_url }}";
-      driveUrl = driveUrl.replace(/\/(view|edit)(\?.*)?$/, '/preview');
-      if (!driveUrl.includes('/preview')) {
-        driveUrl = driveUrl.split('?')[0].replace(/\/$/, '') + '/preview';
-      }
-      const a = document.createElement('a');
-      a.href = driveUrl;
-      a.target = '_blank';
-      a.rel = 'noopener noreferrer';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      
-      // Regresar al detalle en esta pestaña para que no se queden atorados en el player
-      setTimeout(() => goBack(), 500);
-    }
-    {% else %}
+    {% if not is_embed %}
     if (isMobileDevice) {
       // Para MP4 directo usamos el reproductor nativo
     }
