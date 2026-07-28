@@ -1411,6 +1411,7 @@ p {
 /* Display */
 .d-none    { display: none !important; }
 .d-flex    { display: flex; }
+.d-inline-flex { display: inline-flex !important; }
 .d-grid    { display: grid; }
 .d-block   { display: block; }
 .d-inline  { display: inline; }
@@ -1426,6 +1427,7 @@ p {
 @media (min-width: 768px) {
   .d-md-block { display: block !important; }
   .d-md-flex  { display: flex !important; }
+  .d-md-inline-flex { display: inline-flex !important; }
   .d-md-none  { display: none !important; }
 }
 
