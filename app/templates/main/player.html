@@ -290,8 +290,9 @@
     const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
     {% if is_embed %}
-    // Lógica para links incrustados (Google Drive) en celular desactivada
-    // Se usa el truco de CSS transform scale en su lugar para mantener al usuario en Nexstream
+    if (isMobileDevice) {
+      window.location.replace("{{ item.video_url }}");
+    }
     {% endif %}
 
     // --- Funciones de Navegación ---
