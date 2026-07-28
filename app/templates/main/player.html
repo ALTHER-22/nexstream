@@ -281,7 +281,25 @@
     const contentType = "{{ type }}";
     const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
-    {% if not is_embed %}
+    {% if is_embed %}
+    if (isMobileDevice) {
+      let driveUrl = "{{ item.video_url }}";
+      driveUrl = driveUrl.replace(/\/(view|edit)(\?.*)?$/, '/preview');
+      if (!driveUrl.includes('/preview')) {
+        driveUrl = driveUrl.split('?')[0].replace(/\/$/, '') + '/preview';
+      }
+      const a = document.createElement('a');
+      a.href = driveUrl;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      
+      // Regresar al detalle en esta pestaña para que no se queden atorados en el player
+      setTimeout(() => goBack(), 500);
+    }
+    {% else %}
     if (isMobileDevice) {
       // Para MP4 directo usamos el reproductor nativo
     }
