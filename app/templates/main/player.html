@@ -196,31 +196,9 @@
       border: none;
       display: block;
     }
-    
-    /* En escritorio: ocultamos el header de NEXSTREAM para no tapar el iframe */
+    /* Ocultar el header de NEXSTREAM en embeds de escritorio (Drive tiene sus controles) */
     .nex-player-header.is-embed-header {
       display: none;
-    }
-
-    /* En CELULAR: el iframe cubre TODO, incluyendo debajo del header.
-       El header de NEXSTREAM se oculta porque Drive maneja sus propios controles. */
-    @media (max-width: 768px) {
-      .nex-embed-wrapper {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 9999;
-      }
-      .nex-embed-iframe {
-        width: 100%;
-        height: 100%;
-      }
-      /* Ocultar COMPLETAMENTE el header en celular para que Drive tenga toda la pantalla */
-      .nex-player-header.is-embed-header {
-        display: none !important;
-      }
     }
     {% endif %}
     /* Native video fallback styles */
@@ -303,9 +281,21 @@
     const contentType = "{{ type }}";
     const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
-    {% if not is_embed %}
+    {% if is_embed %}
+    // En CELULAR: redirigir directamente al link de Drive en el navegador.
+    // La URL /preview funciona sin app y sin cuenta de Google (modo invitado).
     if (isMobileDevice) {
-      // Usamos reproductor nativo para MP4
+      let driveUrl = "{{ item.video_url }}";
+      // Asegurarse de que se use el endpoint /preview (no /view ni /edit)
+      driveUrl = driveUrl.replace(/\/(view|edit)(\?.*)?$/, '/preview');
+      if (!driveUrl.includes('/preview')) {
+        driveUrl = driveUrl.split('?')[0].replace(/\/$/, '') + '/preview';
+      }
+      window.location.replace(driveUrl);
+    }
+    {% else %}
+    if (isMobileDevice) {
+      // Para MP4 directo usamos el reproductor nativo
     }
     {% endif %}
 
