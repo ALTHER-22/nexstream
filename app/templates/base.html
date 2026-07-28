@@ -194,8 +194,14 @@
             if (!url.includes('/preview')) {
               url = url.split('?')[0].replace(/\/$/, '') + '/preview';
             }
-            // Abrir en pestaña nueva: evita el popup de "abrir app externa"
-            window.open(url, '_blank');
+            // Crear un enlace real y darle clic para simular una pestaña nueva completamente limpia (como si pegara la URL)
+            const a = document.createElement('a');
+            a.href = url;
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
           } else if (el.tagName.toLowerCase() !== 'a' && el.hasAttribute('data-href')) {
             window.location.href = el.getAttribute('data-href');
           }
