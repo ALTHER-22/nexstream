@@ -43,41 +43,16 @@
         {% if movie.synopsis %}
           <p class="nex-detail-hero__synopsis">{{ movie.synopsis }}</p>
         {% endif %}
-        {% if movie.video_url %}
-          <style>
-            .nex-mobile-overlay-link { display: none; }
-            @media (max-width: 768px) {
-              .nex-mobile-overlay-link {
-                display: block;
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                z-index: 10;
-                opacity: 0;
-              }
-            }
-          </style>
-        {% endif %}
         <div class="nex-detail-hero__actions">
-              {% if movie.video_url %}
-                  {% set is_embed = ('drive.google.com' in movie.video_url or 'youtube.com' in movie.video_url or 'youtu.be' in movie.video_url or 'vimeo.com' in movie.video_url) %}
-                  
-                  <div style="position: relative; display: inline-block;">
-                    <a href="{{ url_for('main.play_movie', movie_id=movie.id) }}" class="nex-btn nex-btn--primary nex-btn--lg">
-                      ▶ Reproducir
-                    </a>
-                    
-                    {% if is_embed and 'drive.google.com' in movie.video_url %}
-                      {% set clean_drive_url = movie.video_url | replace('/view', '/preview') | replace('/edit', '/preview') %}
-                      {% if '/preview' not in clean_drive_url %}
-                        {% set clean_drive_url = clean_drive_url.split('?')[0].rstrip('/') + '/preview' %}
-                      {% endif %}
-                      <a href="{{ clean_drive_url }}" target="_blank" rel="noopener noreferrer" class="nex-mobile-overlay-link" title="Reproducir en nueva pestaña"></a>
-                    {% endif %}
-                  </div>
-              {% else %}
+            {% if movie.video_url %}
+                {% set is_embed = ('drive.google.com' in movie.video_url or 'youtube.com' in movie.video_url or 'youtu.be' in movie.video_url or 'vimeo.com' in movie.video_url) %}
+                <a href="{{ url_for('main.play_movie', movie_id=movie.id) }}" 
+                   class="nex-btn nex-btn--primary nex-btn--lg nex-play-link"
+                   data-video-url="{{ movie.video_url }}"
+                   data-is-embed="{{ 'true' if is_embed else 'false' }}">
+                  ▶ Reproducir
+                </a>
+            {% else %}
               <button class="nex-btn nex-btn--primary nex-btn--lg" disabled>▶ Próximamente</button>
             {% endif %}
           
