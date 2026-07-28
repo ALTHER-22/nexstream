@@ -280,17 +280,47 @@
 
     {% if not is_embed %}
     // --- Configuración e Inicialización ---
-    const player = videojs('nex-video', {
-      controls: true,
-      fluid: false,
-      inactivityTimeout: 3000,
-      nativeControlsForTouch: false,
-      html5: {
-        vhs: { overrideNative: true },
-        nativeAudioTracks: false,
-        nativeVideoTracks: false
-      }
-    });
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    let player;
+    const videoEl = document.getElementById('nex-video');
+
+    if (isMobile) {
+      // Dispositivo Móvil: Desactivamos video.js y usamos el reproductor nativo puro del celular
+      videoEl.setAttribute('controls', 'true');
+      videoEl.classList.remove('video-js', 'vjs-default-skin', 'vjs-big-play-centered');
+      
+      // Creamos un adaptador para que nuestras funciones (guardar progreso, autoplay) sigan funcionando
+      player = {
+        duration: () => videoEl.duration || 0,
+        currentTime: (val) => {
+          if (val !== undefined) videoEl.currentTime = val;
+          return videoEl.currentTime || 0;
+        },
+        ready: (fn) => {
+          if (videoEl.readyState >= 1) fn();
+          else videoEl.addEventListener('loadedmetadata', fn);
+        },
+        on: (event, fn) => {
+          // Mapear eventos de video.js a HTML5
+          videoEl.addEventListener(event, fn);
+        },
+        play: () => videoEl.play(),
+        paused: () => videoEl.paused
+      };
+    } else {
+      // Escritorio: Usamos Video.js
+      player = videojs('nex-video', {
+        controls: true,
+        fluid: false,
+        inactivityTimeout: 3000,
+        nativeControlsForTouch: false,
+        html5: {
+          vhs: { overrideNative: true },
+          nativeAudioTracks: false,
+          nativeVideoTracks: false
+        }
+      });
+    }
     const container = document.getElementById('playerContainer');
     const csrfToken = "{{ csrf_token() }}";
     
