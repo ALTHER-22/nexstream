@@ -24,6 +24,9 @@ Flujo:
 """
 
 import os
+from dotenv import load_dotenv
+load_dotenv()
+
 import logging
 from logging.handlers import RotatingFileHandler
 from flask import Flask, render_template, request, g
