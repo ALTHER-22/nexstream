@@ -356,6 +356,7 @@
   height: 100%;
   object-fit: cover;
   object-position: center top;
+  filter: blur(0px) brightness(0.5);
 }
 
 .nex-hero__gradient {

@@ -32,9 +32,11 @@
 
       <div class="nex-hero__bg">
         {% if banner.image_url and 'default-banner.svg' not in banner.image_url %}
-          <img class="nex-hero__bg-img" src="{{ banner.image_url }}" alt="{{ banner.title }}" loading="lazy">
+          <img src="{{ banner.image_url }}" alt="{{ banner.title }}" loading="lazy">
         {% elif banner.cover_url %}
-          <div class="nex-hero__bg-fallback" style="background-image: url('{{ banner.cover_url }}');"></div>
+          <img src="{{ banner.cover_url }}" alt="{{ banner.title }}" loading="lazy">
+        {% else %}
+          <div style="width:100%;height:100%;background:var(--color-surface-2);"></div>
         {% endif %}
         <div class="nex-hero__gradient"></div>
       </div>
