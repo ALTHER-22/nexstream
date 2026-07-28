@@ -281,19 +281,7 @@
     const contentType = "{{ type }}";
     const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
-    {% if is_embed %}
-    // En CELULAR: redirigir directamente al link de Drive en el navegador.
-    // La URL /preview funciona sin app y sin cuenta de Google (modo invitado).
-    if (isMobileDevice) {
-      let driveUrl = "{{ item.video_url }}";
-      // Asegurarse de que se use el endpoint /preview (no /view ni /edit)
-      driveUrl = driveUrl.replace(/\/(view|edit)(\?.*)?$/, '/preview');
-      if (!driveUrl.includes('/preview')) {
-        driveUrl = driveUrl.split('?')[0].replace(/\/$/, '') + '/preview';
-      }
-      window.location.replace(driveUrl);
-    }
-    {% else %}
+    {% if not is_embed %}
     if (isMobileDevice) {
       // Para MP4 directo usamos el reproductor nativo
     }
