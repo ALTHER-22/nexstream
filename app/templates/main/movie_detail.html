@@ -44,27 +44,17 @@
           <p class="nex-detail-hero__synopsis">{{ movie.synopsis }}</p>
         {% endif %}
         <div class="nex-detail-hero__actions">
-          {% if movie.video_url %}
-            {% set is_drive = ('drive.google.com' in movie.video_url) %}
-            
-            {% if is_drive %}
-              {# Desktop Play Button: Goes to player.html iframe #}
-              <a href="{{ url_for('main.play_movie', movie_id=movie.id) }}" class="nex-btn nex-btn--primary nex-btn--lg d-none d-md-inline-flex">
-                ▶ Reproducir
-              </a>
-              
-              {# Mobile Play Button: Opens Drive natively like a WhatsApp link #}
-              <a href="{{ movie.video_url }}" target="_blank" rel="noopener noreferrer" class="nex-btn nex-btn--primary nex-btn--lg d-inline-flex d-md-none">
-                ▶ Reproducir
-              </a>
+            {% if movie.video_url %}
+                {% set is_embed = ('drive.google.com' in movie.video_url or 'youtube.com' in movie.video_url or 'youtu.be' in movie.video_url or 'vimeo.com' in movie.video_url) %}
+                <a href="{{ url_for('main.play_movie', movie_id=movie.id) }}" 
+                   class="nex-btn nex-btn--primary nex-btn--lg nex-play-link"
+                   data-video-url="{{ movie.video_url }}"
+                   data-is-embed="{{ 'true' if is_embed else 'false' }}">
+                  ▶ Reproducir
+                </a>
             {% else %}
-              <a href="{{ url_for('main.play_movie', movie_id=movie.id) }}" class="nex-btn nex-btn--primary nex-btn--lg">
-                ▶ Reproducir
-              </a>
+              <button class="nex-btn nex-btn--primary nex-btn--lg" disabled>▶ Próximamente</button>
             {% endif %}
-          {% else %}
-            <button class="nex-btn nex-btn--primary nex-btn--lg" disabled>▶ Próximamente</button>
-          {% endif %}
           
           {% if current_user.is_authenticated %}
             <button class="nex-btn nex-btn--secondary nex-btn--lg nex-fav-btn {{ 'active' if is_favorite else '' }}"
