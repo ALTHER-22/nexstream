@@ -169,7 +169,7 @@ class Series(db.Model):
             if self.banner.startswith('/static/'):
                 return self.banner
             return f'/static/uploads/banners/{self.banner}'
-        return '/static/images/default-banner.svg'
+        return None
 
     @property
     def total_episodes(self) -> int:
@@ -318,7 +318,7 @@ class Movie(db.Model):
             if self.banner.startswith('/static/'):
                 return self.banner
             return f'/static/uploads/banners/{self.banner}'
-        return '/static/images/default-banner.svg'
+        return None
 
     def increment_views(self) -> None:
         self.views_count += 1
