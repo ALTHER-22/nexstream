@@ -184,31 +184,46 @@
     {% endif %}
     
     {% if is_embed %}
-    .nex-embed-iframe {
-      width: 100vw;
-      height: 100vh;
-      border: none;
+    .nex-embed-wrapper {
       position: absolute;
-      top: 0;
-      left: 0;
+      inset: 0;
       z-index: 5;
+      overflow: hidden;
+    }
+    .nex-embed-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
     }
     
-    /* TRUCO MAESTRO: Engañar a Google Drive en celulares para que muestre el reproductor de PC (controles pequeños) */
     @media (max-width: 768px) {
+      /* En móvil hacemos el iframe un poco más alto para que Google Drive
+         no recorte la barra de controles: la subimos 60px y añadimos 60px abajo */
+      .nex-embed-wrapper {
+        top: -60px;
+        bottom: -60px;
+        left: 0;
+        right: 0;
+        position: absolute;
+      }
       .nex-embed-iframe {
-        /* Hacemos el iframe del doble de tamaño */
-        width: 200vw;
-        height: 200vh;
-        /* Y lo encogemos a la mitad visualmente */
-        transform: scale(0.5);
-        transform-origin: top left;
+        width: 100%;
+        height: calc(100% + 60px);
       }
     }
 
-    /* Ocultamos el header por defecto en embeds de escritorio para no tapar el iframe */
+    /* El header (botón volver) siempre visible en embeds móvil */
     .nex-player-header.is-embed-header {
       display: none;
+    }
+    @media (max-width: 768px) {
+      .nex-player-header.is-embed-header {
+        display: flex;
+        z-index: 20;
+        opacity: 1;
+        pointer-events: auto;
+      }
     }
     {% endif %}
     /* Native video fallback styles */
@@ -243,7 +258,9 @@
     </header>
 
     {% if is_embed %}
-      <iframe id="desktop-embed-iframe" src="{{ item.video_url }}" class="nex-embed-iframe" allowfullscreen allow="autoplay; fullscreen" frameborder="0"></iframe>
+      <div class="nex-embed-wrapper">
+        <iframe id="desktop-embed-iframe" src="{{ item.video_url }}" class="nex-embed-iframe" allowfullscreen allow="autoplay; fullscreen" frameborder="0"></iframe>
+      </div>
     {% else %}
       <video
         id="nex-video"
