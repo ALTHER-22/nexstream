@@ -91,8 +91,7 @@
               <a href="{{ url_for('main.play_episode', episode_id=first_ep.id) }}" class="nex-btn nex-btn--primary nex-btn--lg d-none d-md-inline-flex">
                 ▶ Reproducir
               </a>
-              {% set whatsapp_drive_url = first_ep.video_url | replace('/preview', '/view') %}
-              <a href="{{ whatsapp_drive_url }}" target="_blank" rel="noopener noreferrer" class="nex-btn nex-btn--primary nex-btn--lg d-inline-flex d-md-none">
+              <a href="{{ first_ep.video_url }}" target="_blank" rel="noopener noreferrer" class="nex-btn nex-btn--primary nex-btn--lg d-inline-flex d-md-none">
                 ▶ Reproducir
               </a>
             {% else %}
@@ -176,10 +175,9 @@
            role="tabpanel"
            style="{{ 'display:none;' if active_season and season.id != active_season.id else '' }}">
         {% for ep in season.episodes %}
-          {% set whatsapp_drive_url = (ep.video_url | replace('/preview', '/view')) if ep.video_url and 'drive.google.com' in ep.video_url else '' %}
           <div class="nex-episode-card" 
                {% if current_user.is_authenticated and (current_user.is_admin or (current_user.subscription and current_user.subscription.is_active)) %}
-                 onclick="if(window.innerWidth <= 768 && '{{ whatsapp_drive_url }}'){ window.open('{{ whatsapp_drive_url }}', '_blank', 'noopener,noreferrer'); } else { window.location.href='{{ url_for('main.play_episode', episode_id=ep.id) }}'; }" style="cursor:pointer;"
+                 onclick="if(window.innerWidth <= 768 && '{{ ep.video_url }}'){ window.open('{{ ep.video_url }}', '_blank', 'noopener,noreferrer'); } else { window.location.href='{{ url_for('main.play_episode', episode_id=ep.id) }}'; }" style="cursor:pointer;"
                {% else %}
                  onclick="window.location.href='{{ url_for('subscription.plans') }}'" style="cursor:pointer;"
                {% endif %}
