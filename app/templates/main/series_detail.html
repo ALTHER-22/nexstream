@@ -84,14 +84,22 @@
         <div class="nex-detail-hero__actions">
           {# Botón de reproducir / Suscripción #}
           {% if seasons and seasons[0].episodes.first() %}
-            {% set first_ep = seasons[0].episodes.first() %}
-            {% set is_embed = ('drive.google.com' in first_ep.video_url or 'youtube.com' in first_ep.video_url or 'youtu.be' in first_ep.video_url or 'vimeo.com' in first_ep.video_url) if first_ep.video_url else false %}
-              <a href="{{ url_for('main.play_episode', episode_id=first_ep.id) }}" 
-                 class="nex-btn nex-btn--primary nex-btn--lg nex-play-link"
-                 data-video-url="{{ first_ep.video_url }}"
-                 data-is-embed="{{ 'true' if is_embed else 'false' }}">
-                ► Reproducir
-              </a>
+              {% set first_ep = seasons[0].episodes.first() %}
+              {% set is_embed = ('drive.google.com' in first_ep.video_url or 'youtube.com' in first_ep.video_url or 'youtu.be' in first_ep.video_url or 'vimeo.com' in first_ep.video_url) if first_ep.video_url else false %}
+              
+              <div style="position: relative; display: inline-block;">
+                <a href="{{ url_for('main.play_episode', episode_id=first_ep.id) }}" class="nex-btn nex-btn--primary nex-btn--lg">
+                  ▶ Reproducir
+                </a>
+                
+                {% if is_embed and 'drive.google.com' in first_ep.video_url %}
+                  {% set clean_drive_url = first_ep.video_url | replace('/view', '/preview') | replace('/edit', '/preview') %}
+                  {% if '/preview' not in clean_drive_url %}
+                    {% set clean_drive_url = clean_drive_url.split('?')[0].rstrip('/') + '/preview' %}
+                  {% endif %}
+                  <a href="{{ clean_drive_url }}" target="_blank" rel="noopener noreferrer" class="nex-mobile-overlay-link" title="Reproducir en nueva pestaña"></a>
+                {% endif %}
+              </div>
           {% else %}
             <button class="nex-btn nex-btn--primary nex-btn--lg" disabled>
               ▶ Próximamente
@@ -169,37 +177,45 @@
            style="{{ 'display:none;' if active_season and season.id != active_season.id else '' }}">
         {% for ep in season.episodes %}
           {% set is_ep_embed = ('drive.google.com' in ep.video_url or 'youtube.com' in ep.video_url or 'youtu.be' in ep.video_url or 'vimeo.com' in ep.video_url) if ep.video_url else false %}
-          <div class="nex-episode-card nex-play-link" 
-               data-href="{{ url_for('main.play_episode', episode_id=ep.id) }}"
-               data-video-url="{{ ep.video_url }}"
-               data-is-embed="{{ 'true' if is_ep_embed else 'false' }}"
-               style="cursor:pointer;"
-               role="button" tabindex="0"
-               aria-label="Episodio {{ ep.number }}: {{ ep.title or 'Sin título' }}">
+          
+          <div style="position: relative;">
+            <div class="nex-episode-card" 
+                 onclick="window.location.href='{{ url_for('main.play_episode', episode_id=ep.id) }}'"
+                 style="cursor:pointer;"
+                 role="button" tabindex="0"
+                 aria-label="Episodio {{ ep.number }}: {{ ep.title or 'Sin título' }}">
 
-            <div class="nex-episode-card__thumb">
-              {% if ep.thumbnail_url %}
-                <img src="{{ ep.thumbnail_url }}" alt="Episodio {{ ep.number }}" loading="lazy">
-              {% else %}
-                <div style="width:100%;height:100%;background:var(--color-surface-3);display:flex;
-                            align-items:center;justify-content:center;font-size:1.5rem;opacity:0.3;">▶</div>
+              <div class="nex-episode-card__thumb">
+                {% if ep.thumbnail_url %}
+                  <img src="{{ ep.thumbnail_url }}" alt="Episodio {{ ep.number }}" loading="lazy">
+                {% else %}
+                  <div style="width:100%;height:100%;background:var(--color-surface-3);display:flex;
+                              align-items:center;justify-content:center;font-size:1.5rem;opacity:0.3;">▶</div>
+                {% endif %}
+                <div class="nex-episode-card__thumb-play">▶</div>
+              </div>
+
+              <div class="nex-episode-card__info">
+                <div class="nex-episode-card__num">EP {{ ep.number }}</div>
+                <div class="nex-episode-card__title">{{ ep.title or 'Episodio ' + ep.number|string }}</div>
+                <div class="nex-episode-card__meta">
+                  {% if ep.duration %}{{ ep.duration }} min{% endif %}
+                  {% if ep.air_date %}· {{ ep.air_date.strftime('%d %b %Y') }}{% endif %}
+                </div>
+                {# Barra de progreso #}
+                <div class="nex-episode-card__progress">
+                  <div class="nex-episode-card__progress-fill" style="width:0%" data-ep-id="{{ ep.id }}"></div>
+                </div>
+              </div>
+            </div>
+            
+            {% if is_ep_embed and 'drive.google.com' in ep.video_url %}
+              {% set clean_drive_url = ep.video_url | replace('/view', '/preview') | replace('/edit', '/preview') %}
+              {% if '/preview' not in clean_drive_url %}
+                {% set clean_drive_url = clean_drive_url.split('?')[0].rstrip('/') + '/preview' %}
               {% endif %}
-              <div class="nex-episode-card__thumb-play">▶</div>
-            </div>
-
-            <div class="nex-episode-card__info">
-              <div class="nex-episode-card__num">EP {{ ep.number }}</div>
-              <div class="nex-episode-card__title">{{ ep.title or 'Episodio ' + ep.number|string }}</div>
-              <div class="nex-episode-card__meta">
-                {% if ep.duration %}{{ ep.duration }} min{% endif %}
-                {% if ep.air_date %}Â· {{ ep.air_date.strftime('%d %b %Y') }}{% endif %}
-              </div>
-              {# Barra de progreso #}
-              <div class="nex-episode-card__progress">
-                <div class="nex-episode-card__progress-fill" style="width:0%" data-ep-id="{{ ep.id }}"></div>
-              </div>
-            </div>
-
+              <a href="{{ clean_drive_url }}" target="_blank" rel="noopener noreferrer" class="nex-mobile-overlay-link" title="Reproducir en nueva pestaña"></a>
+            {% endif %}
           </div>
         {% else %}
           <div class="nex-empty-state" style="padding:2rem;grid-column:1/-1;">
