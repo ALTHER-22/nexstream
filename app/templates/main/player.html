@@ -193,8 +193,9 @@
       left: 0;
       z-index: 5;
     }
-    .nex-player-header {
-      display: none !important;
+    /* Ocultamos el header por defecto en embeds de escritorio para no tapar el iframe */
+    .nex-player-header.is-embed-header {
+      display: none;
     }
     {% endif %}
     /* Native video fallback styles */
@@ -211,7 +212,7 @@
 
   <div class="nex-player-container" id="playerContainer">
     
-    <header class="nex-player-header">
+    <header class="nex-player-header {% if is_embed %}is-embed-header{% endif %}">
       <button class="nex-player-back" onclick="goBack()" aria-label="Volver">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <line x1="19" y1="12" x2="5" y2="12"></line>
@@ -229,7 +230,16 @@
     </header>
 
     {% if is_embed %}
-      <iframe src="{{ item.video_url }}" class="nex-embed-iframe" allowfullscreen allow="autoplay; fullscreen" frameborder="0"></iframe>
+      <div id="mobile-embed-launcher" style="display:none; width: 100vw; height: 100vh; position: absolute; top:0; left:0; z-index: 100; background: black; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+        <img src="{{ item.thumbnail_url if type == 'series' else item.banner_url }}" style="max-width: 80%; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+        <h2 style="color: white; margin-bottom: 0.5rem;">{{ item.title }}</h2>
+        <p style="color: rgba(255,255,255,0.7); margin-bottom: 2rem; padding: 0 1.5rem; font-size: 0.95rem;">Para una experiencia fluida y sin controles gigantes, el video se abrirá en su reproductor nativo.</p>
+        <a href="{{ item.video_url }}" target="_blank" class="nex-btn nex-btn--primary" style="padding: 1rem 2.5rem; font-size: 1.1rem; border-radius: 50px; text-decoration: none; display: flex; align-items: center; gap: 0.75rem;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          Reproducir Video
+        </a>
+      </div>
+      <iframe id="desktop-embed-iframe" src="{{ item.video_url }}" class="nex-embed-iframe" allowfullscreen allow="autoplay; fullscreen" frameborder="0"></iframe>
     {% else %}
       <video
         id="nex-video"
@@ -273,7 +283,17 @@
   <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
   <script>
     const contentType = "{{ type }}";
+    const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
+    {% if is_embed %}
+    // Lógica para links incrustados (Google Drive) en celular
+    if (isMobileDevice) {
+      document.getElementById('mobile-embed-launcher').style.display = 'flex';
+      document.getElementById('desktop-embed-iframe').style.display = 'none';
+      document.querySelector('.nex-player-header').style.display = 'flex'; // Mantener el botón de volver visible
+    }
+    {% endif %}
+
     // --- Funciones de Navegación ---
     function goBack() {
       // Guardar progreso antes de salir
