@@ -197,6 +197,14 @@
       display: none !important;
     }
     {% endif %}
+    /* Native video fallback styles */
+    .nex-native-video {
+      width: 100vw !important;
+      height: 100vh !important;
+      object-fit: contain;
+      background: black;
+      outline: none;
+    }
   </style>
 </head>
 <body>
@@ -288,6 +296,7 @@
       // Dispositivo Móvil: Desactivamos video.js y usamos el reproductor nativo puro del celular
       videoEl.setAttribute('controls', 'true');
       videoEl.classList.remove('video-js', 'vjs-default-skin', 'vjs-big-play-centered');
+      videoEl.classList.add('nex-native-video');
       
       // Creamos un adaptador para que nuestras funciones (guardar progreso, autoplay) sigan funcionando
       player = {
