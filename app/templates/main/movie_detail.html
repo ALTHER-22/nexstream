@@ -125,10 +125,45 @@ window.NexFavorites = {
         method: 'POST', body: JSON.stringify({ type: btn.dataset.type, id: parseInt(btn.dataset.id) }),
       });
       const data = await res.json();
-      btn.innerHTML = data.added ? 'â¤ En favoritos' : '♡ Favoritos';
+      btn.innerHTML = data.added ? 'â ¤ En favoritos' : '♡ Favoritos';
       btn.classList.toggle('active', data.added);
       NexStream.Toast[data.added ? 'success' : 'info'](data.message);
     } catch(e) { NexStream.Toast.error('Error'); } finally { btn.disabled = false; }
+  }
+};
+
+window.NexRating = {
+  rate: async function(btn) {
+    const widget = btn.closest('.nex-rating-widget');
+    if (!widget) return;
+    
+    const type = widget.dataset.type;
+    const id = parseInt(widget.dataset.id);
+    const score = parseInt(btn.dataset.value);
+    
+    const buttons = widget.querySelectorAll('.nex-rating-widget__star');
+    buttons.forEach(b => b.disabled = true);
+    
+    try {
+      const res = await nexFetch('/api/v1/rate', {
+        method: 'POST',
+        body: JSON.stringify({ type, id, score })
+      });
+      
+      const data = await res.json();
+      
+      if (!res.ok) {
+        throw new Error(data.error || 'Error al valorar');
+      }
+      
+      widget.setAttribute('data-rating', Math.ceil(score / 2));
+      NexStream.Toast.success(data.message || '¡Gracias por tu valoración!');
+      
+    } catch (e) {
+      NexStream.Toast.error(e.message || 'No se pudo registrar tu valoración');
+    } finally {
+      buttons.forEach(b => b.disabled = false);
+    }
   }
 };
 </script>
