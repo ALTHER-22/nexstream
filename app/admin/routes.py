@@ -66,8 +66,34 @@ def _save_image(upload, folder_name, target_size=None):
         current_app.logger.error(f"Error procesando imagen: {e}")
         return None
 
+    try:
+        if old_filename:
+            old_path = os.path.join(base_dir, old_filename)
+            if os.path.exists(old_path):
+                os.remove(old_path)
+    except Exception as e:
+        current_app.logger.error(f"Error borrando imagen antigua {old_filename}: {e}")
 
-# ─── MIDDLEWARE DE SEGURIDAD ───────────────────────────────────────────────
+def _clean_video_url(url):
+    """
+    Extrae el atributo src si el usuario pega un iframe completo por error.
+    """
+    if not url:
+        return url
+    
+    url = url.strip()
+    if '<iframe' in url.lower():
+        import re
+        match = re.search(r'src=["\']([^"\']+)["\']', url, re.IGNORECASE)
+        if match:
+            url = match.group(1).strip()
+            
+    if url.startswith('//'):
+        url = 'https:' + url
+        
+    return url
+
+# ─── MIDDLEWARE Y LOGGING ──────────────────────────────────────────────────
 
 def admin_required(f):
     """Decorador: Asegura que el usuario sea administrador."""

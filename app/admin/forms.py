@@ -12,7 +12,20 @@ from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, TextAreaField, SelectField, SelectMultipleField, BooleanField, IntegerField, DateField
 from wtforms.validators import DataRequired, Length, Optional, NumberRange
 from wtforms.widgets import ListWidget, CheckboxInput
+import re
 
+def clean_video_url_filter(url):
+    """Extrae el atributo src si se pega un iframe completo, y limpia protocolos relativos."""
+    if not url:
+        return url
+    url = url.strip()
+    if '<iframe' in url.lower():
+        match = re.search(r'src=["\']([^"\']+)["\']', url, re.IGNORECASE)
+        if match:
+            url = match.group(1).strip()
+    if url.startswith('//'):
+        url = 'https:' + url
+    return url
 
 class MultiCheckboxField(SelectMultipleField):
     """Widget personalizado para mostrar SelectMultipleField como checkboxes."""
@@ -67,7 +80,7 @@ class MovieForm(FlaskForm):
         Optional(), FileAllowed(['jpg', 'png', 'webp'])
     ])
     
-    video_url = StringField('URL de la Película / HLS / MP4', validators=[Optional(), Length(max=255)])
+    video_url = StringField('URL de la Película / HLS / MP4', validators=[Optional(), Length(max=255)], filters=[clean_video_url_filter])
     
     # Categorías
     categories = MultiCheckboxField('Categorías', coerce=int)
@@ -94,7 +107,9 @@ class EpisodeForm(FlaskForm):
         Optional(), FileAllowed(['jpg', 'png', 'webp'])
     ])
     
-    video_url = StringField('URL del Video / HLS / MP4', validators=[Optional(), Length(max=255)])
+    video_url = StringField('URL del Video / HLS / MP4', 
+                            validators=[Optional(), Length(max=255)],
+                            filters=[clean_video_url_filter])
 
 
 class CategoryForm(FlaskForm):
