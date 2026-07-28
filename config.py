@@ -204,8 +204,8 @@ class ProductionConfig(Config):
     TESTING = False
 
     # Seguridad de cookies en HTTPS
-    SESSION_COOKIE_SECURE = True
-    REMEMBER_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = False
+    REMEMBER_COOKIE_SECURE = False
 
     # PostgreSQL en producción
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
