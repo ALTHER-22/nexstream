@@ -218,16 +218,8 @@
         height: 720px !important;
         flex-shrink: 0;
         
-        /* Escalamos matemáticamente el iframe de 1280px para que quepa en la pantalla real del celular */
-        transform: scale(calc(100vw / 1280));
+        /* El escalado matematico se hace vía Javascript porque CSS scale() no acepta calc() con unidades (vw) */
         transform-origin: center center;
-      }
-      
-      /* Si el usuario voltea el celular en horizontal, escalamos basados en la altura para que no se corte */
-      @media (orientation: landscape) {
-        .nex-embed-iframe {
-          transform: scale(calc(100vh / 720));
-        }
       }
       
       /* Ocultar COMPLETAMENTE el header en celular para que Drive tenga toda la pantalla */
@@ -316,6 +308,39 @@
     const contentType = "{{ type }}";
     const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
+    {% if is_embed %}
+    function updateIframeScale() {
+      const iframe = document.getElementById('desktop-embed-iframe');
+      if (iframe && window.innerWidth <= 768 && !document.fullscreenElement) {
+        let scale;
+        if (window.innerWidth > window.innerHeight) {
+          scale = window.innerHeight / 720;
+        } else {
+          scale = window.innerWidth / 1280;
+        }
+        iframe.style.transform = 'scale(' + scale + ')';
+        iframe.style.width = '1280px';
+        iframe.style.height = '720px';
+      } else if (iframe && !document.fullscreenElement) {
+        iframe.style.transform = 'none';
+      }
+    }
+    window.addEventListener('resize', updateIframeScale);
+    updateIframeScale();
+
+    // Cuando el usuario hace clic en el boton fullscreen del reproductor (dentro del iframe)
+    document.addEventListener('fullscreenchange', () => {
+      const iframe = document.getElementById('desktop-embed-iframe');
+      if (document.fullscreenElement) {
+        iframe.style.transform = 'none';
+        iframe.style.width = '100vw';
+        iframe.style.height = '100vh';
+      } else {
+        updateIframeScale();
+      }
+    });
+    {% endif %}
+
     {% if not is_embed %}
     if (isMobileDevice) {
       // Para MP4 directo usamos el reproductor nativo
