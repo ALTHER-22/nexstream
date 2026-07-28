@@ -294,6 +294,29 @@ def catalog():
     )
 
 
+# ─── PÁGINAS DE SOPORTE Y LEGALES ───────────────────────────────────────────
+
+@bp.route('/soporte/ayuda')
+def help_center():
+    return render_template('pages/help.html', title='Centro de Ayuda - NEXSTREAM')
+
+@bp.route('/soporte/contacto')
+def contact():
+    return render_template('pages/contact.html', title='Contacto - NEXSTREAM')
+
+@bp.route('/legal/privacidad')
+def privacy():
+    return render_template('pages/privacy.html', title='Política de Privacidad - NEXSTREAM')
+
+@bp.route('/legal/terminos')
+def terms():
+    return render_template('pages/terms.html', title='Términos de Uso - NEXSTREAM')
+
+@bp.route('/legal/cookies')
+def cookies():
+    return render_template('pages/cookies.html', title='Política de Cookies - NEXSTREAM')
+
+
 # ─── DETALLE DE SERIE ─────────────────────────────────────────────────────────
 
 @bp.route('/serie/<slug>')
