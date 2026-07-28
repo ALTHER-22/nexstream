@@ -312,19 +312,28 @@
     {% if is_embed %}
     function updateIframeScale() {
       const iframe = document.getElementById('desktop-embed-iframe');
-      if (iframe && window.innerWidth <= 768 && !document.fullscreenElement) {
+      if (!iframe) return;
+      
+      if (isMobileDevice) {
         let scale;
         if (window.innerWidth > window.innerHeight) {
           scale = window.innerHeight / 720;
         } else {
           scale = window.innerWidth / 1280;
         }
+        iframe.style.position = 'absolute';
+        iframe.style.top = '50%';
+        iframe.style.left = '50%';
         iframe.style.transform = 'translate(-50%, -50%) scale(' + scale + ')';
         iframe.style.width = '1280px';
         iframe.style.height = '720px';
-      } else if (iframe && !document.fullscreenElement) {
-        iframe.style.transform = 'none';
-        iframe.style.position = 'static';
+      } else {
+        iframe.style.position = 'absolute';
+        iframe.style.top = '50%';
+        iframe.style.left = '50%';
+        iframe.style.transform = 'translate(-50%, -50%)';
+        iframe.style.width = '100vw';
+        iframe.style.height = '100vh';
       }
     }
     window.addEventListener('resize', updateIframeScale);
