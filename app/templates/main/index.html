@@ -42,15 +42,17 @@
       <div class="nex-container" style="position:relative;z-index:1;width:100%;display:flex;align-items:center;justify-content:space-between;gap:2rem;">
         <div class="nex-hero__content animate-fade-in-up" style="flex:1;">
           <div class="nex-hero__badge">
-            <span class="nex-badge nex-badge--primary">
-              {% if banner.content_type == 'series' %}📺 Serie{% else %}🎬 Película{% endif %}
+            <span class="nex-badge nex-badge--hd">
+              {% if banner.content_type == 'series' %}SERIE{% else %}PEL&Iacute;CULA{% endif %}
             </span>
+            {% if banner.categories %}
+              <span class="nex-badge nex-badge--primary" style="font-size:0.75rem; border:none;">{{ banner.categories.split(',')[0] }}</span>
+            {% endif %}
           </div>
           <h1 class="nex-hero__title">{{ banner.title }}</h1>
           <div class="nex-hero__meta">
-            {% if banner.year %}<span>{{ banner.year }}</span><span>•</span>{% endif %}
-            {% if banner.rating %}<span>⭐ {{ "%.1f"|format(banner.rating|float) }}</span><span>•</span>{% endif %}
-            {% if banner.categories %}<span>{{ banner.categories }}</span>{% endif %}
+            {% if banner.year %}<span>{{ banner.year }}</span>{% endif %}
+            {% if banner.rating %}<span>⭐ {{ "%.1f"|format(banner.rating|float) }}</span>{% endif %}
           </div>
           {% if banner.description %}
             <div class="nex-hero__synopsis-wrapper">
@@ -63,15 +65,15 @@
           <div class="nex-hero__actions">
             {% if banner.content_type == 'movie' and banner.video_url and 'drive.google.com' in banner.video_url %}
               <a href="{{ banner.url or '#' }}" class="nex-btn nex-btn--primary nex-btn--lg d-none d-md-inline-flex">
-                ▶ Ver ahora
+                ▶ Reproducir
               </a>
               {% set whatsapp_drive_url = banner.video_url | replace('/preview', '/view') %}
               <a href="{{ whatsapp_drive_url }}" target="_blank" rel="noopener noreferrer" class="nex-btn nex-btn--primary nex-btn--lg d-inline-flex d-md-none">
-                ▶ Ver ahora
+                ▶ Reproducir
               </a>
             {% else %}
               <a href="{{ banner.url or '#' }}" class="nex-btn nex-btn--primary nex-btn--lg">
-                ▶ Ver ahora
+                ▶ Reproducir
               </a>
             {% endif %}
             <button class="nex-btn nex-btn--secondary nex-btn--lg"

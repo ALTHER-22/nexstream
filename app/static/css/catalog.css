@@ -339,7 +339,7 @@
 
 .nex-hero {
   position: relative;
-  min-height: min(85vh, 700px);
+  min-height: min(70vh, 600px);
   overflow: hidden;
   display: flex;
   align-items: flex-end;
@@ -356,44 +356,40 @@
   height: 100%;
   object-fit: cover;
   object-position: center top;
+  filter: blur(0px) brightness(0.5);
 }
 
 .nex-hero__gradient {
   position: absolute;
   inset: 0;
-  background: 
-    linear-gradient(to top, var(--color-bg-base) 0%, rgba(10,10,15,0.2) 40%, transparent 100%),
-    linear-gradient(to right, rgba(10,10,15,0.98) 0%, rgba(10,10,15,0.85) 30%, rgba(10,10,15,0.3) 60%, transparent 100%);
+  background:
+    linear-gradient(to top, var(--color-bg-base) 0%, rgba(10,10,15,0.3) 50%, transparent 100%),
+    linear-gradient(to right, rgba(10,10,15,0.8) 0%, transparent 60%);
 }
 
 .nex-hero__content {
   position: relative;
   z-index: 1;
-  padding: 3rem 0 4rem;
-  max-width: 650px;
+  padding: 3rem 0;
+  display: flex;
+  gap: 2.5rem;
+  align-items: flex-end;
 }
 
 .nex-hero__badge {
-  margin-bottom: 1.25rem;
-  display: inline-flex;
-  animation: pulse-soft 3s infinite alternate;
-}
-
-@keyframes pulse-soft {
-  0% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(229,9,20,0.3)); }
-  100% { transform: scale(1.02); filter: drop-shadow(0 0 15px rgba(229,9,20,0.6)); }
+  margin-bottom: 0.875rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .nex-hero__title {
-  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-size: clamp(1.75rem, 5vw, 3rem);
   font-weight: 900;
   line-height: 1.1;
-  letter-spacing: -0.05em;
-  margin-bottom: 1.25rem;
-  text-shadow: 0 4px 30px rgba(0,0,0,0.8);
-  background: linear-gradient(to right, #fff, #f0f0f0);
-  -webkit-background-clip: text;
-  color: transparent;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.75rem;
+  color: #fff;
 }
 
 .nex-hero__meta {
