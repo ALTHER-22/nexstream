@@ -288,7 +288,7 @@ window.NexRating = {
     buttons.forEach(b => b.disabled = true);
     
     try {
-      const res = await nexFetch('/api/v1/rate', {
+      const res = await nexFetch('/api/v1/ratings', {
         method: 'POST',
         body: JSON.stringify({ type, id, score })
       });
