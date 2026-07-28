@@ -67,7 +67,8 @@ def index():
             'year': m.year,
             'rating': m.rating_avg,
             'categories': ', '.join([c.name for c in m.categories]) if m.categories else '',
-            'url': url_for('main.play_movie', movie_id=m.id, slug=m.slug)
+            'url': url_for('main.play_movie', movie_id=m.id, slug=m.slug),
+            'video_url': m.video_url
         })
 
     # Tendencias: Series

@@ -61,9 +61,19 @@
             </div>
           {% endif %}
           <div class="nex-hero__actions">
-            <a href="{{ banner.url or '#' }}" class="nex-btn nex-btn--primary nex-btn--lg">
-              ▶ Ver ahora
-            </a>
+            {% if banner.content_type == 'movie' and banner.video_url and 'drive.google.com' in banner.video_url %}
+              <a href="{{ banner.url or '#' }}" class="nex-btn nex-btn--primary nex-btn--lg d-none d-md-inline-flex">
+                ▶ Ver ahora
+              </a>
+              {% set whatsapp_drive_url = banner.video_url | replace('/preview', '/view') %}
+              <a href="{{ whatsapp_drive_url }}" target="_blank" rel="noopener noreferrer" class="nex-btn nex-btn--primary nex-btn--lg d-inline-flex d-md-none">
+                ▶ Ver ahora
+              </a>
+            {% else %}
+              <a href="{{ banner.url or '#' }}" class="nex-btn nex-btn--primary nex-btn--lg">
+                ▶ Ver ahora
+              </a>
+            {% endif %}
             <button class="nex-btn nex-btn--secondary nex-btn--lg"
                     onclick="NexStream.Toast.info('Añadido a Mi Lista')">
               + Mi Lista
