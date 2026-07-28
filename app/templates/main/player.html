@@ -314,13 +314,13 @@
       if (iframe && window.innerWidth <= 768 && !document.fullscreenElement) {
         let scale;
         if (window.innerWidth > window.innerHeight) {
-          scale = window.innerHeight / 720;
+          scale = window.innerHeight / 480;
         } else {
-          scale = window.innerWidth / 1280;
+          scale = window.innerWidth / 854;
         }
         iframe.style.transform = 'scale(' + scale + ')';
-        iframe.style.width = '1280px';
-        iframe.style.height = '720px';
+        iframe.style.width = '854px';
+        iframe.style.height = '480px';
       } else if (iframe && !document.fullscreenElement) {
         iframe.style.transform = 'none';
       }
