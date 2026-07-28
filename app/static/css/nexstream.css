@@ -629,7 +629,8 @@ p {
   text-shadow: none;
 }
 
-.nex-hero__synopsis.expanded {
+.nex-hero__synopsis.expanded,
+.nex-detail-hero__synopsis.expanded {
   -webkit-line-clamp: unset;
 }
 

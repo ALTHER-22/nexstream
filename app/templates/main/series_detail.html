@@ -78,7 +78,12 @@
         </div>
 
         {% if series.synopsis %}
-          <p class="nex-detail-hero__synopsis">{{ series.synopsis }}</p>
+          <div class="nex-hero__synopsis-wrapper">
+            <p class="nex-detail-hero__synopsis">{{ series.synopsis }}</p>
+            {% if series.synopsis|length > 150 %}
+              <button type="button" class="nex-hero__read-more" onclick="this.previousElementSibling.classList.add('expanded'); this.style.display='none';">Leer más</button>
+            {% endif %}
+          </div>
         {% endif %}
 
         <div class="nex-detail-hero__actions">
