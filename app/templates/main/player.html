@@ -257,8 +257,12 @@
     </header>
 
     {% if is_embed %}
-      <div class="nex-embed-wrapper">
-        <iframe id="desktop-embed-iframe" src="{{ item.video_url }}" class="nex-embed-iframe" allowfullscreen allow="autoplay; fullscreen" frameborder="0"></iframe>
+      <div class="nex-embed-wrapper" id="embed-wrapper">
+        <button id="custom-fullscreen-btn" onclick="toggleCustomFullscreen()" style="position: absolute; top: 15px; right: 15px; z-index: 10000; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 8px; padding: 10px 15px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; backdrop-filter: blur(4px);">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+          Pantalla Completa
+        </button>
+        <iframe id="desktop-embed-iframe" src="{{ item.video_url }}" class="nex-embed-iframe" allow="autoplay" frameborder="0"></iframe>
       </div>
     {% else %}
       <video
@@ -326,18 +330,42 @@
     window.addEventListener('resize', updateIframeScale);
     updateIframeScale();
 
-    // Cuando el usuario hace clic en el boton fullscreen del reproductor (dentro del iframe)
-    document.addEventListener('fullscreenchange', () => {
-      const iframe = document.getElementById('desktop-embed-iframe');
-      if (document.fullscreenElement) {
-        iframe.style.transform = 'none';
-        iframe.style.position = 'static';
-        iframe.style.width = '100vw';
-        iframe.style.height = '100vh';
+    function toggleCustomFullscreen() {
+      const wrapper = document.getElementById('embed-wrapper');
+      if (!document.fullscreenElement) {
+        if (wrapper.requestFullscreen) {
+          wrapper.requestFullscreen();
+        } else if (wrapper.webkitRequestFullscreen) { /* Safari */
+          wrapper.webkitRequestFullscreen();
+        } else if (wrapper.msRequestFullscreen) { /* IE11 */
+          wrapper.msRequestFullscreen();
+        }
+        // Optionally rotate to landscape if supported
+        if (screen.orientation && screen.orientation.lock) {
+          screen.orientation.lock('landscape').catch(() => {});
+        }
       } else {
-        iframe.style.position = 'absolute';
-        updateIframeScale();
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) { /* Safari */
+          document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) { /* IE11 */
+          document.msExitFullscreen();
+        }
       }
+    }
+
+    document.addEventListener('fullscreenchange', () => {
+      const btn = document.getElementById('custom-fullscreen-btn');
+      if (btn) {
+        if (document.fullscreenElement) {
+          btn.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/></svg> Salir';
+        } else {
+          btn.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg> Pantalla Completa';
+        }
+      }
+      // Always maintain the scaling trick, even in fullscreen!
+      updateIframeScale();
     });
     {% endif %}
 
