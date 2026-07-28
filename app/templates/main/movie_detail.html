@@ -70,6 +70,30 @@
             </div>
           </div>
         {% endif %}
+
+        {# Widget de Valoración (Estrellas) #}
+        {% if current_user.is_authenticated %}
+        <div class="nex-rating-container" style="margin-top: 1.5rem;">
+          <span class="nex-rating-title">Valora esta película:</span>
+          <div class="nex-rating-widget" data-type="movie" data-id="{{ movie.id }}"{% if user_rating %} data-rating="{{ (user_rating / 2)|round(0, 'ceil')|int }}"{% endif %}>
+            <button class="nex-rating-widget__star" data-value="10" title="10 - Obra Maestra" onclick="NexRating.rate(this)">
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </button>
+            <button class="nex-rating-widget__star" data-value="8" title="8 - Excelente" onclick="NexRating.rate(this)">
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </button>
+            <button class="nex-rating-widget__star" data-value="6" title="6 - Buena" onclick="NexRating.rate(this)">
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </button>
+            <button class="nex-rating-widget__star" data-value="4" title="4 - Regular" onclick="NexRating.rate(this)">
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </button>
+            <button class="nex-rating-widget__star" data-value="2" title="2 - Mala" onclick="NexRating.rate(this)">
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </button>
+          </div>
+        </div>
+        {% endif %}
       </div>
     </div>
   </div>

@@ -464,3 +464,63 @@ img.loaded {
   .nex-back-to-top   { bottom: 1rem; right: 1rem; }
   .nex-flash-container { right: 1rem; left: 1rem; max-width: unset; }
 }
+/* ✨ RATING WIDGET ✨ */
+
+.nex-rating-widget {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: var(--space-4);
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+
+.nex-rating-widget__star {
+  background: none;
+  border: none;
+  color: var(--color-surface-3);
+  cursor: pointer;
+  padding: 0.25rem;
+  transition: all var(--transition-fast);
+  outline: none;
+}
+
+.nex-rating-widget__star svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+.nex-rating-widget__star:hover,
+.nex-rating-widget__star:hover ~ .nex-rating-widget__star {
+  color: var(--color-warning);
+  transform: scale(1.1);
+}
+
+.nex-rating-widget[data-rating="1"] .nex-rating-widget__star:nth-last-child(-n+1),
+.nex-rating-widget[data-rating="2"] .nex-rating-widget__star:nth-last-child(-n+2),
+.nex-rating-widget[data-rating="3"] .nex-rating-widget__star:nth-last-child(-n+3),
+.nex-rating-widget[data-rating="4"] .nex-rating-widget__star:nth-last-child(-n+4),
+.nex-rating-widget[data-rating="5"] .nex-rating-widget__star:nth-last-child(-n+5) {
+  color: var(--color-warning);
+}
+
+.nex-rating-container {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  background: rgba(0, 0, 0, 0.4);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-surface-3);
+  backdrop-filter: blur(8px);
+  width: fit-content;
+}
+
+.nex-rating-title {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}

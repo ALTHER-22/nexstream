@@ -347,10 +347,18 @@ def series_detail(slug):
 
     # Comprobar si es favorito
     is_favorite = False
+    user_rating = None
     if current_user.is_authenticated:
+        from app.models.interaction import Rating
         is_favorite = Favorite.query.filter_by(
             user_id=current_user.id, series_id=series.id
         ).first() is not None
+        
+        rating = Rating.query.filter_by(
+            user_id=current_user.id, series_id=series.id
+        ).first()
+        if rating:
+            user_rating = rating.score
 
     # Series relacionadas (misma categoría)
     related = []
@@ -368,6 +376,7 @@ def series_detail(slug):
         active_season   = active_season,
         current_episode = current_episode,
         is_favorite     = is_favorite,
+        user_rating     = user_rating,
         related         = related,
         title           = f'{series.title} — NEXSTREAM',
     )
@@ -383,8 +392,10 @@ def movie_detail(slug):
     # Progreso del usuario
     user_progress = None
     is_favorite   = False
+    user_rating   = None
 
     if current_user.is_authenticated:
+        from app.models.interaction import Rating
         history = WatchHistory.query.filter_by(
             user_id=current_user.id, movie_id=movie.id
         ).first()
@@ -393,6 +404,12 @@ def movie_detail(slug):
         is_favorite = Favorite.query.filter_by(
             user_id=current_user.id, movie_id=movie.id
         ).first() is not None
+        
+        rating = Rating.query.filter_by(
+            user_id=current_user.id, movie_id=movie.id
+        ).first()
+        if rating:
+            user_rating = rating.score
 
     # Películas relacionadas
     related = []
@@ -408,6 +425,7 @@ def movie_detail(slug):
         movie         = movie,
         user_progress = user_progress,
         is_favorite   = is_favorite,
+        user_rating   = user_rating,
         related       = related,
         title         = f'{movie.title} — NEXSTREAM',
     )
