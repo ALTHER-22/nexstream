@@ -213,8 +213,8 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        width: 854px !important;
-        height: 480px !important;
+        width: 1280px !important;
+        height: 720px !important;
         /* Javascript will set transform: translate(-50%, -50%) scale(...) */
         transform-origin: center center;
       }
@@ -311,13 +311,13 @@
       if (iframe && window.innerWidth <= 768 && !document.fullscreenElement) {
         let scale;
         if (window.innerWidth > window.innerHeight) {
-          scale = window.innerHeight / 480;
+          scale = window.innerHeight / 720;
         } else {
-          scale = window.innerWidth / 854;
+          scale = window.innerWidth / 1280;
         }
         iframe.style.transform = 'translate(-50%, -50%) scale(' + scale + ')';
-        iframe.style.width = '854px';
-        iframe.style.height = '480px';
+        iframe.style.width = '1280px';
+        iframe.style.height = '720px';
       } else if (iframe && !document.fullscreenElement) {
         iframe.style.transform = 'none';
         iframe.style.position = 'static';
