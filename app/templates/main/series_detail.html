@@ -81,6 +81,21 @@
           <p class="nex-detail-hero__synopsis">{{ series.synopsis }}</p>
         {% endif %}
 
+        <style>
+          .nex-mobile-overlay-link { display: none; }
+          @media (max-width: 768px) {
+            .nex-mobile-overlay-link {
+              display: block;
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              z-index: 10;
+              opacity: 0;
+            }
+          }
+        </style>
         <div class="nex-detail-hero__actions">
           {# Botón de reproducir / Suscripción #}
           {% if seasons and seasons[0].episodes.first() %}

@@ -43,6 +43,23 @@
         {% if movie.synopsis %}
           <p class="nex-detail-hero__synopsis">{{ movie.synopsis }}</p>
         {% endif %}
+        {% if movie.video_url %}
+          <style>
+            .nex-mobile-overlay-link { display: none; }
+            @media (max-width: 768px) {
+              .nex-mobile-overlay-link {
+                display: block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 10;
+                opacity: 0;
+              }
+            }
+          </style>
+        {% endif %}
         <div class="nex-detail-hero__actions">
               {% if movie.video_url %}
                   {% set is_embed = ('drive.google.com' in movie.video_url or 'youtube.com' in movie.video_url or 'youtu.be' in movie.video_url or 'vimeo.com' in movie.video_url) %}
