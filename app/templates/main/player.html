@@ -227,6 +227,8 @@
         id="nex-video"
         class="video-js vjs-default-skin vjs-big-play-centered"
         playsinline
+        disablePictureInPicture
+        controlsList="nodownload noplaybackrate"
         preload="auto"
         poster="{{ item.thumbnail_url if type == 'series' else item.banner_url }}">
         
