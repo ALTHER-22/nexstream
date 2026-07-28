@@ -67,7 +67,7 @@
           {% if series.year %}<span>{{ series.year }}</span>{% endif %}
           {% if series.status %}<span>{{ series.status|title }}</span>{% endif %}
           {% if series.rating_avg %}
-            <span>â­ {{ "%.1f"|format(series.rating_avg|float) }} ({{ series.rating_count }})</span>
+            <span>⭐ {{ "%.1f"|format(series.rating_avg|float) }} ({{ series.rating_count }})</span>
           {% endif %}
           {% if series.season_count %}
             <span>{{ series.season_count }} temporada{{ 's' if series.season_count > 1 }}</span>

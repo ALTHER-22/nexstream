@@ -187,7 +187,7 @@
           if (isEmbed && videoUrl) {
             e.preventDefault();
             e.stopPropagation();
-            window.open(videoUrl, '_blank');
+            window.location.href = videoUrl;
           } else if (link.hasAttribute('data-href') && link.tagName.toLowerCase() !== 'a') {
             window.location.href = link.getAttribute('data-href');
           }
