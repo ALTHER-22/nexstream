@@ -206,19 +206,16 @@
         height: 100vh;
         z-index: 9999;
         background: #000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
         overflow: hidden;
       }
       
       .nex-embed-iframe {
-        /* Forzamos que Google Drive crea que está en una pantalla de PC (1280x720) */
-        width: 1280px !important;
-        height: 720px !important;
-        flex-shrink: 0;
-        
-        /* El escalado matematico se hace vía Javascript porque CSS scale() no acepta calc() con unidades (vw) */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 854px !important;
+        height: 480px !important;
+        /* Javascript will set transform: translate(-50%, -50%) scale(...) */
         transform-origin: center center;
       }
       
@@ -318,11 +315,12 @@
         } else {
           scale = window.innerWidth / 854;
         }
-        iframe.style.transform = 'scale(' + scale + ')';
+        iframe.style.transform = 'translate(-50%, -50%) scale(' + scale + ')';
         iframe.style.width = '854px';
         iframe.style.height = '480px';
       } else if (iframe && !document.fullscreenElement) {
         iframe.style.transform = 'none';
+        iframe.style.position = 'static';
       }
     }
     window.addEventListener('resize', updateIframeScale);
@@ -333,9 +331,11 @@
       const iframe = document.getElementById('desktop-embed-iframe');
       if (document.fullscreenElement) {
         iframe.style.transform = 'none';
+        iframe.style.position = 'static';
         iframe.style.width = '100vw';
         iframe.style.height = '100vh';
       } else {
+        iframe.style.position = 'absolute';
         updateIframeScale();
       }
     });
