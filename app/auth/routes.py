@@ -242,6 +242,37 @@ def resend_verification():
 
 # ─── RECUPERAR CONTRASEÑA ─────────────────────────────────────────────────────
 
+@bp.route('/test-email', methods=['GET'])
+def test_email_route():
+    import smtplib
+    from email.message import EmailMessage
+    from flask import current_app
+    import traceback
+    
+    username = current_app.config.get('MAIL_USERNAME')
+    password = current_app.config.get('MAIL_PASSWORD')
+    server = current_app.config.get('MAIL_SERVER', 'smtp.gmail.com')
+    port = current_app.config.get('MAIL_PORT', 587)
+    
+    if not username or not password:
+        return f"ERROR: Faltan credenciales. USER: {username}, PASS: {'***' if password else 'None'}"
+        
+    msg = EmailMessage()
+    msg.set_content("Prueba SMTP desde el navegador.")
+    msg['Subject'] = 'Prueba Navegador'
+    msg['From'] = username
+    msg['To'] = username
+    
+    try:
+        s = smtplib.SMTP(server, port, timeout=10)
+        s.starttls()
+        s.login(username, password)
+        s.send_message(msg)
+        s.quit()
+        return "¡CORREO ENVIADO CON ÉXITO DESDE LA WEB!"
+    except Exception as e:
+        return f"ERROR AL ENVIAR: {str(e)}<br><pre>{traceback.format_exc()}</pre>"
+
 @bp.route('/forgot-password', methods=['GET', 'POST'])
 @anonymous_required
 @limiter.limit('5 per hour')
