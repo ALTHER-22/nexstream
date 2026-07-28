@@ -8,8 +8,7 @@
 
 /* ─── LAYOUT BASE DE AUTH ────────────────────────────────────────────────────── */
 
-.page-auth body,
-.nex-auth-wrapper {
+.page-auth body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
