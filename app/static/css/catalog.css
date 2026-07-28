@@ -12,13 +12,15 @@
   overflow: hidden;
   background: var(--color-surface-2);
   cursor: pointer;
-  transition: transform var(--transition-spring), box-shadow var(--transition-base);
+  transition: transform var(--transition-spring), box-shadow var(--transition-base), border-color var(--transition-base);
   display: block;
+  border: 1px solid rgba(255, 255, 255, 0.03);
 }
 
 .nex-content-card:hover {
-  transform: translateY(-6px) scale(1.02);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(229,9,20,0.2);
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(229, 9, 20, 0.4);
+  border-color: rgba(229, 9, 20, 0.2);
   z-index: 2;
 }
 
