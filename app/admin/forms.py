@@ -101,7 +101,6 @@ class EpisodeForm(FlaskForm):
     synopsis = TextAreaField('Sinopsis', validators=[Optional()])
     
     duration = IntegerField('Duración (minutos)', validators=[Optional(), NumberRange(min=1)])
-    air_date = DateField('Fecha de emisión', format='%Y-%m-%d', validators=[Optional()])
     
     thumbnail = FileField('Miniatura del episodio (16:9)', validators=[
         Optional(), FileAllowed(['jpg', 'png', 'webp'])

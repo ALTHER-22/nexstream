@@ -32,15 +32,9 @@
       {{ form.synopsis(class="nex-input", rows=3) }}
     </div>
     
-    <div style="display:flex; gap:1rem;">
-      <div class="nex-form-group" style="flex:1;">
-        {{ form.duration.label(class="nex-label") }}
-        {{ form.duration(class="nex-input") }}
-      </div>
-      <div class="nex-form-group" style="flex:1;">
-        {{ form.air_date.label(class="nex-label") }}
-        {{ form.air_date(class="nex-input", type="date") }}
-      </div>
+    <div class="nex-form-group" style="flex:1;">
+      {{ form.duration.label(class="nex-label") }}
+      {{ form.duration(class="nex-input") }}
     </div>
     
     <div class="nex-form-group">
