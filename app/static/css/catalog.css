@@ -888,7 +888,7 @@
 
 @media (max-width: 640px) {
   .nex-catalog-section { padding: 1.5rem 0; }
-  .nex-hero__synopsis { display: none; }
+  .nex-hero__synopsis { -webkit-line-clamp: 2; }
   .nex-detail-hero__synopsis { -webkit-line-clamp: 2; }
 }
 
