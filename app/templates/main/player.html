@@ -197,32 +197,29 @@
       display: block;
     }
     
-    @media (max-width: 768px) {
-      /* En móvil hacemos el iframe un poco más alto para que Google Drive
-         no recorte la barra de controles: la subimos 60px y añadimos 60px abajo */
-      .nex-embed-wrapper {
-        top: -60px;
-        bottom: -60px;
-        left: 0;
-        right: 0;
-        position: absolute;
-      }
-      .nex-embed-iframe {
-        width: 100%;
-        height: calc(100% + 60px);
-      }
-    }
-
-    /* El header (botón volver) siempre visible en embeds móvil */
+    /* En escritorio: ocultamos el header de NEXSTREAM para no tapar el iframe */
     .nex-player-header.is-embed-header {
       display: none;
     }
+
+    /* En CELULAR: el iframe cubre TODO, incluyendo debajo del header.
+       El header de NEXSTREAM se oculta porque Drive maneja sus propios controles. */
     @media (max-width: 768px) {
+      .nex-embed-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 9999;
+      }
+      .nex-embed-iframe {
+        width: 100%;
+        height: 100%;
+      }
+      /* Ocultar COMPLETAMENTE el header en celular para que Drive tenga toda la pantalla */
       .nex-player-header.is-embed-header {
-        display: flex;
-        z-index: 20;
-        opacity: 1;
-        pointer-events: auto;
+        display: none !important;
       }
     }
     {% endif %}
