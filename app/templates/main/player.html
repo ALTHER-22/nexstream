@@ -305,12 +305,8 @@
       if (!iframe) return;
       
       if (isMobileDevice) {
-        let scale;
-        if (window.innerWidth > window.innerHeight) {
-          scale = window.innerHeight / 720;
-        } else {
-          scale = window.innerWidth / 1280;
-        }
+        // Mathematically perfect scale that "contains" 1280x720 within the window without cropping
+        const scale = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
         iframe.style.position = 'absolute';
         iframe.style.top = '50%';
         iframe.style.left = '50%';
@@ -412,6 +408,14 @@
 
     // --- Funciones de Navegación ---
     function goBack() {
+      // Ensure we cleanly exit native fullscreen before navigating to prevent browser UI glitches
+      if (document.fullscreenElement && document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      }
+      if (screen.orientation && screen.orientation.unlock) {
+        screen.orientation.unlock();
+      }
+      
       // Guardar progreso antes de salir
       saveProgress(true).then(() => {
         if (contentType === 'series') {
