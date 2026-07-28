@@ -289,9 +289,9 @@
     const contentType = "{{ type }}";
     const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
-    {% if is_embed %}
+    {% if not is_embed %}
     if (isMobileDevice) {
-      window.location.replace("{{ item.video_url }}");
+      // Usamos reproductor nativo para MP4
     }
     {% endif %}
 
