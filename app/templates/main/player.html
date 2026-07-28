@@ -199,14 +199,11 @@
     /* TRUCO MAESTRO DEFINITIVO: Engañar a Google Drive forzando resolución de PC en celulares */
     @media (max-width: 768px) {
       .nex-embed-wrapper {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        z-index: 9999;
-        background: #000;
+        flex: 1;
+        width: 100%;
+        position: relative;
         overflow: hidden;
+        background: #000;
       }
       
       .nex-embed-iframe {
@@ -258,7 +255,7 @@
 
     {% if is_embed %}
       <div class="nex-embed-wrapper" id="embed-wrapper">
-        <button id="custom-fullscreen-btn" onclick="toggleCustomFullscreen()" style="position: absolute; top: 15px; right: 15px; z-index: 10000; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 8px; padding: 10px 15px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; backdrop-filter: blur(4px); transition: opacity 0.3s ease;">
+        <button id="custom-fullscreen-btn" onclick="toggleCustomFullscreen()" style="position: absolute; top: 15px; left: 50%; transform: translateX(-50%); z-index: 10000; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 8px; padding: 10px 15px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; backdrop-filter: blur(4px); transition: opacity 0.3s ease;">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
           Pantalla Completa
         </button>
@@ -360,6 +357,9 @@
           document.webkitExitFullscreen();
         } else if (document.msExitFullscreen) { /* IE11 */
           document.msExitFullscreen();
+        }
+        if (screen.orientation && screen.orientation.unlock) {
+          screen.orientation.unlock();
         }
       }
     }
