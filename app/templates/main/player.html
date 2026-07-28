@@ -281,7 +281,13 @@
     const player = videojs('nex-video', {
       controls: true,
       fluid: false,
-      inactivityTimeout: 3000
+      inactivityTimeout: 3000,
+      nativeControlsForTouch: false,
+      html5: {
+        vhs: { overrideNative: true },
+        nativeAudioTracks: false,
+        nativeVideoTracks: false
+      }
     });
     const container = document.getElementById('playerContainer');
     const csrfToken = "{{ csrf_token() }}";
