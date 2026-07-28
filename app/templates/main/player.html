@@ -193,6 +193,19 @@
       left: 0;
       z-index: 5;
     }
+    
+    /* TRUCO MAESTRO: Engañar a Google Drive en celulares para que muestre el reproductor de PC (controles pequeños) */
+    @media (max-width: 768px) {
+      .nex-embed-iframe {
+        /* Hacemos el iframe del doble de tamaño */
+        width: 200vw;
+        height: 200vh;
+        /* Y lo encogemos a la mitad visualmente */
+        transform: scale(0.5);
+        transform-origin: top left;
+      }
+    }
+
     /* Ocultamos el header por defecto en embeds de escritorio para no tapar el iframe */
     .nex-player-header.is-embed-header {
       display: none;
@@ -277,11 +290,8 @@
     const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
     {% if is_embed %}
-    // Lógica para links incrustados (Google Drive) en celular
-    if (isMobileDevice) {
-      // Redirigir automáticamente al enlace nativo de Drive sin pantallas intermedias
-      window.location.replace("{{ item.video_url }}");
-    }
+    // Lógica para links incrustados (Google Drive) en celular desactivada
+    // Se usa el truco de CSS transform scale en su lugar para mantener al usuario en Nexstream
     {% endif %}
 
     // --- Funciones de Navegación ---
