@@ -230,15 +230,6 @@
     </header>
 
     {% if is_embed %}
-      <div id="mobile-embed-launcher" style="display:none; width: 100vw; height: 100vh; position: absolute; top:0; left:0; z-index: 100; background: black; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
-        <img src="{{ item.thumbnail_url if type == 'series' else item.banner_url }}" style="max-width: 80%; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
-        <h2 style="color: white; margin-bottom: 0.5rem;">{{ item.title }}</h2>
-        <p style="color: rgba(255,255,255,0.7); margin-bottom: 2rem; padding: 0 1.5rem; font-size: 0.95rem;">Para una experiencia fluida y sin controles gigantes, el video se abrirá en su reproductor nativo.</p>
-        <a href="{{ item.video_url }}" target="_blank" class="nex-btn nex-btn--primary" style="padding: 1rem 2.5rem; font-size: 1.1rem; border-radius: 50px; text-decoration: none; display: flex; align-items: center; gap: 0.75rem;">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-          Reproducir Video
-        </a>
-      </div>
       <iframe id="desktop-embed-iframe" src="{{ item.video_url }}" class="nex-embed-iframe" allowfullscreen allow="autoplay; fullscreen" frameborder="0"></iframe>
     {% else %}
       <video
@@ -288,9 +279,8 @@
     {% if is_embed %}
     // Lógica para links incrustados (Google Drive) en celular
     if (isMobileDevice) {
-      document.getElementById('mobile-embed-launcher').style.display = 'flex';
-      document.getElementById('desktop-embed-iframe').style.display = 'none';
-      document.querySelector('.nex-player-header').style.display = 'flex'; // Mantener el botón de volver visible
+      // Redirigir automáticamente al enlace nativo de Drive sin pantallas intermedias
+      window.location.replace("{{ item.video_url }}");
     }
     {% endif %}
 
