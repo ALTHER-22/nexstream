@@ -78,7 +78,7 @@
                     data-id="{{ movie.id }}"
                     data-type="movie"
                     onclick="NexFavorites.toggle(this)">
-              {{ '❤ En favoritos' if is_favorite else '♡ Añadir a favoritos' }}
+              {{ '&hearts; En favoritos'|safe if is_favorite else '&#9825; Añadir a favoritos'|safe }}
             </button>
           {% endif %}
         </div>
@@ -147,7 +147,7 @@ window.NexFavorites = {
         method: 'POST', body: JSON.stringify({ type: btn.dataset.type, id: parseInt(btn.dataset.id) }),
       });
       const data = await res.json();
-      btn.innerHTML = data.added ? 'â ¤ En favoritos' : '♡ Favoritos';
+      btn.innerHTML = data.added ? '&hearts; En favoritos' : '&#9825; Favoritos';
       btn.classList.toggle('active', data.added);
       NexStream.Toast[data.added ? 'success' : 'info'](data.message);
     } catch(e) { NexStream.Toast.error('Error'); } finally { btn.disabled = false; }

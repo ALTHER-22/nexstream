@@ -118,7 +118,7 @@
                     data-id="{{ series.id }}"
                     data-type="series"
                     onclick="NexFavorites.toggle(this)">
-              {{ '♥ En favoritos' if is_favorite else '♡ Añadir a favoritos' }}
+              {{ '&hearts; En favoritos'|safe if is_favorite else '&#9825; Añadir a favoritos'|safe }}
             </button>
           {% endif %}
         </div>
@@ -279,11 +279,11 @@ window.NexFavorites = {
       });
       const data = await res.json();
       if (data.added) {
-        btn.innerHTML = 'â ¤ En favoritos';
+        btn.innerHTML = '&hearts; En favoritos';
         btn.classList.add('active');
         NexStream.Toast.success('Añadido a favoritos');
       } else {
-        btn.innerHTML = '♡ Añadir a favoritos';
+        btn.innerHTML = '&#9825; Añadir a favoritos';
         btn.classList.remove('active');
         NexStream.Toast.info('Eliminado de favoritos');
       }
