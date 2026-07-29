@@ -15,7 +15,7 @@ from wtforms.widgets import ListWidget, CheckboxInput
 import re
 
 def clean_video_url_filter(url):
-    """Extrae el atributo src si se pega un iframe completo, y limpia protocolos relativos."""
+    """Extrae el atributo src si se pega un iframe completo, limpia protocolos relativos, y adapta URLs de ok.ru"""
     if not url:
         return url
     url = url.strip()
@@ -23,6 +23,11 @@ def clean_video_url_filter(url):
         match = re.search(r'src=["\']([^"\']+)["\']', url, re.IGNORECASE)
         if match:
             url = match.group(1).strip()
+    
+    # Autoconvertir links normales de ok.ru a su versión embed
+    if 'ok.ru/video/' in url:
+        url = url.replace('ok.ru/video/', 'ok.ru/videoembed/')
+        
     if url.startswith('//'):
         url = 'https:' + url
     return url
