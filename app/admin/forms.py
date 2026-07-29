@@ -28,6 +28,10 @@ def clean_video_url_filter(url):
     if 'ok.ru/video/' in url:
         url = url.replace('ok.ru/video/', 'ok.ru/videoembed/')
         
+    # Autoconvertir links de Google Drive a su versión embed (preview)
+    if 'drive.google.com/file/d/' in url and '/view' in url:
+        url = url.replace('/view', '/preview')
+        
     if url.startswith('//'):
         url = 'https:' + url
     return url

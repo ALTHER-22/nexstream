@@ -525,7 +525,7 @@ def play_episode(episode_id):
             start_time = history.progress
 
     is_embed = False
-    if episode.video_url and any(d in episode.video_url.lower() for d in ['ok.ru', 'youtube', 'youtu.be', 'vimeo']):
+    if episode.video_url and any(d in episode.video_url.lower() for d in ['ok.ru', 'youtube', 'youtu.be', 'vimeo', 'drive.google.com']):
         is_embed = True
 
     return render_template(
@@ -554,7 +554,7 @@ def play_movie(movie_id):
             start_time = history.progress
 
     is_embed = False
-    if movie.video_url and any(d in movie.video_url.lower() for d in ['ok.ru', 'youtube', 'youtu.be', 'vimeo']):
+    if movie.video_url and any(d in movie.video_url.lower() for d in ['ok.ru', 'youtube', 'youtu.be', 'vimeo', 'drive.google.com']):
         is_embed = True
 
     return render_template(
