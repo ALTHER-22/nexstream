@@ -178,10 +178,7 @@
       to { transform: translateX(0); opacity: 1; }
     }
     
-    {% set is_embed = False %}
-    {% if item.video_url and ('drive.google.com' in item.video_url or 'youtube.com' in item.video_url or 'youtu.be' in item.video_url or 'vimeo.com' in item.video_url) %}
-      {% set is_embed = True %}
-    {% endif %}
+    
     
     {% if is_embed %}
     .nex-embed-wrapper {
