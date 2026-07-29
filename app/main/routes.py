@@ -524,6 +524,10 @@ def play_episode(episode_id):
         if history and history.progress_percentage < 95:
             start_time = history.progress
 
+    is_embed = False
+    if episode.video_url and any(d in episode.video_url.lower() for d in ['ok.ru', 'youtube', 'youtu.be', 'vimeo']):
+        is_embed = True
+
     return render_template(
         'main/player.html',
         item=episode,
@@ -531,6 +535,7 @@ def play_episode(episode_id):
         type='series',
         next_item=next_episode,
         start_time=start_time,
+        is_embed=is_embed,
         autoplay_next=current_user.autoplay if current_user.is_authenticated else False,
         title=f'{series.title} - S{episode.season.number}E{episode.number}'
     )
@@ -548,10 +553,15 @@ def play_movie(movie_id):
         if history and history.progress_percentage < 95:
             start_time = history.progress
 
+    is_embed = False
+    if movie.video_url and any(d in movie.video_url.lower() for d in ['ok.ru', 'youtube', 'youtu.be', 'vimeo']):
+        is_embed = True
+
     return render_template(
         'main/player.html',
         item=movie,
         type='movie',
         start_time=start_time,
+        is_embed=is_embed,
         title=f'{movie.title} — Reproduciendo'
     )
