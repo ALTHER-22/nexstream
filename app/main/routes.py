@@ -40,8 +40,10 @@ def index():
     # Banners del hero generados a partir de contenido real
     hero_banners = []
     
+    from sqlalchemy.orm import joinedload
+
     # 3 mejores series
-    top_series = Series.query.filter_by(is_active=True).order_by(desc(Series.rating_avg)).limit(3).all()
+    top_series = Series.query.filter_by(is_active=True).options(joinedload(Series.categories)).order_by(desc(Series.rating_avg)).limit(3).all()
     for s in top_series:
         hero_banners.append({
             'title': s.title,
@@ -56,7 +58,7 @@ def index():
         })
         
     # 2 mejores películas
-    top_movies = Movie.query.filter_by(is_active=True).order_by(desc(Movie.rating_avg)).limit(2).all()
+    top_movies = Movie.query.filter_by(is_active=True).options(joinedload(Movie.categories)).order_by(desc(Movie.rating_avg)).limit(2).all()
     for m in top_movies:
         hero_banners.append({
             'title': m.title,
@@ -74,21 +76,21 @@ def index():
     # Tendencias: Series
     trending_series = Series.query.filter_by(
         is_active=True
-    ).order_by(desc(Series.rating_avg), desc(Series.rating_count)).limit(18).all()
+    ).order_by(desc(Series.rating_avg), desc(Series.rating_count)).limit(12).all()
 
     # Tendencias: Películas
     trending_movies = Movie.query.filter_by(
         is_active=True
-    ).order_by(desc(Movie.rating_avg), desc(Movie.rating_count)).limit(18).all()
+    ).order_by(desc(Movie.rating_avg), desc(Movie.rating_count)).limit(12).all()
 
     # Recién añadidas
     recent_series = Series.query.filter_by(
         is_active=True
-    ).order_by(desc(Series.created_at)).limit(18).all()
+    ).order_by(desc(Series.created_at)).limit(12).all()
 
     recent_movies = Movie.query.filter_by(
         is_active=True
-    ).order_by(desc(Movie.created_at)).limit(18).all()
+    ).order_by(desc(Movie.created_at)).limit(12).all()
 
     # Continuar viendo (solo usuarios autenticados)
     continue_watching = []
@@ -98,7 +100,7 @@ def index():
             WatchHistory.user_id == current_user.id,
             WatchHistory.completed == False,
             WatchHistory.progress > 30,
-        ).order_by(desc(WatchHistory.watched_at)).limit(12).all()
+        ).order_by(desc(WatchHistory.watched_at)).limit(8).all()
         continue_watching = history
         
         # Generar recomendaciones basadas en la última categoría vista
@@ -112,15 +114,15 @@ def index():
                     Category.id == last_cat.id,
                     Series.is_active == True,
                     Series.id != (last_item.id if last_series else 0)
-                ).order_by(desc(Series.rating_avg)).limit(8).all()
+                ).order_by(desc(Series.rating_avg)).limit(6).all()
                 
                 rec_movies = Movie.query.join(Movie.categories).filter(
                     Category.id == last_cat.id,
                     Movie.is_active == True,
                     Movie.id != (last_item.id if last_history.movie else 0)
-                ).order_by(desc(Movie.rating_avg)).limit(8).all()
+                ).order_by(desc(Movie.rating_avg)).limit(6).all()
                 
-                recommended_for_you = (rec_series + rec_movies)[:16]
+                recommended_for_you = (rec_series + rec_movies)[:12]
 
     # Categorías para la barra de navegación y sliders
     categories = Category.query.filter_by(
@@ -129,11 +131,11 @@ def index():
 
     # Slider por categoría: tomar la primera con suficiente contenido
     category_sliders = []
-    for cat in categories[:5]:
+    for cat in categories[:3]:
         cat_series = Series.query.join(Series.categories).filter(
             Category.id == cat.id,
             Series.is_active == True,
-        ).order_by(desc(Series.rating_avg)).limit(12).all()
+        ).order_by(desc(Series.rating_avg)).limit(8).all()
 
         cat_movies = Movie.query.join(Movie.categories).filter(
             Category.id == cat.id,
