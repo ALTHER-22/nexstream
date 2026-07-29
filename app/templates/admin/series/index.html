@@ -44,7 +44,7 @@
       <td>
         <div style="display:flex; gap:0.5rem; align-items:center;">
           <a href="{{ url_for('admin.edit_series', id=serie.id) }}" class="nex-btn nex-btn--ghost nex-btn--sm">Editar</a>
-          <a href="{{ url_for('admin.create_episode', series_id=serie.id, season=1) }}" class="nex-btn nex-btn--ghost nex-btn--sm" title="Añadir episodio a la Temp 1">+ Ep</a>
+          <a href="{{ url_for('admin.series_episodes', series_id=serie.id) }}" class="nex-btn nex-btn--ghost nex-btn--sm" title="Gestionar Episodios">Episodios</a>
           <a href="{{ url_for('main.series_detail', slug=serie.slug) }}" target="_blank" class="nex-btn nex-btn--secondary nex-btn--sm">Ver</a>
           <form action="{{ url_for('admin.delete_series', id=serie.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de eliminar esta serie?');">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>

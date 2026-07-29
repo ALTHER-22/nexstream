@@ -1,0 +1,57 @@
+{% extends "admin/layout.html" %}
+
+{% block page_title %}Episodios — {{ serie.title }}{% endblock %}
+
+{% block content %}
+<div class="nex-admin-panel">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 2rem;">
+    <div>
+      <h1 style="margin:0;">Episodios de {{ serie.title }}</h1>
+      <p style="margin:0.25rem 0 0; color:var(--color-text-secondary);">Gestiona los capítulos subidos</p>
+    </div>
+    <div style="display:flex; gap:1rem;">
+      <a href="{{ url_for('admin.list_series') }}" class="nex-btn nex-btn--ghost">Volver a Series</a>
+      <a href="{{ url_for('admin.create_episode', series_id=serie.id, season=1) }}" class="nex-btn nex-btn--primary">+ Añadir Episodio</a>
+    </div>
+  </div>
+
+  <div style="overflow-x:auto;">
+    <table class="nex-table">
+      <thead>
+        <tr>
+          <th>TEMPORADA</th>
+          <th>EPISODIO</th>
+          <th>TÍTULO</th>
+          <th>DURACIÓN</th>
+          <th style="text-align:right;">ACCIONES</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ep in episodes %}
+        <tr>
+          <td>Temp. {{ ep.season.number }}</td>
+          <td>{{ ep.number }}</td>
+          <td>{{ ep.title or ('Episodio ' ~ ep.number) }}</td>
+          <td>{{ ep.duration ~ ' min' if ep.duration else '-' }}</td>
+          <td style="text-align:right;">
+            <div style="display:flex; gap:0.5rem; justify-content:flex-end; align-items:center;">
+              <a href="{{ url_for('admin.edit_episode', id=ep.id) }}" class="nex-btn nex-btn--ghost nex-btn--sm">Editar</a>
+              <form action="{{ url_for('admin.delete_episode', id=ep.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de eliminar este episodio? Esta acción no se puede deshacer.');">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <button type="submit" class="nex-btn nex-btn--sm" style="background-color: var(--color-error, #e50914); color: white; border: none; cursor: pointer;">Eliminar</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="5" style="text-align:center; padding: 3rem;">
+            <p style="color:var(--color-text-secondary);">Aún no hay episodios en esta serie.</p>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

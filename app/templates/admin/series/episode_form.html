@@ -1,14 +1,16 @@
 {% extends "admin/layout.html" %}
 
-{% block page_title %}Añadir Episodio — {{ serie.title }}{% endblock %}
+{% block page_title %}{% if is_edit %}Editar Episodio{% else %}Añadir Episodio{% endif %} — {{ serie.title }}{% endblock %}
 
 {% block content %}
 <div class="nex-admin-panel" style="max-width: 600px; margin: 0 auto;">
-  <h2 style="margin-top:0; font-size:1.25rem;">Temporada {{ season_num }}</h2>
-  <p style="color:var(--color-text-secondary); margin-bottom: 2rem;">
-    Completa los datos del episodio para agregarlo a la serie.
-  </p>
-
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 2rem;">
+    <div>
+      <h1 style="margin:0;">{% if is_edit %}Editar Episodio{% else %}Nuevo Episodio{% endif %}</h1>
+      <h2 style="margin-top:0.5rem; font-size:1.25rem; font-weight:normal;">Temporada {{ season_num }}</h2>
+    </div>
+  </div>
+  
   <form method="POST" enctype="multipart/form-data">
     {{ form.hidden_tag() }}
     

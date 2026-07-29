@@ -391,6 +391,62 @@ def create_episode(series_id):
         
     return render_template('admin/series/episode_form.html', form=form, serie=serie, season_num=season_number)
 
+@bp.route('/series/<int:series_id>/episodios')
+@login_required
+@admin_required
+def series_episodes(series_id):
+    """Listar episodios de una serie específica."""
+    from app.models import Season, Episode
+    serie = Series.query.get_or_404(series_id)
+    episodes = Episode.query.join(Season).filter(Season.series_id == serie.id).order_by(Season.number.desc(), Episode.number.desc()).all()
+    return render_template('admin/series/episodes.html', serie=serie, episodes=episodes)
+
+@bp.route('/episodios/<int:id>/editar', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def edit_episode(id):
+    """Editar un episodio existente."""
+    from app.models import Episode
+    episode = Episode.query.get_or_404(id)
+    serie = episode.season.series
+    season_number = episode.season.number
+    
+    form = EpisodeForm(obj=episode)
+    # The form field is called synopsis but the model is called description
+    if request.method == 'GET':
+        form.synopsis.data = episode.description
+        
+    if form.validate_on_submit():
+        episode.number = form.number.data
+        episode.title = form.title.data
+        episode.description = form.synopsis.data
+        episode.duration = form.duration.data
+        episode.video_url = form.video_url.data
+        
+        if form.thumbnail.data and form.thumbnail.data.filename:
+            episode.thumbnail = _save_image(form.thumbnail.data, 'thumbnails', (1280, 720))
+            
+        db.session.commit()
+        flash(f'Episodio {episode.number} actualizado.', 'success')
+        return redirect(url_for('admin.series_episodes', series_id=serie.id))
+        
+    return render_template('admin/series/episode_form.html', form=form, serie=serie, season_num=season_number, is_edit=True, episode=episode)
+
+@bp.route('/episodios/<int:id>/eliminar', methods=['POST'])
+@login_required
+@admin_required
+def delete_episode(id):
+    """Eliminar un episodio."""
+    from app.models import Episode
+    episode = Episode.query.get_or_404(id)
+    serie_id = episode.season.series_id
+    
+    db.session.delete(episode)
+    db.session.commit()
+    
+    flash('Episodio eliminado exitosamente.', 'success')
+    return redirect(url_for('admin.series_episodes', series_id=serie_id))
+
 
 # ─── GESTIÓN DE CATEGORÍAS ─────────────────────────────────────────────────
 
