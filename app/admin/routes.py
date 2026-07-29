@@ -377,8 +377,7 @@ def create_episode(series_id):
             title=form.title.data,
             description=form.synopsis.data,
             duration=form.duration.data,
-            video_url=form.video_url.data,
-            air_date=form.air_date.data
+            video_url=form.video_url.data
         )
         # Procesar miniatura
         if form.thumbnail.data and form.thumbnail.data.filename:
