@@ -19,25 +19,25 @@ def run():
             db.session.commit()
 
         # Buscar si la película ya existe
-        movie = Movie.query.filter(Movie.title.ilike('%Bolt%')).first()
+        movie = Movie.query.filter(Movie.title.ilike('%Ratatouille%')).first()
         
         if not movie:
-            print("Creando la película 'Bolt: Un perro fuera de serie' en la base de datos...")
+            print("Creando la película 'Ratatouille' en la base de datos...")
             movie = Movie(
-                title='Bolt: Un perro fuera de serie',
-                slug='bolt-un-perro-fuera-de-serie',
-                synopsis='Para el superperro Bolt, todos los días están llenos de aventuras, peligro e intriga... al menos hasta que las cámaras dejan de grabar, ya que es el protagonista de un famoso programa de televisión. Cuando es enviado por accidente desde sus estudios de Hollywood a Nueva York, comienza su mayor aventura en el mundo real, donde descubrirá junto a un gato callejero y un hámster que no necesita superpoderes para ser un héroe.',
-                year=2008,
-                video_url='https://ok.ru/videoembed/9952445401838',
+                title='Ratatouille',
+                slug='ratatouille',
+                synopsis='Remy es una simpática rata que sueña con convertirse en un gran chef francés a pesar de la oposición de su familia. Cuando el destino lleva a Remy a París, descubre que está situado justo debajo del restaurante de su ídolo culinario, Auguste Gusteau. A pesar del peligro evidente de ser un roedor en la cocina de un restaurante, su pasión lo unirá a un joven y despistado lavaplatos llamado Linguini para crear la combinación perfecta.',
+                year=2007,
+                video_url='https://ok.ru/videoembed/9823113448174',
                 is_active=True
             )
             movie.categories.append(category)
             db.session.add(movie)
             db.session.commit()
-            print("¡Película Bolt añadida con éxito!")
+            print("¡Película Ratatouille añadida con éxito!")
         else:
             print("La película ya existía, actualizando el link de video...")
-            movie.video_url = 'https://ok.ru/videoembed/9952445401838'
+            movie.video_url = 'https://ok.ru/videoembed/9823113448174'
             db.session.commit()
             print("¡Video actualizado con éxito!")
 
