@@ -19,16 +19,16 @@ def run():
             db.session.commit()
 
         # Buscar si la película ya existe
-        movie = Movie.query.filter(Movie.title.ilike('%Drive%')).first()
+        movie = Movie.query.filter(Movie.title.ilike('%Baby Driver%')).first()
         
         if not movie:
-            print("Creando la película 'Drive' en la base de datos...")
+            print("Creando la película 'Baby Driver' en la base de datos...")
             movie = Movie(
-                title='Drive',
-                slug='drive-2011',
-                synopsis='Un conductor misterioso trabaja como doble de acción en Hollywood durante el día y como conductor de huidas criminales por la noche. Su metódica vida da un giro violento cuando se enamora de su vecina Irene. Tras participar en un atraco que sale terriblemente mal para ayudar al esposo de ella recién salido de prisión, deberá usar todas sus habilidades al volante para proteger a las únicas personas que le importan.',
-                year=2011,
-                video_url='https://ok.ru/videoembed/12460053891766',
+                title='Baby Driver (El Aprendiz del Crimen)',
+                slug='baby-driver-el-aprendiz-del-crimen',
+                synopsis='Baby es un joven y talentoso conductor especializado en fugas criminales que depende del ritmo de su música para ser el mejor al volante. Cuando conoce a la chica de sus sueños, ve la oportunidad de abandonar su vida delictiva. Pero tras ser forzado a trabajar para un jefe del crimen, deberá luchar por su vida y su libertad cuando un robo a mano armada sale mal.',
+                year=2017,
+                video_url='https://vk.ru/wall200001672276_2',
                 is_active=True
             )
             # Categoría: Acción
@@ -39,10 +39,10 @@ def run():
             movie.categories.append(cat_accion)
             db.session.add(movie)
             db.session.commit()
-            print("¡Película Drive añadida con éxito!")
+            print("¡Película Baby Driver añadida con éxito!")
         else:
             print("La película ya existía, actualizando el link de video...")
-            movie.video_url = 'https://ok.ru/videoembed/12460053891766'
+            movie.video_url = 'https://vk.ru/wall200001672276_2'
             db.session.commit()
             print("¡Video actualizado con éxito!")
 

@@ -531,7 +531,7 @@ def play_episode(episode_id):
         if 'drive.google.com/file/d/' in episode.video_url and '/view' in episode.video_url:
             episode.video_url = episode.video_url.replace('/view', '/preview')
             
-        if any(d in episode.video_url.lower() for d in ['ok.ru', 'youtube', 'youtu.be', 'vimeo', 'drive.google.com']):
+        if any(d in episode.video_url.lower() for d in ['ok.ru', 'youtube', 'youtu.be', 'vimeo', 'drive.google.com', 'vk.com', 'vk.ru']):
             is_embed = True
 
     return render_template(
@@ -566,7 +566,7 @@ def play_movie(movie_id):
         if 'drive.google.com/file/d/' in movie.video_url and '/view' in movie.video_url:
             movie.video_url = movie.video_url.replace('/view', '/preview')
             
-        if any(d in movie.video_url.lower() for d in ['ok.ru', 'youtube', 'youtu.be', 'vimeo', 'drive.google.com']):
+        if any(d in movie.video_url.lower() for d in ['ok.ru', 'youtube', 'youtu.be', 'vimeo', 'drive.google.com', 'vk.com', 'vk.ru']):
             is_embed = True
 
     return render_template(
