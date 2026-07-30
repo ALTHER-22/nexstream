@@ -19,30 +19,30 @@ def run():
             db.session.commit()
 
         # Buscar si la película ya existe
-        movie = Movie.query.filter(Movie.title.ilike('%El Demonio%')).first()
+        movie = Movie.query.filter(Movie.title.ilike('%Desperado%')).first()
         
         if not movie:
-            print("Creando la película 'El Demonio' en la base de datos...")
+            print("Creando la película 'Desperado (La Balada del Pistolero)' en la base de datos...")
             movie = Movie(
-                title='El Demonio (Jeepers Creepers)',
-                slug='el-demonio-jeepers-creepers',
-                synopsis='Los hermanos Trish y Darry viajan por una carretera desolada para pasar las vacaciones en casa. Su viaje se convierte en una pesadilla cuando descubren el espeluznante secreto que oculta un misterioso conductor en el sótano de una iglesia abandonada. Pronto se ven perseguidos por el "Creeper", un terrorífico ser sobrenatural que despierta cada 23 años durante 23 días para alimentarse de partes humanas.',
-                year=2001,
-                video_url='https://ok.ru/videoembed/3341535152675',
+                title='Desperado',
+                slug='desperado-la-balada-del-pistolero',
+                synopsis='El Mariachi se sumerge en el oscuro mundo del hampa en la frontera mexicana buscando venganza contra Bucho, el despiadado narcotraficante que mató a su amada. Armado con un estuche de guitarra lleno de armas, deja un rastro de sangre y balas a su paso mientras une fuerzas con Carolina, la hermosa dueña de una librería local que lo ayudará a enfrentarse al letal cartel.',
+                year=1995,
+                video_url='https://ok.ru/videoembed/3484283374220',
                 is_active=True
             )
-            # Categoría: Terror
-            cat_terror = Category.query.filter_by(name='Terror').first()
-            if not cat_terror:
-                cat_terror = Category(name='Terror', slug='terror')
-                db.session.add(cat_terror)
-            movie.categories.append(cat_terror)
+            # Categoría: Acción
+            cat_accion = Category.query.filter_by(name='Acción').first()
+            if not cat_accion:
+                cat_accion = Category(name='Acción', slug='accion')
+                db.session.add(cat_accion)
+            movie.categories.append(cat_accion)
             db.session.add(movie)
             db.session.commit()
-            print("¡Película El Demonio añadida con éxito!")
+            print("¡Película Desperado añadida con éxito!")
         else:
             print("La película ya existía, actualizando el link de video...")
-            movie.video_url = 'https://ok.ru/videoembed/3341535152675'
+            movie.video_url = 'https://ok.ru/videoembed/3484283374220'
             db.session.commit()
             print("¡Video actualizado con éxito!")
 
