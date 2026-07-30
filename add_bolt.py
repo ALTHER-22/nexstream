@@ -19,16 +19,16 @@ def run():
             db.session.commit()
 
         # Buscar si la película ya existe
-        movie = Movie.query.filter(Movie.title.ilike('%La Masacre de Texas: El Inicio%')).first()
+        movie = Movie.query.filter(Movie.title.ilike('%El Demonio%')).first()
         
         if not movie:
-            print("Creando la película 'La Masacre de Texas: El Inicio' en la base de datos...")
+            print("Creando la película 'El Demonio' en la base de datos...")
             movie = Movie(
-                title='La Masacre de Texas: El Inicio',
-                slug='la-masacre-de-texas-el-inicio',
-                synopsis='En 1969, dos hermanos y sus novias emprenden un viaje por carretera en Texas para pasar un último fin de semana juntos antes de ir a Vietnam. Tras un aparatoso accidente, caen en las garras de la sádica familia Hewitt. Este terrorífico viaje revelará los sangrientos orígenes de Thomas Hewitt, quien pronto se convertirá en el legendario y despiadado asesino conocido como Leatherface (Cara de Cuero).',
-                year=2006,
-                video_url='https://ok.ru/videoembed/11823008451283',
+                title='El Demonio (Jeepers Creepers)',
+                slug='el-demonio-jeepers-creepers',
+                synopsis='Los hermanos Trish y Darry viajan por una carretera desolada para pasar las vacaciones en casa. Su viaje se convierte en una pesadilla cuando descubren el espeluznante secreto que oculta un misterioso conductor en el sótano de una iglesia abandonada. Pronto se ven perseguidos por el "Creeper", un terrorífico ser sobrenatural que despierta cada 23 años durante 23 días para alimentarse de partes humanas.',
+                year=2001,
+                video_url='https://ok.ru/videoembed/3341535152675',
                 is_active=True
             )
             # Categoría: Terror
@@ -39,10 +39,10 @@ def run():
             movie.categories.append(cat_terror)
             db.session.add(movie)
             db.session.commit()
-            print("¡Película La Masacre de Texas añadida con éxito!")
+            print("¡Película El Demonio añadida con éxito!")
         else:
             print("La película ya existía, actualizando el link de video...")
-            movie.video_url = 'https://ok.ru/videoembed/11823008451283'
+            movie.video_url = 'https://ok.ru/videoembed/3341535152675'
             db.session.commit()
             print("¡Video actualizado con éxito!")
 
