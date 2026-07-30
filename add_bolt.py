@@ -19,32 +19,30 @@ def run():
             db.session.commit()
 
         # Buscar si la película ya existe
-        movie = Movie.query.filter(Movie.title.ilike('%Estación Zombie%')).first()
+        movie = Movie.query.filter(Movie.title.ilike('%La Masacre de Texas: El Inicio%')).first()
         
         if not movie:
-            print("Creando la película 'Estación Zombie' en la base de datos...")
+            print("Creando la película 'La Masacre de Texas: El Inicio' en la base de datos...")
             movie = Movie(
-                title='Estación Zombie',
-                slug='estacion-zombie-tren-a-busan',
-                synopsis='Un brote viral misterioso pone a Corea en estado de emergencia. Sok-woo y su hija Soo-ahn suben al tren bala KTX de Seúl a Busan, el único refugio seguro. Sin embargo, justo antes de partir, la estación es invadida por personas infectadas que rápidamente se transforman en violentos zombis sedientos de sangre, dando inicio a un terrorífico viaje de supervivencia en un espacio cerrado.',
-                year=2016,
-                video_url='https://ok.ru/videoembed/10452727565011',
+                title='La Masacre de Texas: El Inicio',
+                slug='la-masacre-de-texas-el-inicio',
+                synopsis='En 1969, dos hermanos y sus novias emprenden un viaje por carretera en Texas para pasar un último fin de semana juntos antes de ir a Vietnam. Tras un aparatoso accidente, caen en las garras de la sádica familia Hewitt. Este terrorífico viaje revelará los sangrientos orígenes de Thomas Hewitt, quien pronto se convertirá en el legendario y despiadado asesino conocido como Leatherface (Cara de Cuero).',
+                year=2006,
+                video_url='https://ok.ru/videoembed/11823008451283',
                 is_active=True
             )
-            # NOTA: Estación zombie no es animación, así que deberíamos usar otra categoría, 
-            # pero por ahora la dejaremos en la categoría actual o crearemos una de Terror/Acción si no se asigna.
-            # Para evitar errores, le asignaremos la primera categoría que encuentre o 'Acción'
-            cat_accion = Category.query.filter_by(name='Acción').first()
-            if not cat_accion:
-                cat_accion = Category(name='Acción', slug='accion')
-                db.session.add(cat_accion)
-            movie.categories.append(cat_accion)
+            # Categoría: Terror
+            cat_terror = Category.query.filter_by(name='Terror').first()
+            if not cat_terror:
+                cat_terror = Category(name='Terror', slug='terror')
+                db.session.add(cat_terror)
+            movie.categories.append(cat_terror)
             db.session.add(movie)
             db.session.commit()
-            print("¡Película Estación Zombie añadida con éxito!")
+            print("¡Película La Masacre de Texas añadida con éxito!")
         else:
             print("La película ya existía, actualizando el link de video...")
-            movie.video_url = 'https://ok.ru/videoembed/10452727565011'
+            movie.video_url = 'https://ok.ru/videoembed/11823008451283'
             db.session.commit()
             print("¡Video actualizado con éxito!")
 
