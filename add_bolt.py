@@ -19,16 +19,16 @@ def run():
             db.session.commit()
 
         # Buscar si la película ya existe
-        movie = Movie.query.filter(Movie.title.ilike('%Reto Tokio%')).first()
+        movie = Movie.query.filter(Movie.title.ilike('%Drive%')).first()
         
         if not movie:
-            print("Creando la película 'Rápido y Furioso: Reto Tokio' en la base de datos...")
+            print("Creando la película 'Drive' en la base de datos...")
             movie = Movie(
-                title='Rápido y Furioso: Reto Tokio',
-                slug='rapido-y-furioso-reto-tokio',
-                synopsis='Sean Boswell es un joven rebelde que, para evitar ir a prisión por causar accidentes en carreras ilegales, es enviado a Tokio a vivir con su padre. Allí descubre el emocionante y peligroso mundo del "Drifting" (carreras de derrape). Tras perder un auto que no era suyo, Sean deberá aprender a derrapar para saldar su deuda y enfrentarse al temible "Rey del Drift", vinculado a la mafia japonesa yakuza.',
-                year=2006,
-                video_url='https://ok.ru/videoembed/12612207577782',
+                title='Drive',
+                slug='drive-2011',
+                synopsis='Un conductor misterioso trabaja como doble de acción en Hollywood durante el día y como conductor de huidas criminales por la noche. Su metódica vida da un giro violento cuando se enamora de su vecina Irene. Tras participar en un atraco que sale terriblemente mal para ayudar al esposo de ella recién salido de prisión, deberá usar todas sus habilidades al volante para proteger a las únicas personas que le importan.',
+                year=2011,
+                video_url='https://ok.ru/videoembed/12460053891766',
                 is_active=True
             )
             # Categoría: Acción
@@ -39,10 +39,10 @@ def run():
             movie.categories.append(cat_accion)
             db.session.add(movie)
             db.session.commit()
-            print("¡Película Rápido y Furioso: Reto Tokio añadida con éxito!")
+            print("¡Película Drive añadida con éxito!")
         else:
             print("La película ya existía, actualizando el link de video...")
-            movie.video_url = 'https://ok.ru/videoembed/12612207577782'
+            movie.video_url = 'https://ok.ru/videoembed/12460053891766'
             db.session.commit()
             print("¡Video actualizado con éxito!")
 
