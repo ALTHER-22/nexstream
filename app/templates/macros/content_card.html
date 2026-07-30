@@ -45,7 +45,7 @@
 
     {# Overlay con play #}
     <div class="nex-content-card__overlay">
-      <div class="nex-content-card__play" aria-hidden="true">â–¶</div>
+      <div class="nex-content-card__play" aria-hidden="true">&#9654;</div>
     </div>
 
     {# Botón favorito #}
@@ -56,7 +56,7 @@
               aria-label="{{ 'Quitar de favoritos' if item.is_favorite else 'Añadir a favoritos' }}"
               title="{{ 'Quitar de favoritos' if item.is_favorite else 'Añadir a favoritos' }}"
               onclick="event.preventDefault(); NexFavorites.toggle(this)">
-        {{ 'â¤' if item.is_favorite else '♡' }}
+        {{ '&hearts;'|safe if item.is_favorite else '&#9825;'|safe }}
       </button>
     {% endif %}
 
