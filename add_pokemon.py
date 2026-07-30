@@ -19,25 +19,25 @@ def run():
             db.session.commit()
 
         # Buscar si la película ya existe
-        movie = Movie.query.filter(Movie.title.ilike('%Pokémon 2: El poder de Uno%')).first()
+        movie = Movie.query.filter(Movie.title.ilike('%Pokémon 3: El Hechizo de los Unown%')).first()
         
         if not movie:
-            print("Creando la película 'Pokémon 2: El poder de Uno' en la base de datos...")
+            print("Creando la película 'Pokémon 3: El Hechizo de los Unown' en la base de datos...")
             movie = Movie(
-                title='Pokémon 2: El poder de Uno',
-                slug='pokemon-el-poder-de-uno',
-                synopsis='Ash y sus amigos llegan a la Isla Shamouti, donde la leyenda cuenta que un Elegido debe reunir los tres tesoros para evitar la destrucción del mundo si los legendarios Articuno, Zapdos y Moltres son perturbados por un misterioso coleccionista.',
-                year=1999,
-                video_url='https://ok.ru/videoembed/10207933893358',
+                title='Pokémon 3: El Hechizo de los Unown',
+                slug='pokemon-el-hechizo-de-los-unown',
+                synopsis='Cuando el investigador Spencer Hale desaparece misteriosamente, los enigmáticos Unown responden a la tristeza de su hija Molly creando un mundo de ilusiones donde Entei se convierte en su padre. Ash, Pikachu y sus amigos deben entrar en esta extraña dimensión de cristal para salvar a Molly y a la madre de Ash, quien ha sido secuestrada por Entei.',
+                year=2000,
+                video_url='https://ok.ru/videoembed/10209981565678',
                 is_active=True
             )
             movie.categories.append(category)
             db.session.add(movie)
             db.session.commit()
-            print("¡Película Pokémon 2: El poder de Uno añadida con éxito!")
+            print("¡Película Pokémon 3 añadida con éxito!")
         else:
             print("La película ya existía, actualizando el link de video...")
-            movie.video_url = 'https://ok.ru/videoembed/10207933893358'
+            movie.video_url = 'https://ok.ru/videoembed/10209981565678'
             db.session.commit()
             print("¡Video actualizado con éxito!")
 
