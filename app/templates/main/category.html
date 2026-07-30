@@ -26,18 +26,32 @@
   {% set show_series = tipo in ('all','series') %}
   {% set show_movies = tipo in ('all','movies') %}
 
-  {% if show_series and series_items %}
-    <h2 style="font-size:1.25rem;font-weight:700;margin-bottom:1rem;">Series</h2>
-    <div class="nex-content-grid" style="margin-bottom:2.5rem;">
-      {% for item in series_items %}{{ content_card(item, type='series') }}{% endfor %}
-    </div>
-  {% endif %}
+  {% if tipo == 'all' %}
+    {% set all_items = [] %}
+    {% for s in series_items %}{% set _ = all_items.append({'item': s, 'type': 'series'}) %}{% endfor %}
+    {% for m in movies_items %}{% set _ = all_items.append({'item': m, 'type': 'movie'}) %}{% endfor %}
+    
+    {% if all_items %}
+      <div class="nex-content-grid" style="margin-bottom:2.5rem;">
+        {% for obj in all_items %}
+          {{ content_card(obj.item, type=obj.type) }}
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% else %}
+    {% if show_series and series_items %}
+      <h2 style="font-size:1.25rem;font-weight:700;margin-bottom:1rem;">Series</h2>
+      <div class="nex-content-grid" style="margin-bottom:2.5rem;">
+        {% for item in series_items %}{{ content_card(item, type='series') }}{% endfor %}
+      </div>
+    {% endif %}
 
-  {% if show_movies and movies_items %}
-    <h2 style="font-size:1.25rem;font-weight:700;margin-bottom:1rem;">Películas</h2>
-    <div class="nex-content-grid">
-      {% for item in movies_items %}{{ content_card(item, type='movie') }}{% endfor %}
-    </div>
+    {% if show_movies and movies_items %}
+      <h2 style="font-size:1.25rem;font-weight:700;margin-bottom:1rem;">Películas</h2>
+      <div class="nex-content-grid">
+        {% for item in movies_items %}{{ content_card(item, type='movie') }}{% endfor %}
+      </div>
+    {% endif %}
   {% endif %}
 
   {% if not series_items and not movies_items %}
