@@ -28,7 +28,7 @@ def run():
                 slug='baby-driver-el-aprendiz-del-crimen',
                 synopsis='Baby es un joven y talentoso conductor especializado en fugas criminales que depende del ritmo de su música para ser el mejor al volante. Cuando conoce a la chica de sus sueños, ve la oportunidad de abandonar su vida delictiva. Pero tras ser forzado a trabajar para un jefe del crimen, deberá luchar por su vida y su libertad cuando un robo a mano armada sale mal.',
                 year=2017,
-                video_url='https://vk.ru/wall200001672276_2',
+                video_url='https://vkvideo.ru/video_ext.php?oid=200001672276&id=456239019&hash=65e0b2464980ff16&hd=4',
                 is_active=True
             )
             # Categoría: Acción
@@ -42,7 +42,7 @@ def run():
             print("¡Película Baby Driver añadida con éxito!")
         else:
             print("La película ya existía, actualizando el link de video...")
-            movie.video_url = 'https://vk.ru/wall200001672276_2'
+            movie.video_url = 'https://vkvideo.ru/video_ext.php?oid=200001672276&id=456239019&hash=65e0b2464980ff16&hd=4'
             db.session.commit()
             print("¡Video actualizado con éxito!")
 
