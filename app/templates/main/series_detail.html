@@ -183,11 +183,7 @@
         {% for ep in season.episodes %}
           {% set whatsapp_drive_url = (ep.video_url | replace('/preview', '/view')) if ep.video_url and 'drive.google.com' in ep.video_url else '' %}
           <div class="nex-episode-card" 
-               {% if current_user.is_authenticated and (current_user.is_admin or (current_user.subscription and current_user.subscription.is_active)) %}
-                 onclick="if(window.innerWidth <= 768 && '{{ whatsapp_drive_url }}'){ window.open('{{ whatsapp_drive_url }}', '_blank', 'noopener,noreferrer'); } else { window.location.href='{{ url_for('main.play_episode', episode_id=ep.id) }}'; }" style="cursor:pointer;"
-               {% else %}
-                 onclick="window.location.href='{{ url_for('subscription.plans') }}'" style="cursor:pointer;"
-               {% endif %}
+               onclick="if(window.innerWidth <= 768 && '{{ whatsapp_drive_url }}'){ window.open('{{ whatsapp_drive_url }}', '_blank', 'noopener,noreferrer'); } else { window.location.href='{{ url_for('main.play_episode', episode_id=ep.id) }}'; }" style="cursor:pointer;"
                role="button" tabindex="0"
                aria-label="Episodio {{ ep.number }}: {{ ep.title or 'Sin título' }}">
 
