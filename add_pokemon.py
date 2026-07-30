@@ -19,25 +19,25 @@ def run():
             db.session.commit()
 
         # Buscar si la película ya existe
-        movie = Movie.query.filter(Movie.title.ilike('%Pokémon 4: Celebi, la Voz del Bosque%')).first()
+        movie = Movie.query.filter(Movie.title.ilike('%Pokémon 5: Latios y Latias%')).first()
         
         if not movie:
-            print("Creando la película 'Pokémon 4: Celebi, la Voz del Bosque' en la base de datos...")
+            print("Creando la película 'Pokémon 5: Latios y Latias' en la base de datos...")
             movie = Movie(
-                title='Pokémon 4: Celebi, la Voz del Bosque',
-                slug='pokemon-celebi-la-voz-del-bosque',
-                synopsis='Ash y Pikachu viajan a un misterioso bosque habitado por Celebi, el mítico Pokémon que puede viajar en el tiempo. Allí se encuentran con Sammy, un chico que ha sido transportado 40 años desde el pasado para proteger a Celebi de un malvado cazador del Team Rocket, que planea usar el poder del tiempo para sus oscuros propósitos.',
-                year=2001,
-                video_url='https://ok.ru/videoembed/10213846485742',
+                title='Pokémon 5: Latios y Latias',
+                slug='pokemon-latios-y-latias',
+                synopsis='Ash, Pikachu y sus amigos llegan a Altomare, la hermosa capital del agua. Allí conocen a Latios y Latias, dos misteriosos Pokémon legendarios que protegen la ciudad y la Joya del Alma. Cuando un par de famosas ladronas intentan robar la joya, desencadenan una catástrofe que amenaza con hundir la ciudad entera.',
+                year=2002,
+                video_url='https://ok.ru/videoembed/10214016944878',
                 is_active=True
             )
             movie.categories.append(category)
             db.session.add(movie)
             db.session.commit()
-            print("¡Película Pokémon 4 añadida con éxito!")
+            print("¡Película Pokémon 5 añadida con éxito!")
         else:
             print("La película ya existía, actualizando el link de video...")
-            movie.video_url = 'https://ok.ru/videoembed/10213846485742'
+            movie.video_url = 'https://ok.ru/videoembed/10214016944878'
             db.session.commit()
             print("¡Video actualizado con éxito!")
 
