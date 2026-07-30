@@ -19,16 +19,16 @@ def run():
             db.session.commit()
 
         # Buscar si la película ya existe
-        movie = Movie.query.filter(Movie.title.ilike('%Desperado%')).first()
+        movie = Movie.query.filter(Movie.title.ilike('%Reto Tokio%')).first()
         
         if not movie:
-            print("Creando la película 'Desperado (La Balada del Pistolero)' en la base de datos...")
+            print("Creando la película 'Rápido y Furioso: Reto Tokio' en la base de datos...")
             movie = Movie(
-                title='Desperado',
-                slug='desperado-la-balada-del-pistolero',
-                synopsis='El Mariachi se sumerge en el oscuro mundo del hampa en la frontera mexicana buscando venganza contra Bucho, el despiadado narcotraficante que mató a su amada. Armado con un estuche de guitarra lleno de armas, deja un rastro de sangre y balas a su paso mientras une fuerzas con Carolina, la hermosa dueña de una librería local que lo ayudará a enfrentarse al letal cartel.',
-                year=1995,
-                video_url='https://ok.ru/videoembed/3484283374220',
+                title='Rápido y Furioso: Reto Tokio',
+                slug='rapido-y-furioso-reto-tokio',
+                synopsis='Sean Boswell es un joven rebelde que, para evitar ir a prisión por causar accidentes en carreras ilegales, es enviado a Tokio a vivir con su padre. Allí descubre el emocionante y peligroso mundo del "Drifting" (carreras de derrape). Tras perder un auto que no era suyo, Sean deberá aprender a derrapar para saldar su deuda y enfrentarse al temible "Rey del Drift", vinculado a la mafia japonesa yakuza.',
+                year=2006,
+                video_url='https://ok.ru/videoembed/12612207577782',
                 is_active=True
             )
             # Categoría: Acción
@@ -39,10 +39,10 @@ def run():
             movie.categories.append(cat_accion)
             db.session.add(movie)
             db.session.commit()
-            print("¡Película Desperado añadida con éxito!")
+            print("¡Película Rápido y Furioso: Reto Tokio añadida con éxito!")
         else:
             print("La película ya existía, actualizando el link de video...")
-            movie.video_url = 'https://ok.ru/videoembed/3484283374220'
+            movie.video_url = 'https://ok.ru/videoembed/12612207577782'
             db.session.commit()
             print("¡Video actualizado con éxito!")
 
