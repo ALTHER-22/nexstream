@@ -19,16 +19,16 @@ def run():
             db.session.add(category)
 
         # Buscar si la serie ya existe
-        series = Series.query.filter(Series.title.ilike('%Elfen Lied%')).first()
+        series = Series.query.filter(Series.title.ilike('%Amos del Universo%')).first()
         
         if not series:
-            print("Creando la serie 'Elfen Lied' en la base de datos...")
+            print("Creando la serie 'Amos del Universo' en la base de datos...")
             series = Series(
-                title='Elfen Lied',
-                original_title='Elfen Lied',
-                slug='elfen-lied',
-                synopsis='Los Diclonius, una especie mutante con cuernos y poderes telequinéticos invisibles llamados "vectores", son mantenidos en cautiverio. Lucy, una Diclonius letal, escapa masacrando a los guardias pero sufre una lesión en la cabeza que la deja con una doble personalidad infantil llamada Nyu. Es acogida por dos estudiantes, Kouta y Yuka, sin saber que el gobierno ha desatado una cacería sangrienta para recuperarla.',
-                year=2004,
+                title='He-Man y los Amos del Universo',
+                original_title='He-Man and the Masters of the Universe',
+                slug='he-man-amos-del-universo',
+                synopsis='El Príncipe Adam de Eternia recibe la Espada del Poder que lo transforma en He-Man, el hombre más poderoso del universo. Junto a sus aliados como Teela, Man-At-Arms y Orko, deberá defender el Castillo Grayskull y el planeta Eternia de las malvadas fuerzas de Skeletor y sus secuaces.',
+                year=1983,
                 status='COMPLETED',
                 is_active=True
             )
@@ -51,15 +51,15 @@ def run():
             episode = Episode(
                 season_id=season.id,
                 number=1,
-                title='La Serie Completa (Cap 1-13)',
-                description='Recopilación de los 13 capítulos de Elfen Lied.',
-                video_url='https://ok.ru/videoembed/10116989913838'
+                title='La Serie Completa',
+                description='Recopilación de capítulos de Amos del Universo.',
+                video_url='https://ok.ru/videoembed/14769364798190'
             )
             db.session.add(episode)
             db.session.commit()
-            print("¡Serie Elfen Lied y video añadidos con éxito!")
+            print("¡Serie Amos del Universo y video añadidos con éxito!")
         else:
-            episode.video_url = 'https://ok.ru/videoembed/10116989913838'
+            episode.video_url = 'https://ok.ru/videoembed/14769364798190'
             db.session.commit()
             print("El video ha sido actualizado en el episodio 1.")
 
