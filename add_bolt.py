@@ -19,25 +19,32 @@ def run():
             db.session.commit()
 
         # Buscar si la película ya existe
-        movie = Movie.query.filter(Movie.title.ilike('%Amos del universo%')).first()
+        movie = Movie.query.filter(Movie.title.ilike('%Estación Zombie%')).first()
         
         if not movie:
-            print("Creando la película 'Amos del universo' en la base de datos...")
+            print("Creando la película 'Estación Zombie' en la base de datos...")
             movie = Movie(
-                title='Amos del universo',
-                slug='amos-del-universo-2026',
-                synopsis='En esta espectacular película, el príncipe Adam descubre su destino como el protector de Eternia. Al empuñar la Espada del Poder y transformarse en He-Man, deberá enfrentarse al despiadado Skeletor y sus fuerzas oscuras, quienes planean apoderarse del místico Castillo Grayskull para desatar su poder maligno sobre todo el universo.',
-                year=2026,
-                video_url='https://ok.ru/videoembed/14769364798190',
+                title='Estación Zombie',
+                slug='estacion-zombie-tren-a-busan',
+                synopsis='Un brote viral misterioso pone a Corea en estado de emergencia. Sok-woo y su hija Soo-ahn suben al tren bala KTX de Seúl a Busan, el único refugio seguro. Sin embargo, justo antes de partir, la estación es invadida por personas infectadas que rápidamente se transforman en violentos zombis sedientos de sangre, dando inicio a un terrorífico viaje de supervivencia en un espacio cerrado.',
+                year=2016,
+                video_url='https://ok.ru/videoembed/10452727565011',
                 is_active=True
             )
-            movie.categories.append(category)
+            # NOTA: Estación zombie no es animación, así que deberíamos usar otra categoría, 
+            # pero por ahora la dejaremos en la categoría actual o crearemos una de Terror/Acción si no se asigna.
+            # Para evitar errores, le asignaremos la primera categoría que encuentre o 'Acción'
+            cat_accion = Category.query.filter_by(name='Acción').first()
+            if not cat_accion:
+                cat_accion = Category(name='Acción', slug='accion')
+                db.session.add(cat_accion)
+            movie.categories.append(cat_accion)
             db.session.add(movie)
             db.session.commit()
-            print("¡Película Amos del universo añadida con éxito!")
+            print("¡Película Estación Zombie añadida con éxito!")
         else:
             print("La película ya existía, actualizando el link de video...")
-            movie.video_url = 'https://ok.ru/videoembed/14769364798190'
+            movie.video_url = 'https://ok.ru/videoembed/10452727565011'
             db.session.commit()
             print("¡Video actualizado con éxito!")
 
