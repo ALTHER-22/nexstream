@@ -19,25 +19,25 @@ def run():
             db.session.commit()
 
         # Buscar si la película ya existe
-        movie = Movie.query.filter(Movie.title.ilike('%Ratatouille%')).first()
+        movie = Movie.query.filter(Movie.title.ilike('%Amos del universo%')).first()
         
         if not movie:
-            print("Creando la película 'Ratatouille' en la base de datos...")
+            print("Creando la película 'Amos del universo' en la base de datos...")
             movie = Movie(
-                title='Ratatouille',
-                slug='ratatouille',
-                synopsis='Remy es una simpática rata que sueña con convertirse en un gran chef francés a pesar de la oposición de su familia. Cuando el destino lleva a Remy a París, descubre que está situado justo debajo del restaurante de su ídolo culinario, Auguste Gusteau. A pesar del peligro evidente de ser un roedor en la cocina de un restaurante, su pasión lo unirá a un joven y despistado lavaplatos llamado Linguini para crear la combinación perfecta.',
-                year=2007,
-                video_url='https://ok.ru/videoembed/9823113448174',
+                title='Amos del universo',
+                slug='amos-del-universo-2026',
+                synopsis='En esta espectacular película, el príncipe Adam descubre su destino como el protector de Eternia. Al empuñar la Espada del Poder y transformarse en He-Man, deberá enfrentarse al despiadado Skeletor y sus fuerzas oscuras, quienes planean apoderarse del místico Castillo Grayskull para desatar su poder maligno sobre todo el universo.',
+                year=2026,
+                video_url='https://ok.ru/videoembed/14769364798190',
                 is_active=True
             )
             movie.categories.append(category)
             db.session.add(movie)
             db.session.commit()
-            print("¡Película Ratatouille añadida con éxito!")
+            print("¡Película Amos del universo añadida con éxito!")
         else:
             print("La película ya existía, actualizando el link de video...")
-            movie.video_url = 'https://ok.ru/videoembed/9823113448174'
+            movie.video_url = 'https://ok.ru/videoembed/14769364798190'
             db.session.commit()
             print("¡Video actualizado con éxito!")
 
