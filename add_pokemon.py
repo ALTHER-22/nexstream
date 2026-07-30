@@ -19,25 +19,25 @@ def run():
             db.session.commit()
 
         # Buscar si la película ya existe
-        movie = Movie.query.filter(Movie.title.ilike('%Pokémon: Mewtwo vs Mew%')).first()
+        movie = Movie.query.filter(Movie.title.ilike('%Pokémon 2: El poder de Uno%')).first()
         
         if not movie:
-            print("Creando la película 'Pokémon: Mewtwo vs Mew' en la base de datos...")
+            print("Creando la película 'Pokémon 2: El poder de Uno' en la base de datos...")
             movie = Movie(
-                title='Pokémon: Mewtwo vs Mew',
-                slug='pokemon-mewtwo-vs-mew',
-                synopsis='Científicos crean a un poderoso clon de Mew llamado Mewtwo. Lleno de resentimiento, Mewtwo decide crear su propio ejército de clones para demostrar que son superiores a los originales y así vengarse de la humanidad. Ash, Pikachu y sus amigos deberán detenerlo en la batalla más épica antes de que destruya el mundo.',
-                year=1998,
-                video_url='https://ok.ru/videoembed/10209735346926',
+                title='Pokémon 2: El poder de Uno',
+                slug='pokemon-el-poder-de-uno',
+                synopsis='Ash y sus amigos llegan a la Isla Shamouti, donde la leyenda cuenta que un Elegido debe reunir los tres tesoros para evitar la destrucción del mundo si los legendarios Articuno, Zapdos y Moltres son perturbados por un misterioso coleccionista.',
+                year=1999,
+                video_url='https://ok.ru/videoembed/10207933893358',
                 is_active=True
             )
             movie.categories.append(category)
             db.session.add(movie)
             db.session.commit()
-            print("¡Película Pokémon: Mewtwo vs Mew añadida con éxito!")
+            print("¡Película Pokémon 2: El poder de Uno añadida con éxito!")
         else:
             print("La película ya existía, actualizando el link de video...")
-            movie.video_url = 'https://ok.ru/videoembed/10209735346926'
+            movie.video_url = 'https://ok.ru/videoembed/10207933893358'
             db.session.commit()
             print("¡Video actualizado con éxito!")
 
