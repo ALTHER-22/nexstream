@@ -19,25 +19,25 @@ def run():
             db.session.commit()
 
         # Buscar si la película ya existe
-        movie = Movie.query.filter(Movie.title.ilike('%Pokémon 3: El Hechizo de los Unown%')).first()
+        movie = Movie.query.filter(Movie.title.ilike('%Pokémon 4: Celebi, la Voz del Bosque%')).first()
         
         if not movie:
-            print("Creando la película 'Pokémon 3: El Hechizo de los Unown' en la base de datos...")
+            print("Creando la película 'Pokémon 4: Celebi, la Voz del Bosque' en la base de datos...")
             movie = Movie(
-                title='Pokémon 3: El Hechizo de los Unown',
-                slug='pokemon-el-hechizo-de-los-unown',
-                synopsis='Cuando el investigador Spencer Hale desaparece misteriosamente, los enigmáticos Unown responden a la tristeza de su hija Molly creando un mundo de ilusiones donde Entei se convierte en su padre. Ash, Pikachu y sus amigos deben entrar en esta extraña dimensión de cristal para salvar a Molly y a la madre de Ash, quien ha sido secuestrada por Entei.',
-                year=2000,
-                video_url='https://ok.ru/videoembed/10209981565678',
+                title='Pokémon 4: Celebi, la Voz del Bosque',
+                slug='pokemon-celebi-la-voz-del-bosque',
+                synopsis='Ash y Pikachu viajan a un misterioso bosque habitado por Celebi, el mítico Pokémon que puede viajar en el tiempo. Allí se encuentran con Sammy, un chico que ha sido transportado 40 años desde el pasado para proteger a Celebi de un malvado cazador del Team Rocket, que planea usar el poder del tiempo para sus oscuros propósitos.',
+                year=2001,
+                video_url='https://ok.ru/videoembed/10213846485742',
                 is_active=True
             )
             movie.categories.append(category)
             db.session.add(movie)
             db.session.commit()
-            print("¡Película Pokémon 3 añadida con éxito!")
+            print("¡Película Pokémon 4 añadida con éxito!")
         else:
             print("La película ya existía, actualizando el link de video...")
-            movie.video_url = 'https://ok.ru/videoembed/10209981565678'
+            movie.video_url = 'https://ok.ru/videoembed/10213846485742'
             db.session.commit()
             print("¡Video actualizado con éxito!")
 
