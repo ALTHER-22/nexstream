@@ -25,7 +25,7 @@
     {% from 'macros/content_card.html' import content_card with context %}
     {% for item in pagination.items %}
       {% if item.episode %}
-        {{ content_card(item.episode.series, type='series', show_info=True, progress=item.progress_percentage) }}
+        {{ content_card(item.episode.season.series, type='series', show_info=True, progress=item.progress_percentage) }}
       {% elif item.movie %}
         {{ content_card(item.movie, type='movie', show_info=True, progress=item.progress_percentage) }}
       {% endif %}
