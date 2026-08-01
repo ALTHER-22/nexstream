@@ -150,24 +150,10 @@
           }
         </style>
         <div class="nex-detail-hero__bottom-grid">
-          <div class="nex-detail-hero__synopsis-col">
+          <div class="nex-detail-hero__synopsis-col" style="grid-column: 1 / -1; max-width: 800px;">
             {% if series.synopsis %}
               <p class="nex-detail-hero__synopsis" style="max-width: none; margin-bottom: 0;">{{ series.synopsis }}</p>
             {% endif %}
-          </div>
-          
-          <div class="nex-detail-hero__details-list" style="font-size: 0.9rem; color: rgba(255,255,255,0.75); line-height: 1.8;">
-            {% if series.original_title and series.original_title != series.title %}
-              <p style="margin-bottom: 0.5rem;"><strong style="color: #fff;">Título original:</strong> {{ series.original_title }}</p>
-            {% endif %}
-            <p style="margin-bottom: 0.5rem;"><strong style="color: #fff;">Audio:</strong> Español (Latino), Inglés, Original</p>
-            <p style="margin-bottom: 0.5rem;"><strong style="color: #fff;">Subtítulos:</strong> Español</p>
-            <p style="margin-bottom: 0.5rem;"><strong style="color: #fff;">Estado:</strong> {{ series.status|title if series.status else 'Finalizada' }}</p>
-            <p style="margin-bottom: 0;"><strong style="color: #fff;">Géneros:</strong> 
-              {% for cat in series.categories %}
-                <a href="{{ url_for('main.category', slug=cat.slug) }}" style="color: rgba(255,255,255,0.75); text-decoration: underline;">{{ cat.name }}</a>{% if not loop.last %}, {% endif %}
-              {% endfor %}
-            </p>
           </div>
         </div>
 
