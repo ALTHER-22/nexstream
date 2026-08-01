@@ -27,59 +27,11 @@
    ───────────────────────────────────────────────────────────────────────────── */
 
 const NexTheme = (() => {
-  /** Clave en localStorage para persistir el tema */
-  const STORAGE_KEY = 'nex-theme';
-  const THEMES = ['dark', 'light'];
-
-  /** Obtener el tema actual del documento */
-  const getCurrent = () => document.documentElement.getAttribute('data-theme') || 'dark';
-
-  /** Aplicar un tema al documento y persistirlo */
-  const apply = (theme) => {
-    if (!THEMES.includes(theme)) theme = 'dark';
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem(STORAGE_KEY, theme);
-    _updateIcons(theme);
-    _dispatchEvent(theme);
-  };
-
-  /** Alternar entre dark y light */
-  const toggle = () => apply(getCurrent() === 'dark' ? 'light' : 'dark');
-
-  /** Actualizar iconos del botón de tema */
-  const _updateIcons = (theme) => {
-    const iconDark  = document.getElementById('themeIconDark');
-    const iconLight = document.getElementById('themeIconLight');
-    if (!iconDark || !iconLight) return;
-    iconDark.style.display  = theme === 'dark'  ? 'block' : 'none';
-    iconLight.style.display = theme === 'light' ? 'block' : 'none';
-  };
-
-  /** Disparar evento personalizado para que otros módulos reaccionen */
-  const _dispatchEvent = (theme) => {
-    document.dispatchEvent(new CustomEvent('nexstream:theme-change', { detail: { theme } }));
-  };
-
-  /** Inicializar: leer preferencia guardada o del sistema */
   const init = () => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    const system = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    const theme = saved || system;
-    apply(theme);
-
-    // Botón de toggle en navbar
-    const btn = document.getElementById('themeToggle');
-    if (btn) btn.addEventListener('click', toggle);
-
-    // Escuchar cambios del sistema operativo
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-      if (!localStorage.getItem(STORAGE_KEY)) {
-        apply(e.matches ? 'dark' : 'light');
-      }
-    });
+    document.documentElement.setAttribute('data-theme', 'dark');
+    localStorage.setItem('nex-theme', 'dark');
   };
-
-  return { init, apply, toggle, getCurrent };
+  return { init, apply: () => {}, toggle: () => {}, getCurrent: () => 'dark' };
 })();
 
 
