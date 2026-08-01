@@ -309,7 +309,7 @@ p {
 
 /* Navbar transparente cuando está en la parte superior */
 .nex-navbar.transparent {
-  background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+  background: transparent;
   backdrop-filter: none;
 }
 
