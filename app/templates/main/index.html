@@ -57,11 +57,9 @@
             {% if banner.rating %}<span>⭐ {{ "%.1f"|format(banner.rating|float) }}</span>{% endif %}
           </div>
           {% if banner.description %}
-            <div class="nex-hero__synopsis-wrapper">
+            <!-- Sinopsis oculta a petición del usuario para mantener el diseño limpio -->
+            <div class="nex-hero__synopsis-wrapper d-none">
               <p class="nex-hero__synopsis">{{ banner.description }}</p>
-              {% if banner.description|length > 150 %}
-                <button type="button" class="nex-hero__read-more" onclick="this.previousElementSibling.classList.add('expanded'); this.style.display='none';">Leer más <span style="font-size:0.8em; margin-left:4px;">❯</span></button>
-              {% endif %}
             </div>
           {% endif %}
           <div class="nex-hero__actions">
