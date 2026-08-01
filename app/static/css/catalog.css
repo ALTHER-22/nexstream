@@ -362,11 +362,7 @@
 }
 
 .nex-hero__gradient {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(to top, #050508 0%, rgba(10,10,15,0.3) 50%, transparent 100%),
-    linear-gradient(to right, rgba(10,10,15,0.8) 0%, transparent 60%);
+  display: none;
 }
 
 .nex-hero__content {
@@ -549,11 +545,7 @@
 }
 
 .nex-detail-hero__gradient {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(to top, #050508 0%, rgba(10,10,15,0.3) 50%, transparent 100%),
-    linear-gradient(to right, rgba(10,10,15,0.8) 0%, transparent 60%);
+  display: none;
 }
 
 .nex-detail-hero__content {
