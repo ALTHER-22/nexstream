@@ -541,17 +541,14 @@
   height: 100%;
   object-fit: cover;
   object-position: center top;
-  filter: blur(0px) brightness(0.8);
-  -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
-  mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
 }
 
 .nex-detail-hero__gradient {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(90deg, rgba(5,5,8,0.9) 0%, rgba(5,5,8,0.4) 50%, transparent 100%),
-    linear-gradient(0deg, #050508 0%, transparent 30%);
+  background: linear-gradient(90deg, rgba(5,5,8,0.9) 0%, rgba(5,5,8,0.1) 40%, transparent 70%);
   z-index: 1;
 }
 

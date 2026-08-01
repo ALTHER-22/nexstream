@@ -541,7 +541,6 @@ p {
   height: 100%;
   object-fit: cover;
   object-position: center top;
-  filter: brightness(0.9);
   transform: scale(1.05);
   transition: transform 8s ease;
 }
@@ -551,13 +550,11 @@ p {
   transform: scale(1);
 }
 
-/* Gradiente oscuro, sutil y elegante estilo Netflix */
+/* Gradiente oscuro sutil solo a la izquierda */
 .nex-hero__gradient {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(90deg, rgba(5,5,8,0.9) 0%, rgba(5,5,8,0.4) 50%, transparent 100%),
-    linear-gradient(0deg, #050508 0%, transparent 30%);
+  background: linear-gradient(90deg, rgba(5,5,8,0.9) 0%, rgba(5,5,8,0.1) 40%, transparent 70%);
   z-index: 1;
 }
 
