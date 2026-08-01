@@ -556,16 +556,16 @@ p {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(10,10,15,0.95) 0%, rgba(10,10,15,0.6) 50%, transparent 100%),
-    linear-gradient(0deg, #050508 0%, transparent 60%),
-    radial-gradient(circle at 100% 0%, transparent 40%, rgba(0,0,0,0.2) 100%);
+    linear-gradient(90deg, rgba(10,10,15,0.98) 0%, rgba(10,10,15,0.7) 35%, transparent 70%),
+    linear-gradient(0deg, #050508 0%, transparent 40%),
+    radial-gradient(circle at 100% 0%, transparent 40%, rgba(0,0,0,0.25) 100%);
   z-index: 1;
 }
 
 [data-theme="light"] .nex-hero__gradient {
   background:
-    linear-gradient(90deg, rgba(245,245,250,0.95) 0%, rgba(245,245,250,0.85) 50%, transparent 100%),
-    linear-gradient(0deg, #f5f5fa 0%, transparent 60%),
+    linear-gradient(90deg, rgba(245,245,250,0.98) 0%, rgba(245,245,250,0.85) 40%, transparent 70%),
+    linear-gradient(0deg, #f5f5fa 0%, transparent 40%),
     radial-gradient(circle at 100% 0%, transparent 40%, rgba(0,0,0,0.05) 100%);
 }
 
@@ -579,13 +579,14 @@ p {
 
 
 .nex-hero__title {
-  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
   font-weight: 900;
   line-height: 1.05;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.04em;
   color: var(--color-text-primary);
   margin-bottom: var(--space-4);
   text-shadow: 0 4px 30px rgba(0,0,0,0.8), 0 2px 10px rgba(0,0,0,0.5);
+  text-transform: uppercase;
 }
 
 [data-theme="light"] .nex-hero__title {
@@ -614,14 +615,14 @@ p {
 }
 
 .nex-hero__synopsis {
-  font-size: var(--text-base);
+  font-size: 1.1rem;
   line-height: 1.6;
   margin-bottom: var(--space-8);
   display: -webkit-box;
   -webkit-line-clamp: 5;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  color: var(--color-text-secondary);
+  color: rgba(255, 255, 255, 0.7);
   text-shadow: 0 1px 8px rgba(0,0,0,0.8);
 }
 
@@ -637,19 +638,23 @@ p {
 .nex-hero__read-more {
   background: transparent;
   border: none;
-  color: var(--color-primary);
+  color: #ffffff;
   font-weight: 700;
   font-size: var(--text-sm);
   padding: 0;
   margin-top: calc(-1 * var(--space-6));
   margin-bottom: var(--space-8);
   cursor: pointer;
-  transition: opacity var(--transition-fast);
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .nex-hero__read-more:hover {
-  opacity: 0.8;
-  text-decoration: underline;
+  opacity: 1;
+  color: var(--color-primary-light);
+  transform: translateX(4px);
 }
 
 .nex-hero__actions {
@@ -1176,20 +1181,21 @@ p {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 2px var(--space-2);
+  padding: 4px var(--space-3);
   border-radius: var(--radius-full);
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+  font-weight: 800;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   line-height: 1;
+  backdrop-filter: blur(8px);
 }
 
-.nex-badge--primary { background: rgba(229, 9, 20, 0.15); color: var(--color-primary-light); border: 1px solid rgba(229, 9, 20, 0.25); }
-.nex-badge--new     { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.25); }
-.nex-badge--hot     { background: rgba(245, 166, 35, 0.15); color: #fbbf24; border: 1px solid rgba(245, 166, 35, 0.25); }
-.nex-badge--hd      { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.25); }
-.nex-badge--4k      { background: rgba(123, 92, 245, 0.15); color: #a78bfa; border: 1px solid rgba(123, 92, 245, 0.25); }
+.nex-badge--primary { background: rgba(229, 9, 20, 0.2); color: #ff4d58; border: 1px solid rgba(229, 9, 20, 0.4); }
+.nex-badge--new     { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+.nex-badge--hot     { background: rgba(245, 166, 35, 0.2); color: #fbbf24; border: 1px solid rgba(245, 166, 35, 0.4); }
+.nex-badge--hd      { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
+.nex-badge--4k      { background: rgba(123, 92, 245, 0.2); color: #a78bfa; border: 1px solid rgba(123, 92, 245, 0.4); }
 
 /* ─── 13. ANIMACIONES ─────────────────────────────────────────────────────── */
 

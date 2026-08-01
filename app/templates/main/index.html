@@ -60,7 +60,7 @@
             <div class="nex-hero__synopsis-wrapper">
               <p class="nex-hero__synopsis">{{ banner.description }}</p>
               {% if banner.description|length > 150 %}
-                <button type="button" class="nex-hero__read-more" onclick="this.previousElementSibling.classList.add('expanded'); this.style.display='none';">Leer más</button>
+                <button type="button" class="nex-hero__read-more" onclick="this.previousElementSibling.classList.add('expanded'); this.style.display='none';">Leer más <span style="font-size:0.8em; margin-left:4px;">❯</span></button>
               {% endif %}
             </div>
           {% endif %}
