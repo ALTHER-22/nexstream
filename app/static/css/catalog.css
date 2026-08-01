@@ -541,11 +541,18 @@
   height: 100%;
   object-fit: cover;
   object-position: center top;
-  filter: blur(0px) brightness(0.5);
+  filter: blur(0px) brightness(0.8);
+  -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
 }
 
 .nex-detail-hero__gradient {
-  display: none;
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(5,5,8,0.9) 0%, rgba(5,5,8,0.4) 50%, transparent 100%),
+    linear-gradient(0deg, #050508 0%, transparent 30%);
+  z-index: 1;
 }
 
 .nex-detail-hero__content {
@@ -586,6 +593,8 @@
   letter-spacing: -0.03em;
   margin-bottom: 0.75rem;
   line-height: 1.1;
+  color: #ffffff;
+  text-shadow: 0 4px 15px rgba(0,0,0,0.8);
 }
 
 .nex-detail-hero__meta {
@@ -594,13 +603,15 @@
   gap: 0.75rem;
   flex-wrap: wrap;
   font-size: 0.9375rem;
-  color: var(--color-text-secondary);
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.8);
   margin-bottom: 1rem;
 }
 
 .nex-detail-hero__synopsis {
   font-size: 0.9375rem;
-  color: var(--color-text-secondary);
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 8px rgba(0,0,0,0.8);
   line-height: 1.7;
   margin-bottom: 1.5rem;
   max-width: 600px;
